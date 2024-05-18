@@ -1,0 +1,15 @@
+# Configuration for the 'test' profile
+server:
+  port: 8097
+
+spring:
+  config:
+    activate:
+      on-profile: test
+  application:
+    name: Banking service
+  main:
+    banner-mode: off
+  output:
+    ansi:
+      enabled: ALWAYS
