@@ -6,10 +6,21 @@ spring:
   config:
     activate:
       on-profile: test
+
   application:
     name: Banking service
+
   main:
     banner-mode: off
+
   output:
     ansi:
       enabled: ALWAYS
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
