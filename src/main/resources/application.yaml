@@ -1,26 +1,40 @@
 # Configuration for the 'test' profile
 server:
-  port: 8097
+  port: ${SERVER_TEST_PORT_APPLICATION}
+
+logging:
+  level:
+    com.github.jon7even.bankingservice: DEBUG
+    org:
+      springframework:
+        orm:
+          jpa: INFO
+          JpaTransactionManager: DEBUG
+        transaction: INFO
+      hibernate:
+        SQL: DEBUG
+        type.descriptor.sql.BasicBinder: TRACE
 
 spring:
-  config:
-    activate:
-      on-profile: test
+  config.activate.on-profile: test
+  application.name: Banking service
+  main.banner-mode: off
+  output.ansi.enabled: ALWAYS
 
-  application:
-    name: Banking service
-
-  main:
-    banner-mode: off
-
-  output:
-    ansi:
-      enabled: ALWAYS
+  liquibase:
+    enabled: true
+    default-schema: ${SCHEMA_APP}
+    change-log: classpath:db/changelog/db.changelog-master.xml
 
   jpa:
-    hibernate:
-      ddl-auto: validate
-    properties:
-      hibernate:
-        format_sql: true
+    hibernate.ddl-auto: validate
+    properties.hibernate:
+      format_sql: true
+      default-schema: ${SCHEMA_APP}
     open-in-view: false
+
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://${DB_HOST_TEST}:${DB_PORT_TEST}/${DB_NAME_TEST}
+    username: ${DB_USER_TEST}
+    password: ${DB_PASS_TEST}

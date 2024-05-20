@@ -26,6 +26,7 @@
         <maven.compiler.sourceEncoding>UTF-8</maven.compiler.sourceEncoding>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <lombok-mapstruct.version>0.2.0</lombok-mapstruct.version>
+        <preliquibase.version>1.5.0</preliquibase.version>
     </properties>
 
     <dependencyManagement>
@@ -49,6 +50,12 @@
                 <artifactId>lombok-mapstruct-binding</artifactId>
                 <version>${lombok-mapstruct.version}</version>
                 <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>net.lbruun.springboot</groupId>
+                <artifactId>preliquibase-spring-boot-autoconfigure</artifactId>
+                <version>${preliquibase.version}</version>
             </dependency>
 
         </dependencies>
@@ -87,6 +94,22 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok-mapstruct-binding</artifactId>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.lbruun.springboot</groupId>
+            <artifactId>preliquibase-spring-boot-autoconfigure</artifactId>
         </dependency>
 
     </dependencies>
