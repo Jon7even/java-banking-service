@@ -1,6 +1,5 @@
 # Configuration for the 'test' profile
-server:
-  port: ${SERVER_TEST_PORT_APPLICATION}
+server.port: ${SERVER_TEST_PORT_APPLICATION}
 
 logging:
   level:

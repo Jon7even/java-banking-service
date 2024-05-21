@@ -5,7 +5,6 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 /**
  * Класс описывающий сущность пользователя
@@ -40,11 +39,17 @@ public class UserEntity {
     @Column(name = "phone", nullable = false, unique = true)
     private String phone;
 
+    @Column(name = "is_confirmed_phone")
+    private Boolean isConfirmedPhone;
+
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
     @Column(name = "last_name", nullable = false)
     private String lastName;
+
+    @Column(name = "middle_name")
+    private String middleName;
 
     @Column(name = "date_of_birth", nullable = false)
     private LocalDate dateOfBirth;
@@ -58,23 +63,12 @@ public class UserEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UserEntity that)) return false;
-        return id.equals(that.id)
-                && password.equals(that.password)
-                && email.equals(that.email)
-                && firstName.equals(that.firstName)
-                && lastName.equals(that.lastName)
-                && login.equals(that.login)
-                && phone.equals(that.phone)
-                && dateOfBirth.equals(that.dateOfBirth)
-                && registeredOn.equals(that.registeredOn)
-                && updatedOn.equals(that.updatedOn);
+        if (!(o instanceof UserEntity)) return false;
+        return id != null && id.equals(((UserEntity) o).getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-                id, password, email, firstName, lastName, login, phone, dateOfBirth, registeredOn, updatedOn
-        );
+        return getClass().hashCode();
     }
 }
