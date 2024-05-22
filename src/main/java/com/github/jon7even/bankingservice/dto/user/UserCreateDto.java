@@ -1,10 +1,7 @@
 package com.github.jon7even.bankingservice.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -22,12 +19,20 @@ import static com.github.jon7even.bankingservice.constants.DateTimeFormat.DATE_D
 @NoArgsConstructor
 public class UserCreateDto {
     private String login;
+
     private String email;
+
     private String phone;
+
+    @ToString.Exclude
     private String password;
+
     private String firstName;
+
     private String lastName;
+
     private String middleName;
+
     @JsonFormat(pattern = DATE_DEFAULT)
     private LocalDate dateOfBirth;
 }
