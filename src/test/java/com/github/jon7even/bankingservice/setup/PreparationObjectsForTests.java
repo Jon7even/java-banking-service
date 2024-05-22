@@ -17,6 +17,7 @@ public class PreparationObjectsForTests {
     protected Long seventhId = 7L;
 
     protected UserEntity userEntityFirst;
+    protected UserEntity userEntityFirstWithoutId;
     protected UserEntity userEntitySecond;
     protected UserEntity userEntityThird;
 
@@ -39,6 +40,19 @@ public class PreparationObjectsForTests {
     protected void initUserEntity() {
         userEntityFirst = UserEntity.builder()
                 .id(firstId)
+                .login("FirstLogin")
+                .email("First@email.ru")
+                .password("FirstPassword")
+                .phone("+79000000001")
+                .isConfirmedPhone(false)
+                .firstName("FirstFirstName")
+                .lastName("FirstLastName")
+                .middleName("FirstMiddleName")
+                .dateOfBirth(firstDate)
+                .registeredOn(firstDateTime)
+                .build();
+
+        userEntityFirstWithoutId = UserEntity.builder()
                 .login("FirstLogin")
                 .email("First@email.ru")
                 .password("FirstPassword")
