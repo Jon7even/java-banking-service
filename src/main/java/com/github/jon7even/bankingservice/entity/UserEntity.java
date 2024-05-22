@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 @Table(name = "user", schema = "application")
 public class UserEntity {
     @Id
-    @SequenceGenerator(name = "UserGenId", sequenceName = "user_seq", allocationSize = 5)
+    @SequenceGenerator(name = "UserGenId", sequenceName = "application.user_seq", allocationSize = 5)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "UserGenId")
     @Column(name = "id")
     private Long id;
