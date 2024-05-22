@@ -72,9 +72,7 @@ public class UserEntity {
             return false;
         }
         EqualsBuilder eb = new EqualsBuilder();
-        if (that.id != null) {
-            eb.append(id, that.id);
-        }
+        eb.append(id, that.id);
         eb.append(login, that.login);
         eb.append(email, that.email);
         eb.append(password, that.password);
