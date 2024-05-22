@@ -8,8 +8,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserEntityTest extends PreparationObjectsForTests {
-    @BeforeEach
-    public void setupMapperTest() {
+    @BeforeEach public void setupMapperTest() {
         initUserEntity();
     }
 
