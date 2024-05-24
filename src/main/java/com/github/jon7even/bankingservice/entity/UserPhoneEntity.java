@@ -27,7 +27,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Table(name = "phone", schema = "application")
 public class UserPhoneEntity {
     @Id
-    @SequenceGenerator(name = "PhoneGenId", sequenceName = "application.phone_seq", allocationSize = 5)
+    @SequenceGenerator(name = "PhoneGenId", sequenceName = "application.phone_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PhoneGenId")
     @Column(name = "id")
     private Long id;

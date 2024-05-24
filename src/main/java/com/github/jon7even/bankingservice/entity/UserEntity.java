@@ -26,7 +26,7 @@ import java.util.Set;
 @Table(name = "user", schema = "application")
 public class UserEntity {
     @Id
-    @SequenceGenerator(name = "UserGenId", sequenceName = "application.user_seq", allocationSize = 5)
+    @SequenceGenerator(name = "UserGenId", sequenceName = "application.user_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "UserGenId")
     @Column(name = "id")
     private Long id;

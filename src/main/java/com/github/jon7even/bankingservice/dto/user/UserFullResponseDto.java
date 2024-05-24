@@ -34,8 +34,6 @@ public class UserFullResponseDto {
 
     private Set<PhoneShortResponseDto> phones;
 
-    private boolean isConfirmedPhone;
-
     private String firstName;
 
     private String lastName;
@@ -64,7 +62,6 @@ public class UserFullResponseDto {
         eb.append(login, that.login);
         eb.append(emails, that.emails);
         eb.append(phones, that.phones);
-        eb.append(isConfirmedPhone, that.isConfirmedPhone);
         eb.append(firstName, that.firstName);
         eb.append(lastName, that.lastName);
         eb.append(middleName, that.middleName);
@@ -81,7 +78,6 @@ public class UserFullResponseDto {
         hcb.append(login);
         hcb.append(emails);
         hcb.append(phones);
-        hcb.append(isConfirmedPhone);
         hcb.append(firstName);
         hcb.append(lastName);
         hcb.append(middleName);

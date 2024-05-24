@@ -27,7 +27,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Table(name = "email", schema = "application")
 public class UserEmailEntity {
     @Id
-    @SequenceGenerator(name = "EmailGenId", sequenceName = "application.email_seq", allocationSize = 5)
+    @SequenceGenerator(name = "EmailGenId", sequenceName = "application.email_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EmailGenId")
     @Column(name = "id")
     private Long id;
