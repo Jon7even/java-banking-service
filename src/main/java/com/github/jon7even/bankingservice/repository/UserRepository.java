@@ -14,23 +14,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     /**
-     * Метод для проверки существования пользователя по email
-     *
-     * @param email электронная почта
-     */
-    boolean existsByEmail(@Param("email") String email);
-
-    /**
      * Метод для проверки существования пользователя по login
      *
      * @param login логин
      */
     boolean existsByLogin(@Param("login") String login);
-
-    /**
-     * Метод для проверки существования пользователя по phone
-     *
-     * @param phone номер телефона
-     */
-    boolean existsByPhone(@Param("phone") String phone);
 }

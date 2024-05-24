@@ -1,9 +1,13 @@
 package com.github.jon7even.bankingservice.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.github.jon7even.bankingservice.dto.user.email.EmailCreateDto;
+import com.github.jon7even.bankingservice.dto.user.phone.PhoneCreateDto;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.github.jon7even.bankingservice.constants.DateTimeFormat.DATE_DEFAULT;
 
@@ -20,12 +24,14 @@ import static com.github.jon7even.bankingservice.constants.DateTimeFormat.DATE_D
 public class UserCreateDto {
     private String login;
 
-    private String email;
-
-    private String phone;
-
     @ToString.Exclude
     private String password;
+
+    @Builder.Default
+    private Set<EmailCreateDto> emails = new HashSet<>();
+
+    @Builder.Default
+    private Set<PhoneCreateDto> phones = new HashSet<>();
 
     private String firstName;
 

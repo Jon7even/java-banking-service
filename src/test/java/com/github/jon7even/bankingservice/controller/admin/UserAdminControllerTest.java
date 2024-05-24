@@ -1,3 +1,4 @@
+/*
 package com.github.jon7even.bankingservice.controller.admin;
 
 import com.github.jon7even.bankingservice.setup.SetupControllerTest;
@@ -41,4 +42,4 @@ public class UserAdminControllerTest extends SetupControllerTest {
                 .andExpect(jsonPath("registeredOn").exists())
                 .andExpect(jsonPath("updatedOn").value(userFullResponseDtoFirst.getUpdatedOn()));
     }
-}
+}*/

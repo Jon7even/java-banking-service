@@ -2,9 +2,16 @@ package com.github.jon7even.bankingservice.service.impl;
 
 import com.github.jon7even.bankingservice.dto.user.UserCreateDto;
 import com.github.jon7even.bankingservice.dto.user.UserFullResponseDto;
+import com.github.jon7even.bankingservice.dto.user.email.EmailCreateDto;
+import com.github.jon7even.bankingservice.dto.user.phone.PhoneCreateDto;
+import com.github.jon7even.bankingservice.entity.UserEmailEntity;
 import com.github.jon7even.bankingservice.entity.UserEntity;
+import com.github.jon7even.bankingservice.entity.UserPhoneEntity;
+import com.github.jon7even.bankingservice.exception.IncorrectMadeRequestException;
 import com.github.jon7even.bankingservice.exception.IntegrityConstraintException;
 import com.github.jon7even.bankingservice.mapper.UserMapper;
+import com.github.jon7even.bankingservice.repository.UserEmailRepository;
+import com.github.jon7even.bankingservice.repository.UserPhoneRepository;
 import com.github.jon7even.bankingservice.repository.UserRepository;
 import com.github.jon7even.bankingservice.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Set;
 
 import static com.github.jon7even.bankingservice.constants.LogsMessage.*;
 
@@ -28,6 +37,8 @@ import static com.github.jon7even.bankingservice.constants.LogsMessage.*;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final UserEmailRepository userEmailRepository;
+    private final UserPhoneRepository userPhoneRepository;
     private final UserMapper userMapper;
 
     @Override
@@ -35,10 +46,19 @@ public class UserServiceImpl implements UserService {
     public UserFullResponseDto createUser(UserCreateDto userCreateDto) {
         log.trace(SAVE_IN_REPOSITORY + "[userCreateDto={}]", userCreateDto);
         checkUserCreateDto(userCreateDto);
-        UserEntity userForSaveInRepository = userMapper.toEntityFromCreateDto(userCreateDto, LocalDateTime.now());
-        UserEntity savedUserFromRepository = userRepository.save(userForSaveInRepository);
+
+        Set<UserEmailEntity> userEmailEntities = userMapper.toEntityEmailFromCreateDto(userCreateDto.getEmails());
+        Set<UserPhoneEntity> userPhoneEntities = userMapper.toEntityPhoneFromCreateDto(userCreateDto.getPhones());
+        UserEntity userForSaveInRepository = userMapper.toUserEntityFromCreateDto(
+                userCreateDto, userEmailEntities, userPhoneEntities, LocalDateTime.now()
+        );
+
+        UserEntity savedUserFromRepository = userRepository.saveAndFlush(userForSaveInRepository);
         log.trace("У нас успешно зарегистрирован новый пользователь [user={}]", savedUserFromRepository);
-        return userMapper.toFullDtoFromEntity(savedUserFromRepository);
+        return userMapper.toUserFullDtoFromUserEntity(savedUserFromRepository,
+                userMapper.toShortEmailDtoFromEmailEntity(savedUserFromRepository.getEmails()),
+                userMapper.toShortPhoneDtoFromPhoneEntity(savedUserFromRepository.getPhones())
+        );
     }
 
     private void checkUserCreateDto(UserCreateDto userCreateDto) {
@@ -49,18 +69,46 @@ public class UserServiceImpl implements UserService {
             throw new IntegrityConstraintException("логин", login);
         }
 
-        var email = userCreateDto.getEmail();
-        if (existsUserByEmail(email)) {
-            log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[почта={}]", email);
-            throw new IntegrityConstraintException("почта", email);
-        }
+        checkEmailCreateDto(userCreateDto.getEmails());
+        checkPhoneCreateDto(userCreateDto.getPhones());
 
-        var phone = userCreateDto.getPhone();
-        if (existsUserByPhone(phone)) {
-            log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[телефон={}]", phone);
-            throw new IntegrityConstraintException("телефон", phone);
-        }
         log.debug("Проверка успешно завершена, пользователя можно сохранять");
+    }
+
+    private void checkEmailCreateDto(Set<EmailCreateDto> emails) {
+        if (emails.size() == 1) {
+            var email = emails.stream().findFirst().toString();
+            if (existsEmailByStringEmail(email)) {
+                log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[адрес электронной почты={}]", email);
+                throw new IntegrityConstraintException(PARAMETER_EMAIL, email);
+            }
+        } else if (emails.size() > 1) {
+            if (existsEmailBySetEmails(Collections.singleton(emails.toString()))) {
+                log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[список адресов электронной почты={}]", emails);
+                throw new IntegrityConstraintException(PARAMETER_EMAIL, emails.toString());
+            }
+        } else {
+            log.error(PARAMETER_BAD_REQUEST + "список [email адресов] оказался пуст");
+            throw new IncorrectMadeRequestException(PARAMETER_EMAIL, "не может быть пустым");
+        }
+    }
+
+    private void checkPhoneCreateDto(Set<PhoneCreateDto> phones) {
+        if (phones.size() == 1) {
+            var phone = phones.stream().findFirst().toString();
+            if (existsPhoneByStringPhone(phone)) {
+                log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[номер телефона={}]", phone);
+                throw new IntegrityConstraintException(PARAMETER_PHONE, phone);
+            }
+        } else if (phones.size() > 1) {
+            if (existsPhoneBySetPhones(Collections.singleton(phones.toString()))) {
+                log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[список номеров={}]", phones);
+                throw new IntegrityConstraintException(PARAMETER_PHONE, phones.toString());
+            }
+        } else {
+            log.error(PARAMETER_BAD_REQUEST + "список [номеров] оказался пуст");
+            throw new IncorrectMadeRequestException(PARAMETER_PHONE, "не может быть пустым");
+        }
     }
 
     private boolean existsUserByLogin(String login) {
@@ -68,13 +116,23 @@ public class UserServiceImpl implements UserService {
         return userRepository.existsByLogin(login);
     }
 
-    private boolean existsUserByEmail(String email) {
+    private boolean existsEmailByStringEmail(String email) {
         log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[почта={}]", email);
-        return userRepository.existsByEmail(email);
+        return userEmailRepository.existsByEmail(email);
     }
 
-    private boolean existsUserByPhone(String phone) {
+    private boolean existsPhoneByStringPhone(String phone) {
         log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[телефон={}]", phone);
-        return userRepository.existsByPhone(phone);
+        return userPhoneRepository.existsByPhone(phone);
+    }
+
+    private boolean existsEmailBySetEmails(Set<String> emails) {
+        log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[список адресов={}]", emails);
+        return userEmailRepository.existsEmailsBySetEmails(emails);
+    }
+
+    private boolean existsPhoneBySetPhones(Set<String> phones) {
+        log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[список номеров телефонов={}]", phones);
+        return userPhoneRepository.existsPhonesBySetPhones(phones);
     }
 }

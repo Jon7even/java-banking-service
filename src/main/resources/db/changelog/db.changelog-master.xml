@@ -7,4 +7,7 @@
         logicalFilePath="db.changelog.xml">
     <include file="v-1.0/data/000-set-tag.xml" relativeToChangelogFile="true"/>
     <include file="v-1.0/data/001-create-user-table.xml" relativeToChangelogFile="true"/>
+    <include file="v-1.0/data/002-create-user-email-table.xml" relativeToChangelogFile="true"/>
+    <include file="v-1.0/data/003-create-user-phone-table.xml" relativeToChangelogFile="true"/>
+    <include file="v-1.0/data/100-set-tag.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

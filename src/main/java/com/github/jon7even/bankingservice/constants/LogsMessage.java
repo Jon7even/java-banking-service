@@ -15,4 +15,7 @@ public final class LogsMessage {
     public static final String SAVE_IN_REPOSITORY = "Начинаем сохранять новую сущность, данные для сохранения: ";
     public static final String CHECK_PARAMETER_IN_REPOSITORY = "Проверяем существует ли такой параметр в БД: ";
     public static final String PARAMETER_ALREADY_EXIST_IN_REPOSITORY = "Сущность с таким параметром уже существует: ";
+    public static final String PARAMETER_BAD_REQUEST = "Пользователь сделал недопустимый запрос: ";
+    public static final String PARAMETER_EMAIL = "адрес электронной почты";
+    public static final String PARAMETER_PHONE = "номер телефона";
 }

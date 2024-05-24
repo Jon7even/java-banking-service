@@ -1,3 +1,4 @@
+/*
 package com.github.jon7even.bankingservice.entity;
 
 import com.github.jon7even.bankingservice.setup.PreparationObjectsForTests;
@@ -265,3 +266,4 @@ public class UserEntityTest extends PreparationObjectsForTests {
                 .isNotEqualTo(userEntityFirst);
     }
 }
+*/

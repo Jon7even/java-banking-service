@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="002-create-user-email-table" author="Jon7even" context="dev" dbms="postgresql">
+
+        <createSequence
+                schemaName="application"
+                sequenceName="email_seq"
+                dataType="BIGINT"
+                startValue="1"
+                incrementBy="5"
+                maxValue="100000000"
+                cycle="false"/>
+
+        <createTable tableName="email" schemaName="application">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="email_seq">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_email"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true" primaryKeyName="unq_email"/>
+            </column>
+            <column name="owner_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableSchemaName="application"
+                                 baseTableName="email"
+                                 baseColumnNames="owner_id"
+                                 constraintName="fk_email_to_user"
+                                 referencedTableSchemaName="application"
+                                 referencedTableName="user"
+                                 referencedColumnNames="id"/>
+
+        <rollback>
+            <delete tableName="email" schemaName="application"/>
+            <dropAllForeignKeyConstraints baseTableName="email" baseTableSchemaName="application"/>
+            <dropSequence sequenceName="email_seq" schemaName="application"/>
+            <dropTable tableName="email" schemaName="application"/>
+        </rollback>
+
+    </changeSet>
+
+</databaseChangeLog>

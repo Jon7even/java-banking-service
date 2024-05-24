@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Класс описывающий сущность пользователя
@@ -32,18 +34,19 @@ public class UserEntity {
     @Column(name = "login", nullable = false, unique = true)
     private String login;
 
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
-
     @ToString.Exclude
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "phone", nullable = false, unique = true)
-    private String phone;
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @ToString.Exclude
+    private Set<UserEmailEntity> emails = new HashSet<>();
 
-    @Column(name = "is_confirmed_phone")
-    private Boolean isConfirmedPhone;
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @ToString.Exclude
+    private Set<UserPhoneEntity> phones = new HashSet<>();
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -74,10 +77,9 @@ public class UserEntity {
         EqualsBuilder eb = new EqualsBuilder();
         eb.append(id, that.id);
         eb.append(login, that.login);
-        eb.append(email, that.email);
         eb.append(password, that.password);
-        eb.append(phone, that.phone);
-        eb.append(isConfirmedPhone, that.isConfirmedPhone);
+        eb.append(emails, that.emails);
+        eb.append(phones, that.phones);
         eb.append(firstName, that.firstName);
         eb.append(lastName, that.lastName);
         eb.append(middleName, that.middleName);
@@ -92,10 +94,9 @@ public class UserEntity {
         HashCodeBuilder hcb = new HashCodeBuilder();
         hcb.append(id);
         hcb.append(login);
-        hcb.append(email);
         hcb.append(password);
-        hcb.append(phone);
-        hcb.append(isConfirmedPhone);
+        hcb.append(emails);
+        hcb.append(phones);
         hcb.append(firstName);
         hcb.append(lastName);
         hcb.append(middleName);

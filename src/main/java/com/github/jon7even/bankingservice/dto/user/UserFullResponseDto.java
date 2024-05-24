@@ -1,12 +1,15 @@
 package com.github.jon7even.bankingservice.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.github.jon7even.bankingservice.dto.user.email.EmailShortResponseDto;
+import com.github.jon7even.bankingservice.dto.user.phone.PhoneShortResponseDto;
 import lombok.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import static com.github.jon7even.bankingservice.constants.DateTimeFormat.DATE_DEFAULT;
 import static com.github.jon7even.bankingservice.constants.DateTimeFormat.DATE_TIME_DEFAULT;
@@ -27,9 +30,9 @@ public class UserFullResponseDto {
 
     private String login;
 
-    private String email;
+    private Set<EmailShortResponseDto> emails;
 
-    private String phone;
+    private Set<PhoneShortResponseDto> phones;
 
     private boolean isConfirmedPhone;
 
@@ -57,12 +60,10 @@ public class UserFullResponseDto {
             return false;
         }
         EqualsBuilder eb = new EqualsBuilder();
-        if (that.id != null) {
-            eb.append(id, that.id);
-        }
+        eb.append(id, that.id);
         eb.append(login, that.login);
-        eb.append(email, that.email);
-        eb.append(phone, that.phone);
+        eb.append(emails, that.emails);
+        eb.append(phones, that.phones);
         eb.append(isConfirmedPhone, that.isConfirmedPhone);
         eb.append(firstName, that.firstName);
         eb.append(lastName, that.lastName);
@@ -78,8 +79,8 @@ public class UserFullResponseDto {
         HashCodeBuilder hcb = new HashCodeBuilder();
         hcb.append(id);
         hcb.append(login);
-        hcb.append(email);
-        hcb.append(phone);
+        hcb.append(emails);
+        hcb.append(phones);
         hcb.append(isConfirmedPhone);
         hcb.append(firstName);
         hcb.append(lastName);
