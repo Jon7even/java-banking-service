@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import static com.github.jon7even.bankingservice.constants.LogsMessage.*;
@@ -47,13 +48,20 @@ public class UserServiceImpl implements UserService {
         log.trace(SAVE_IN_REPOSITORY + "[userCreateDto={}]", userCreateDto);
         checkUserCreateDto(userCreateDto);
 
-        Set<UserEmailEntity> userEmailEntities = userMapper.toEntityEmailFromCreateDto(userCreateDto.getEmails());
-        Set<UserPhoneEntity> userPhoneEntities = userMapper.toEntityPhoneFromCreateDto(userCreateDto.getPhones());
-        UserEntity userForSaveInRepository = userMapper.toUserEntityFromCreateDto(
-                userCreateDto, userEmailEntities, userPhoneEntities, LocalDateTime.now()
-        );
+        List<UserEmailEntity> userEmailEntities =
+                userMapper.toEntityEmailFromCreateDto(userCreateDto.getEmails().stream().toList());
+        List<UserPhoneEntity> userPhoneEntities =
+                userMapper.toEntityPhoneFromCreateDto(userCreateDto.getPhones().stream().toList());
+        UserEntity userForSaveInRepository = userMapper.toUserEntityFromCreateDto(userCreateDto, LocalDateTime.now());
 
-        UserEntity savedUserFromRepository = userRepository.saveAndFlush(userForSaveInRepository);
+        UserEntity savedUserFromRepository = userRepository.save(userForSaveInRepository);
+
+        userEmailEntities.forEach(userEmailEntity -> userEmailEntity.setOwner(savedUserFromRepository));
+        userEmailRepository.saveAllAndFlush(userEmailEntities);
+
+        userPhoneEntities.forEach(userPhoneEntity -> userPhoneEntity.setOwner(savedUserFromRepository));
+        userPhoneRepository.saveAllAndFlush(userPhoneEntities);
+
         log.trace("У нас успешно зарегистрирован новый пользователь [user={}]", savedUserFromRepository);
         return userMapper.toUserFullDtoFromUserEntity(savedUserFromRepository,
                 userMapper.toShortEmailDtoFromEmailEntity(savedUserFromRepository.getEmails()),
@@ -77,10 +85,11 @@ public class UserServiceImpl implements UserService {
 
     private void checkEmailCreateDto(Set<EmailCreateDto> emails) {
         if (emails.size() == 1) {
-            var email = emails.stream().findFirst().toString();
-            if (existsEmailByStringEmail(email)) {
-                log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[адрес электронной почты={}]", email);
-                throw new IntegrityConstraintException(PARAMETER_EMAIL, email);
+            var email = emails.stream().findFirst()
+                    .orElseThrow(() -> new IntegrityConstraintException(PARAMETER_EMAIL, emails.toString()));
+            if (existsEmailByStringEmail(email.getEmail())) {
+                log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[адрес электронной почты={}]", email.getEmail());
+                throw new IntegrityConstraintException(PARAMETER_EMAIL, email.getEmail());
             }
         } else if (emails.size() > 1) {
             if (existsEmailBySetEmails(Collections.singleton(emails.toString()))) {
@@ -95,10 +104,11 @@ public class UserServiceImpl implements UserService {
 
     private void checkPhoneCreateDto(Set<PhoneCreateDto> phones) {
         if (phones.size() == 1) {
-            var phone = phones.stream().findFirst().toString();
-            if (existsPhoneByStringPhone(phone)) {
-                log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[номер телефона={}]", phone);
-                throw new IntegrityConstraintException(PARAMETER_PHONE, phone);
+            var phone = phones.stream().findFirst()
+                    .orElseThrow(() -> new IntegrityConstraintException(PARAMETER_PHONE, phones.toString()));
+            if (existsPhoneByStringPhone(phone.getPhone())) {
+                log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[номер телефона={}]", phone.getPhone());
+                throw new IntegrityConstraintException(PARAMETER_PHONE, phone.getPhone());
             }
         } else if (phones.size() > 1) {
             if (existsPhoneBySetPhones(Collections.singleton(phones.toString()))) {
@@ -128,11 +138,13 @@ public class UserServiceImpl implements UserService {
 
     private boolean existsEmailBySetEmails(Set<String> emails) {
         log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[список адресов={}]", emails);
-        return userEmailRepository.existsEmailsBySetEmails(emails);
+        var listOfEmails = userEmailRepository.getEmailEntityBySetEmails(emails);
+        return !listOfEmails.isEmpty();
     }
 
     private boolean existsPhoneBySetPhones(Set<String> phones) {
         log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[список номеров телефонов={}]", phones);
-        return userPhoneRepository.existsPhonesBySetPhones(phones);
+        var listOfPhones = userPhoneRepository.getPhoneEntityBySetPhones(phones);
+        return !listOfPhones.isEmpty();
     }
 }

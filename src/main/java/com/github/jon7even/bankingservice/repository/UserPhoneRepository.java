@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -24,15 +25,19 @@ public interface UserPhoneRepository extends JpaRepository<UserPhoneEntity, Long
     boolean existsByPhone(@Param("phone") String phone);
 
     /**
-     * Метод для проверки существования телефона пользователя по списку номеров
+     * Метод для получения списка сущностей номеров телефона по списку из номеров
      *
-     * @param phones список номеров
+     * @param phones список из номеров
      */
-    @Query("   SELECT CASE WHEN COUNT(uph) > 0 "
-            + "       THEN true"
-            + "       ELSE false"
-            + "       END "
+    @Query("   SELECT uph"
             + "  FROM UserPhoneEntity AS uph "
-            + " WHERE (COALESCE(:phones, NULL) IS NULL OR uph.phone IN (:phones) ) ")
-    boolean existsPhonesBySetPhones(@Param("phones") Set<String> phones);
+            + " WHERE uph.phone IN :phones")
+    List<UserPhoneEntity> getPhoneEntityBySetPhones(@Param("phones") Set<String> phones);
+
+    /**
+     * Метод получения списка всех номеров телефона пользователя по его ID
+     *
+     * @param ownerId ID пользователя
+     */
+    List<UserPhoneEntity> findByOwnerId(@Param("ownerId") Long ownerId);
 }

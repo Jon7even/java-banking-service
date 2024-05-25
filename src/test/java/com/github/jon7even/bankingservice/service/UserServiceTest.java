@@ -1,4 +1,3 @@
-/*
 package com.github.jon7even.bankingservice.service;
 
 import com.github.jon7even.bankingservice.dto.user.UserFullResponseDto;
@@ -29,10 +28,10 @@ public class UserServiceTest extends SetupServiceTest {
     @Test public void shouldCreateNewUser_thenReturn_UserFullResponseDto() {
         when(userMapper.toUserEntityFromCreateDto(any(), any())).thenReturn(userEntityFirstWithoutId);
         when(userRepository.existsByLogin(userCreateDtoFirst.getLogin())).thenReturn(false);
-        when(userRepository.existsByEmail(userCreateDtoFirst.getEmail())).thenReturn(false);
-        when(userRepository.existsByPhone(userCreateDtoFirst.getPhone())).thenReturn(false);
+        when(userEmailRepository.existsByEmail(any())).thenReturn(false);
+        when(userPhoneRepository.existsByPhone(any())).thenReturn(false);
         when(userRepository.save(userEntityFirstWithoutId)).thenReturn(userEntityFirst);
-        when(userMapper.toUserFullDtoFromUserEntity(userEntityFirst)).thenReturn(userFullResponseDtoFirst);
+        when(userMapper.toUserFullDtoFromUserEntity(any(), any(), any())).thenReturn(userFullResponseDtoFirst);
 
         UserFullResponseDto actualResult = userService.createUser(userCreateDtoFirst);
 
@@ -41,8 +40,8 @@ public class UserServiceTest extends SetupServiceTest {
                 .isEqualTo(userFullResponseDtoFirst);
 
         verify(userRepository, times(1)).existsByLogin(anyString());
-        verify(userRepository, times(1)).existsByEmail(anyString());
-        verify(userRepository, times(1)).existsByPhone(anyString());
+        verify(userEmailRepository, times(1)).existsByEmail(anyString());
+        verify(userPhoneRepository, times(1)).existsByPhone(anyString());
         verify(userRepository, times(1)).save(any(UserEntity.class));
     }
 
@@ -53,33 +52,32 @@ public class UserServiceTest extends SetupServiceTest {
         assertThrows(IntegrityConstraintException.class, () -> userService.createUser(userCreateDtoFirst));
 
         verify(userRepository, times(1)).existsByLogin(anyString());
-        verify(userRepository, never()).existsByEmail(anyString());
-        verify(userRepository, never()).existsByPhone(anyString());
+        verify(userEmailRepository, never()).existsByEmail(anyString());
+        verify(userPhoneRepository, never()).existsByPhone(anyString());
         verify(userRepository, never()).save(any(UserEntity.class));
     }
 
     @DisplayName("[createUser] Новый пользователь не должен создаться потому что такой [email] уже есть в БД")
     @Test public void shouldNotCreateNewUser_thenReturn_ExceptionEmailAlreadyExist() {
-        when(userRepository.existsByEmail(any())).thenReturn(true);
+        when(userEmailRepository.existsByEmail(any())).thenReturn(true);
 
         assertThrows(IntegrityConstraintException.class, () -> userService.createUser(userCreateDtoFirst));
 
         verify(userRepository, times(1)).existsByLogin(anyString());
-        verify(userRepository, times(1)).existsByEmail(anyString());
-        verify(userRepository, never()).existsByPhone(anyString());
+        verify(userEmailRepository, times(1)).existsByEmail(anyString());
+        verify(userPhoneRepository, never()).existsByPhone(anyString());
         verify(userRepository, never()).save(any(UserEntity.class));
     }
 
     @DisplayName("[createUser] Новый пользователь не должен создаться потому что такой [phone] уже есть в БД")
     @Test public void shouldNotCreateNewUser_thenReturn_ExceptionPhoneAlreadyExist() {
-        when(userRepository.existsByPhone(any())).thenReturn(true);
+        when(userPhoneRepository.existsByPhone(any())).thenReturn(true);
 
         assertThrows(IntegrityConstraintException.class, () -> userService.createUser(userCreateDtoFirst));
 
         verify(userRepository, times(1)).existsByLogin(anyString());
-        verify(userRepository, times(1)).existsByEmail(anyString());
-        verify(userRepository, times(1)).existsByPhone(anyString());
+        verify(userEmailRepository, times(1)).existsByEmail(anyString());
+        verify(userPhoneRepository, times(1)).existsByPhone(anyString());
         verify(userRepository, never()).save(any(UserEntity.class));
     }
 }
-*/

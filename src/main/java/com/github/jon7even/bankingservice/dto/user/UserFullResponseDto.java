@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 import static com.github.jon7even.bankingservice.constants.DateTimeFormat.DATE_DEFAULT;
 import static com.github.jon7even.bankingservice.constants.DateTimeFormat.DATE_TIME_DEFAULT;
@@ -30,9 +30,9 @@ public class UserFullResponseDto {
 
     private String login;
 
-    private Set<EmailShortResponseDto> emails;
+    private List<EmailShortResponseDto> emails;
 
-    private Set<PhoneShortResponseDto> phones;
+    private List<PhoneShortResponseDto> phones;
 
     private String firstName;
 

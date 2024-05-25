@@ -17,9 +17,10 @@ public class SetupRepositoryTest extends SetupContainerTest {
     @Autowired protected UserRepository userRepository;
     @Autowired protected UserEmailRepository userEmailRepository;
     @Autowired protected UserPhoneRepository userPhoneRepository;
-    @Autowired protected JdbcTemplate jdbcTemplate;
+    @Autowired private JdbcTemplate jdbcTemplate;
 
-    @BeforeEach protected void clearRepositories() {
+    @BeforeEach protected void clearRepositoriesAndInitUserEntity() {
+        initUserEntity();
         userRepository.deleteAll();
         jdbcTemplate.execute("ALTER SEQUENCE application.user_seq RESTART WITH 1");
         jdbcTemplate.execute("ALTER SEQUENCE application.email_seq RESTART WITH 1");

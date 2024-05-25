@@ -12,6 +12,7 @@ import com.github.jon7even.bankingservice.entity.UserPhoneEntity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 public class PreparationObjectsForTests {
@@ -25,25 +26,25 @@ public class PreparationObjectsForTests {
 
     protected UserEntity userEntityFirst;
     protected UserEntity userEntityFirstWithoutId;
-    protected Set<UserEmailEntity> setUserEmailEntitiesFirst;
-    protected Set<UserPhoneEntity> setUserPhoneEntitiesFirst;
-    protected Set<UserEmailEntity> setUserEmailEntitiesFirstWithoutId;
-    protected Set<UserPhoneEntity> setUserPhoneEntitiesFirstWithoutId;
+    protected List<UserEmailEntity> listUserEmailEntitiesFirst;
+    protected List<UserPhoneEntity> listUserPhoneEntitiesFirst;
+    protected List<UserEmailEntity> listUserEmailEntitiesFirstWithoutId;
+    protected List<UserPhoneEntity> listUserPhoneEntitiesFirstWithoutId;
 
     protected UserEntity userEntitySecond;
     protected UserEntity userEntitySecondWithoutId;
-    protected Set<UserEmailEntity> setUserEmailEntitiesSecond;
-    protected Set<UserPhoneEntity> setUserPhoneEntitiesSecond;
-    protected Set<UserEmailEntity> setUserEmailEntitiesSecondWithoutId;
-    protected Set<UserPhoneEntity> setUserPhoneEntitiesSecondWithoutId;
+    protected List<UserEmailEntity> listUserEmailEntitiesSecond;
+    protected List<UserPhoneEntity> listUserPhoneEntitiesSecond;
+    protected List<UserEmailEntity> listUserEmailEntitiesSecondWithoutId;
+    protected List<UserPhoneEntity> listUserPhoneEntitiesSecondWithoutId;
 
 
     protected UserEntity userEntityThird;
     protected UserEntity userEntityThirdWithoutId;
-    protected Set<UserEmailEntity> setUserEmailEntitiesThird;
-    protected Set<UserPhoneEntity> setUserPhoneEntitiesThird;
-    protected Set<UserEmailEntity> setUserEmailEntitiesThirdWithoutId;
-    protected Set<UserPhoneEntity> setUserPhoneEntitiesThirdWithoutId;
+    protected List<UserEmailEntity> listUserEmailEntitiesThird;
+    protected List<UserPhoneEntity> listUserPhoneEntitiesThird;
+    protected List<UserEmailEntity> listUserEmailEntitiesThirdWithoutId;
+    protected List<UserPhoneEntity> listUserPhoneEntitiesThirdWithoutId;
 
     protected UserCreateDto userCreateDtoFirst;
     protected Set<EmailCreateDto> setEmailCreateDtoFirst;
@@ -58,16 +59,16 @@ public class PreparationObjectsForTests {
     protected Set<PhoneCreateDto> setPhoneCreateDtoThird;
 
     protected UserFullResponseDto userFullResponseDtoFirst;
-    protected Set<EmailShortResponseDto> emailShortResponseDtoFirst;
-    protected Set<PhoneShortResponseDto> phoneShortResponseDtoFirst;
+    protected List<EmailShortResponseDto> emailShortResponseDtoFirst;
+    protected List<PhoneShortResponseDto> phoneShortResponseDtoFirst;
 
     protected UserFullResponseDto userFullResponseDtoSecond;
-    protected Set<EmailShortResponseDto> emailShortResponseDtoSecond;
-    protected Set<PhoneShortResponseDto> phoneShortResponseDtoSecond;
+    protected List<EmailShortResponseDto> emailShortResponseDtoSecond;
+    protected List<PhoneShortResponseDto> phoneShortResponseDtoSecond;
 
     protected UserFullResponseDto userFullResponseDtoThird;
-    protected Set<EmailShortResponseDto> emailShortResponseDtoThird;
-    protected Set<PhoneShortResponseDto> phoneShortResponseDtoThird;
+    protected List<EmailShortResponseDto> emailShortResponseDtoThird;
+    protected List<PhoneShortResponseDto> phoneShortResponseDtoThird;
 
     protected LocalDate firstDate = LocalDate.of(1990, 1, 1);
     protected LocalDate secondDate = LocalDate.of(1985, 4, 25);
@@ -89,11 +90,11 @@ public class PreparationObjectsForTests {
                 .registeredOn(firstDateTime)
                 .build();
 
-        setUserEmailEntitiesFirst = Set.of(UserEmailEntity.builder()
+        listUserEmailEntitiesFirst = List.of(UserEmailEntity.builder()
                 .id(firstId).email("First@email.ru").owner(userEntityFirst)
                 .build());
 
-        setUserPhoneEntitiesFirst = Set.of(UserPhoneEntity.builder()
+        listUserPhoneEntitiesFirst = List.of(UserPhoneEntity.builder()
                 .id(firstId).phone("+79000000001").owner(userEntityFirst)
                 .build());
 
@@ -107,11 +108,11 @@ public class PreparationObjectsForTests {
                 .registeredOn(firstDateTime)
                 .build();
 
-        setUserEmailEntitiesFirstWithoutId = Set.of(UserEmailEntity.builder()
+        listUserEmailEntitiesFirstWithoutId = List.of(UserEmailEntity.builder()
                 .email("First@email.ru").owner(userEntityFirst)
                 .build());
 
-        setUserPhoneEntitiesFirstWithoutId = Set.of(UserPhoneEntity.builder()
+        listUserPhoneEntitiesFirstWithoutId = List.of(UserPhoneEntity.builder()
                 .phone("+79000000001").owner(userEntityFirst)
                 .build());
 
@@ -126,7 +127,7 @@ public class PreparationObjectsForTests {
                 .registeredOn(secondDateTime)
                 .build();
 
-        setUserEmailEntitiesSecond = Set.of(
+        listUserEmailEntitiesSecond = List.of(
                 UserEmailEntity.builder()
                         .id(firstId).email("Second1@email.ru").owner(userEntitySecond)
                         .build(),
@@ -134,7 +135,7 @@ public class PreparationObjectsForTests {
                         .id(secondId).email("Second2@email.ru").owner(userEntitySecond)
                         .build());
 
-        setUserPhoneEntitiesSecond = Set.of(
+        listUserPhoneEntitiesSecond = List.of(
                 UserPhoneEntity.builder()
                         .id(firstId).phone("+79000000002").owner(userEntitySecond)
                         .build(),
@@ -152,7 +153,7 @@ public class PreparationObjectsForTests {
                 .registeredOn(secondDateTime)
                 .build();
 
-        setUserEmailEntitiesSecondWithoutId = Set.of(
+        listUserEmailEntitiesSecondWithoutId = List.of(
                 UserEmailEntity.builder()
                         .email("Second1@email.ru").owner(userEntitySecondWithoutId)
                         .build(),
@@ -160,7 +161,7 @@ public class PreparationObjectsForTests {
                         .email("Second2@email.ru").owner(userEntitySecondWithoutId)
                         .build());
 
-        setUserPhoneEntitiesSecondWithoutId = Set.of(
+        listUserPhoneEntitiesSecondWithoutId = List.of(
                 UserPhoneEntity.builder()
                         .phone("+79000000002").owner(userEntitySecondWithoutId)
                         .build(),
@@ -179,7 +180,7 @@ public class PreparationObjectsForTests {
                 .registeredOn(thirdDateTime)
                 .build();
 
-        setUserEmailEntitiesThird = Set.of(
+        listUserEmailEntitiesThird = List.of(
                 UserEmailEntity.builder()
                         .id(firstId).email("Third1@email.ru").owner(userEntityThird)
                         .build(),
@@ -190,7 +191,7 @@ public class PreparationObjectsForTests {
                         .id(thirdId).email("Third3@email.ru").owner(userEntityThird)
                         .build());
 
-        setUserPhoneEntitiesThird = Set.of(
+        listUserPhoneEntitiesThird = List.of(
                 UserPhoneEntity.builder()
                         .id(firstId).phone("+79000000003").owner(userEntityThird)
                         .build(),
@@ -211,7 +212,7 @@ public class PreparationObjectsForTests {
                 .registeredOn(thirdDateTime)
                 .build();
 
-        setUserEmailEntitiesThirdWithoutId = Set.of(
+        listUserEmailEntitiesThirdWithoutId = List.of(
                 UserEmailEntity.builder()
                         .email("Third1@email.ru").owner(userEntityThird)
                         .build(),
@@ -222,7 +223,7 @@ public class PreparationObjectsForTests {
                         .email("Third3@email.ru").owner(userEntityThird)
                         .build());
 
-        setUserPhoneEntitiesThirdWithoutId = Set.of(
+        listUserPhoneEntitiesThirdWithoutId = List.of(
                 UserPhoneEntity.builder()
                         .phone("+79000000003").owner(userEntityThird)
                         .build(),
@@ -247,6 +248,9 @@ public class PreparationObjectsForTests {
         setEmailCreateDtoFirst = Set.of(EmailCreateDto.builder().email("First@email.ru").build());
 
         setPhoneCreateDtoFirst = Set.of(PhoneCreateDto.builder().phone("+79000000001").build());
+
+        userCreateDtoFirst.setEmails(setEmailCreateDtoFirst);
+        userCreateDtoFirst.setPhones(setPhoneCreateDtoFirst);
 
         userCreateDtoSecond = UserCreateDto.builder()
                 .login("SecondLogin")
@@ -317,9 +321,12 @@ public class PreparationObjectsForTests {
                 .updatedOn(null)
                 .build();
 
-        emailShortResponseDtoFirst = Set.of(EmailShortResponseDto.builder().email("First@email.ru").build());
+        emailShortResponseDtoFirst = List.of(EmailShortResponseDto.builder().email("First@email.ru").build());
 
-        phoneShortResponseDtoFirst = Set.of(PhoneShortResponseDto.builder().phone("+79000000001").build());
+        phoneShortResponseDtoFirst = List.of(PhoneShortResponseDto.builder().phone("+79000000001").build());
+
+        userFullResponseDtoFirst.setEmails(emailShortResponseDtoFirst);
+        userFullResponseDtoFirst.setPhones(phoneShortResponseDtoFirst);
 
         userFullResponseDtoSecond = UserFullResponseDto.builder()
                 .id(secondId)
@@ -332,7 +339,7 @@ public class PreparationObjectsForTests {
                 .updatedOn(null)
                 .build();
 
-        emailShortResponseDtoSecond = Set.of(
+        emailShortResponseDtoSecond = List.of(
                 EmailShortResponseDto.builder()
                         .email("Second1@email.ru")
                         .build(),
@@ -340,7 +347,7 @@ public class PreparationObjectsForTests {
                         .email("Second2@email.ru")
                         .build());
 
-        phoneShortResponseDtoSecond = Set.of(
+        phoneShortResponseDtoSecond = List.of(
                 PhoneShortResponseDto.builder()
                         .phone("+79000000002")
                         .build(),
@@ -359,7 +366,7 @@ public class PreparationObjectsForTests {
                 .updatedOn(null)
                 .build();
 
-        emailShortResponseDtoThird = Set.of(
+        emailShortResponseDtoThird = List.of(
                 EmailShortResponseDto.builder()
                         .email("Third1@email.ru")
                         .build(),
@@ -370,7 +377,7 @@ public class PreparationObjectsForTests {
                         .email("Third3@email.ru")
                         .build());
 
-        phoneShortResponseDtoThird = Set.of(
+        phoneShortResponseDtoThird = List.of(
                 PhoneShortResponseDto.builder()
                         .phone("+79000000003")
                         .build(),

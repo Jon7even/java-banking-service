@@ -1,6 +1,6 @@
-/*
 package com.github.jon7even.bankingservice.controller.admin;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.jon7even.bankingservice.setup.SetupControllerTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class UserAdminControllerTest extends SetupControllerTest {
-    @BeforeEach public void setupMapperTest() {
+    @BeforeEach public void setupControllerTest() {
         initUserCreateDto();
         initUserFullResponseDto();
     }
@@ -30,9 +30,10 @@ public class UserAdminControllerTest extends SetupControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("id").value(firstId))
                 .andExpect(jsonPath("login").value(userFullResponseDtoFirst.getLogin()))
-                .andExpect(jsonPath("email").value(userFullResponseDtoFirst.getEmail()))
-                .andExpect(jsonPath("phone").value(userFullResponseDtoFirst.getPhone()))
-                .andExpect(jsonPath("confirmedPhone").value(userFullResponseDtoFirst.isConfirmedPhone()))
+                .andExpect(jsonPath("$.emails.[0].email").value(userFullResponseDtoFirst.getEmails().stream()
+                        .findFirst().get().getEmail()))
+                .andExpect(jsonPath("$.phones.[0].phone").value(userFullResponseDtoFirst.getPhones().stream()
+                        .findFirst().get().getPhone()))
                 .andExpect(jsonPath("firstName").value(userFullResponseDtoFirst.getFirstName()))
                 .andExpect(jsonPath("lastName").value(userFullResponseDtoFirst.getLastName()))
                 .andExpect(jsonPath("middleName").value(userFullResponseDtoFirst.getMiddleName()))
@@ -42,4 +43,4 @@ public class UserAdminControllerTest extends SetupControllerTest {
                 .andExpect(jsonPath("registeredOn").exists())
                 .andExpect(jsonPath("updatedOn").value(userFullResponseDtoFirst.getUpdatedOn()));
     }
-}*/
+}

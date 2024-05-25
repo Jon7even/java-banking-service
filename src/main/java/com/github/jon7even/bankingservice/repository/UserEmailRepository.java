@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -24,15 +25,19 @@ public interface UserEmailRepository extends JpaRepository<UserEmailEntity, Long
     boolean existsByEmail(@Param("email") String email);
 
     /**
-     * Метод для проверки существования пользователя по email
+     * Метод для получения списка сущностей электронных адресов по списку из адресов
      *
-     * @param emails список электронных адресов
+     * @param emails список адресов
      */
-    @Query("   SELECT CASE WHEN COUNT(uem) > 0 "
-            + "       THEN true"
-            + "       ELSE false"
-            + "       END "
+    @Query("   SELECT uem"
             + "  FROM UserEmailEntity AS uem "
-            + " WHERE (COALESCE(:emails, NULL) IS NULL OR uem.email IN (:emails) ) ")
-    boolean existsEmailsBySetEmails(@Param("emails") Set<String> emails);
+            + " WHERE uem.email IN :emails")
+    List<UserEmailEntity> getEmailEntityBySetEmails(@Param("emails") Set<String> emails);
+
+    /**
+     * Метод получения списка всех электронных адресов пользователя по его ID
+     *
+     * @param ownerId ID пользователя
+     */
+    List<UserEmailEntity> findByOwnerId(@Param("ownerId") Long ownerId);
 }

@@ -13,6 +13,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -26,8 +27,6 @@ public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "userCreateDto.login", target = "login")
     @Mapping(source = "userCreateDto.password", target = "password")
-    @Mapping(source = "userEmailEntities", target = "emails")
-    @Mapping(source = "userPhoneEntities", target = "phones")
     @Mapping(source = "userCreateDto.firstName", target = "firstName")
     @Mapping(source = "userCreateDto.lastName", target = "lastName")
     @Mapping(source = "userCreateDto.middleName", target = "middleName")
@@ -35,8 +34,6 @@ public interface UserMapper {
     @Mapping(source = "now", target = "registeredOn")
     @Mapping(target = "updatedOn", ignore = true)
     UserEntity toUserEntityFromCreateDto(UserCreateDto userCreateDto,
-                                         Set<UserEmailEntity> userEmailEntities,
-                                         Set<UserPhoneEntity> userPhoneEntities,
                                          LocalDateTime now);
 
     @Mapping(source = "userEntity.id", target = "id")
@@ -50,18 +47,18 @@ public interface UserMapper {
     @Mapping(source = "userEntity.registeredOn", target = "registeredOn")
     @Mapping(source = "userEntity.updatedOn", target = "updatedOn")
     UserFullResponseDto toUserFullDtoFromUserEntity(UserEntity userEntity,
-                                                    Set<EmailShortResponseDto> emailShortResponseDto,
-                                                    Set<PhoneShortResponseDto> phoneShortResponseDto);
+                                                    List<EmailShortResponseDto> emailShortResponseDto,
+                                                    List<PhoneShortResponseDto> phoneShortResponseDto);
 
     @Mapping(source = "emailCreateDto.email", target = "email")
-    Set<UserEmailEntity> toEntityEmailFromCreateDto(Set<EmailCreateDto> emailCreateDto);
+    List<UserEmailEntity> toEntityEmailFromCreateDto(List<EmailCreateDto> emailCreateDto);
 
     @Mapping(source = "phoneCreateDto.phone", target = "phone")
-    Set<UserPhoneEntity> toEntityPhoneFromCreateDto(Set<PhoneCreateDto> phoneCreateDto);
+    List<UserPhoneEntity> toEntityPhoneFromCreateDto(List<PhoneCreateDto> phoneCreateDto);
 
     @Mapping(source = "userEmailEntities.email", target = "email")
-    Set<EmailShortResponseDto> toShortEmailDtoFromEmailEntity(Set<UserEmailEntity> userEmailEntities);
+    List<EmailShortResponseDto> toShortEmailDtoFromEmailEntity(List<UserEmailEntity> userEmailEntities);
 
     @Mapping(source = "userPhoneEntities.phone", target = "phone")
-    Set<PhoneShortResponseDto> toShortPhoneDtoFromPhoneEntity(Set<UserPhoneEntity> userPhoneEntities);
+    List<PhoneShortResponseDto> toShortPhoneDtoFromPhoneEntity(List<UserPhoneEntity> userPhoneEntities);
 }

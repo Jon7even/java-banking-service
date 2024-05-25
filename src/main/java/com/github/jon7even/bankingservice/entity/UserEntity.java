@@ -7,8 +7,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Класс описывающий сущность пользователя
@@ -38,15 +38,15 @@ public class UserEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @Builder.Default
     @ToString.Exclude
-    private Set<UserEmailEntity> emails = new HashSet<>();
+    private final List<UserEmailEntity> emails = new ArrayList<>();
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @Builder.Default
     @ToString.Exclude
-    private Set<UserPhoneEntity> phones = new HashSet<>();
+    private final List<UserPhoneEntity> phones = new ArrayList<>();
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -78,8 +78,6 @@ public class UserEntity {
         eb.append(id, that.id);
         eb.append(login, that.login);
         eb.append(password, that.password);
-        eb.append(emails, that.emails);
-        eb.append(phones, that.phones);
         eb.append(firstName, that.firstName);
         eb.append(lastName, that.lastName);
         eb.append(middleName, that.middleName);
@@ -95,8 +93,6 @@ public class UserEntity {
         hcb.append(id);
         hcb.append(login);
         hcb.append(password);
-        hcb.append(emails);
-        hcb.append(phones);
         hcb.append(firstName);
         hcb.append(lastName);
         hcb.append(middleName);

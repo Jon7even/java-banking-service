@@ -1,4 +1,3 @@
-/*
 package com.github.jon7even.bankingservice.entity;
 
 import com.github.jon7even.bankingservice.setup.PreparationObjectsForTests;
@@ -18,10 +17,7 @@ public class UserEntityTest extends PreparationObjectsForTests {
         UserEntity thatUser = UserEntity.builder()
                 .id(firstId)
                 .login("FirstLogin")
-                .email("First@email.ru")
                 .password("FirstPassword")
-                .phone("+79000000001")
-                .isConfirmedPhone(false)
                 .firstName("FirstFirstName")
                 .lastName("FirstLastName")
                 .middleName("FirstMiddleName")
@@ -39,31 +35,7 @@ public class UserEntityTest extends PreparationObjectsForTests {
         UserEntity thatUser = UserEntity.builder()
                 .id(firstId)
                 .login("Change")
-                .email("First@email.ru")
                 .password("FirstPassword")
-                .phone("+79000000001")
-                .isConfirmedPhone(false)
-                .firstName("FirstFirstName")
-                .lastName("FirstLastName")
-                .middleName("FirstMiddleName")
-                .dateOfBirth(firstDate)
-                .registeredOn(firstDateTime)
-                .build();
-
-        assertThat(thatUser)
-                .isNotNull()
-                .isNotEqualTo(userEntityFirst);
-    }
-
-    @DisplayName("Проверка сравнения для сущности с изменением [почты] должна дать отрицательный ответ")
-    @Test public void toNotEquals_ActualUserWithChangeOfEmail_ReturnFalse() {
-        UserEntity thatUser = UserEntity.builder()
-                .id(firstId)
-                .login("FirstLogin")
-                .email("Change@email.ru")
-                .password("FirstPassword")
-                .phone("+79000000001")
-                .isConfirmedPhone(false)
                 .firstName("FirstFirstName")
                 .lastName("FirstLastName")
                 .middleName("FirstMiddleName")
@@ -81,52 +53,7 @@ public class UserEntityTest extends PreparationObjectsForTests {
         UserEntity thatUser = UserEntity.builder()
                 .id(firstId)
                 .login("FirstLogin")
-                .email("First@email.ru")
                 .password("Change")
-                .phone("+79000000001")
-                .isConfirmedPhone(false)
-                .firstName("FirstFirstName")
-                .lastName("FirstLastName")
-                .middleName("FirstMiddleName")
-                .dateOfBirth(firstDate)
-                .registeredOn(firstDateTime)
-                .build();
-
-        assertThat(thatUser)
-                .isNotNull()
-                .isNotEqualTo(userEntityFirst);
-    }
-
-    @DisplayName("Проверка сравнения для сущности с изменением [номера телефона] должна дать отрицательный ответ")
-    @Test public void toNotEquals_ActualUserWithChangeOfPhone_ReturnFalse() {
-        UserEntity thatUser = UserEntity.builder()
-                .id(firstId)
-                .login("FirstLogin")
-                .email("First@email.ru")
-                .password("FirstPassword")
-                .phone("Change")
-                .isConfirmedPhone(false)
-                .firstName("FirstFirstName")
-                .lastName("FirstLastName")
-                .middleName("FirstMiddleName")
-                .dateOfBirth(firstDate)
-                .registeredOn(firstDateTime)
-                .build();
-
-        assertThat(thatUser)
-                .isNotNull()
-                .isNotEqualTo(userEntityFirst);
-    }
-
-    @DisplayName("Проверка сравнения для сущности с изменением [верификации телефона] должна дать отрицательный ответ")
-    @Test public void toNotEquals_ActualUserWithChangeOfIsConfirmedPhone_ReturnFalse() {
-        UserEntity thatUser = UserEntity.builder()
-                .id(firstId)
-                .login("FirstLogin")
-                .email("First@email.ru")
-                .password("FirstPassword")
-                .phone("+79000000001")
-                .isConfirmedPhone(true)
                 .firstName("FirstFirstName")
                 .lastName("FirstLastName")
                 .middleName("FirstMiddleName")
@@ -144,10 +71,7 @@ public class UserEntityTest extends PreparationObjectsForTests {
         UserEntity thatUser = UserEntity.builder()
                 .id(firstId)
                 .login("FirstLogin")
-                .email("First@email.ru")
                 .password("FirstPassword")
-                .phone("+79000000001")
-                .isConfirmedPhone(false)
                 .firstName("Change")
                 .lastName("FirstLastName")
                 .middleName("FirstMiddleName")
@@ -165,10 +89,7 @@ public class UserEntityTest extends PreparationObjectsForTests {
         UserEntity thatUser = UserEntity.builder()
                 .id(firstId)
                 .login("FirstLogin")
-                .email("First@email.ru")
                 .password("FirstPassword")
-                .phone("+79000000001")
-                .isConfirmedPhone(false)
                 .firstName("FirstFirstName")
                 .lastName("Change")
                 .middleName("FirstMiddleName")
@@ -186,10 +107,7 @@ public class UserEntityTest extends PreparationObjectsForTests {
         UserEntity thatUser = UserEntity.builder()
                 .id(firstId)
                 .login("FirstLogin")
-                .email("First@email.ru")
                 .password("FirstPassword")
-                .phone("+79000000001")
-                .isConfirmedPhone(false)
                 .firstName("FirstFirstName")
                 .lastName("FirstLastName")
                 .middleName("Change")
@@ -207,10 +125,7 @@ public class UserEntityTest extends PreparationObjectsForTests {
         UserEntity thatUser = UserEntity.builder()
                 .id(firstId)
                 .login("FirstLogin")
-                .email("First@email.ru")
                 .password("FirstPassword")
-                .phone("+79000000001")
-                .isConfirmedPhone(false)
                 .firstName("FirstFirstName")
                 .lastName("FirstLastName")
                 .middleName("FirstMiddleName")
@@ -228,10 +143,7 @@ public class UserEntityTest extends PreparationObjectsForTests {
         UserEntity thatUser = UserEntity.builder()
                 .id(firstId)
                 .login("FirstLogin")
-                .email("First@email.ru")
                 .password("FirstPassword")
-                .phone("+79000000001")
-                .isConfirmedPhone(false)
                 .firstName("FirstFirstName")
                 .lastName("FirstLastName")
                 .middleName("FirstMiddleName")
@@ -249,10 +161,7 @@ public class UserEntityTest extends PreparationObjectsForTests {
         UserEntity thatUser = UserEntity.builder()
                 .id(firstId)
                 .login("FirstLogin")
-                .email("First@email.ru")
                 .password("FirstPassword")
-                .phone("+79000000001")
-                .isConfirmedPhone(false)
                 .firstName("FirstFirstName")
                 .lastName("FirstLastName")
                 .middleName("FirstMiddleName")
@@ -266,4 +175,3 @@ public class UserEntityTest extends PreparationObjectsForTests {
                 .isNotEqualTo(userEntityFirst);
     }
 }
-*/
