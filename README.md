@@ -19,6 +19,9 @@
 > - Lombok
 > - Mapstruct
 > - JUnit 5
+> - TestContainers
+> - MockMVC
+> - AssertJ
 > - Docker
 > - Postman
 
