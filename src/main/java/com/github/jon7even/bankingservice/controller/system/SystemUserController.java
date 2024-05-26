@@ -1,4 +1,4 @@
-package com.github.jon7even.bankingservice.controller.admin;
+package com.github.jon7even.bankingservice.controller.system;
 
 import com.github.jon7even.bankingservice.dto.user.UserCreateDto;
 import com.github.jon7even.bankingservice.dto.user.UserFullResponseDto;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.github.jon7even.bankingservice.constants.ControllerApi.PATH_ADMIN;
+import static com.github.jon7even.bankingservice.constants.ControllerApi.PATH_SYSTEM;
 import static com.github.jon7even.bankingservice.constants.ControllerUser.PATH_USERS;
 import static com.github.jon7even.bankingservice.constants.LogsMessage.IN_CONTROLLER_METHOD;
 
@@ -26,20 +26,20 @@ import static com.github.jon7even.bankingservice.constants.LogsMessage.IN_CONTRO
  * @author Jon7even
  * @version 1.0
  * @apiNote Используется для регистрации новых пользователей, операции удаления не предусмотрено, заранее предполагаем,
- * что это плохо:)
+ * что это плохо:), JWT токен не требуется
  */
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = PATH_ADMIN + PATH_USERS)
-public class UserAdminController {
+@RequestMapping(path = PATH_SYSTEM + PATH_USERS)
+public class SystemUserController {
     private final UserService userService;
 
     @Operation(
             summary = "Добавить нового пользователя",
             description = "Для создания нового пользователя требуется заполненный объект UserCreateDto")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Created")
+            @ApiResponse(responseCode = "201", description = "Created пользователь создан")
     })
     @PostMapping
     public ResponseEntity<UserFullResponseDto> create(@RequestBody UserCreateDto userCreateDto,

@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ControllerUser {
     public static final String PATH_USERS = "/users";
+    public static final String PATH_SEARCH = "/search";
     public static final String PATH_USER_ID = "/{userId}";
 }

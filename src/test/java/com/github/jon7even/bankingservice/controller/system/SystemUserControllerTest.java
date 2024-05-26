@@ -1,6 +1,5 @@
-package com.github.jon7even.bankingservice.controller.admin;
+package com.github.jon7even.bankingservice.controller.system;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.jon7even.bankingservice.setup.SetupControllerTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -9,14 +8,14 @@ import org.springframework.http.MediaType;
 
 import java.time.format.DateTimeFormatter;
 
-import static com.github.jon7even.bankingservice.constants.ControllerApi.PATH_ADMIN;
+import static com.github.jon7even.bankingservice.constants.ControllerApi.PATH_SYSTEM;
 import static com.github.jon7even.bankingservice.constants.ControllerUser.PATH_USERS;
 import static com.github.jon7even.bankingservice.constants.DateTimeFormat.DATE_DEFAULT;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class UserAdminControllerTest extends SetupControllerTest {
+public class SystemUserControllerTest extends SetupControllerTest {
     @BeforeEach public void setupControllerTest() {
         initUserCreateDto();
         initUserFullResponseDto();
@@ -24,7 +23,7 @@ public class UserAdminControllerTest extends SetupControllerTest {
 
     @DisplayName("[create] Новый пользователь должен создаться с релевантными полями и присвоить ID")
     @Test public void shouldCreateNewUser_thenReturn_Status201AndUserFullResponseDto() throws Exception {
-        mockMvc.perform(post(PATH_ADMIN + PATH_USERS)
+        mockMvc.perform(post(PATH_SYSTEM + PATH_USERS)
                         .content(objectMapper.writeValueAsString(userCreateDtoFirst))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())

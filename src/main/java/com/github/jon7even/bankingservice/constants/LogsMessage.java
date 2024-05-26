@@ -17,5 +17,8 @@ public final class LogsMessage {
     public static final String PARAMETER_ALREADY_EXIST_IN_REPOSITORY = "Сущность с таким параметром уже существует: ";
     public static final String PARAMETER_BAD_REQUEST = "Пользователь сделал недопустимый запрос: ";
     public static final String PARAMETER_EMAIL = "адрес электронной почты";
+    public static final String PARAMETER_DATE_OF_BIRTH = "день рождения";
     public static final String PARAMETER_PHONE = "номер телефона";
+    public static final String SORT_REQUIRED = "Сортировка определена по:";
+    public static final String SORT_NOT_REQUIRED = "Сортировка не требуется, поиск будет по:";
 }

@@ -1,8 +1,8 @@
 package com.github.jon7even.bankingservice.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.github.jon7even.bankingservice.dto.user.email.EmailCreateDto;
-import com.github.jon7even.bankingservice.dto.user.phone.PhoneCreateDto;
+import com.github.jon7even.bankingservice.dto.user.email.EmailShortResponseDto;
+import com.github.jon7even.bankingservice.dto.user.phone.PhoneShortResponseDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Builder;
@@ -11,13 +11,12 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import static com.github.jon7even.bankingservice.constants.DateTimeFormat.DATE_DEFAULT;
 
 /**
- * Класс DTO для регистрации нового пользователя
+ * Класс DTO для краткого представления информации о пользователе
  *
  * @author Jon7even
  * @version 1.0
@@ -28,17 +27,8 @@ import static com.github.jon7even.bankingservice.constants.DateTimeFormat.DATE_D
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCreateDto {
+public class UserShortResponseDto {
     private String login;
-
-    @ToString.Exclude
-    private String password;
-
-    @Builder.Default
-    private Set<EmailCreateDto> emails = new HashSet<>();
-
-    @Builder.Default
-    private Set<PhoneCreateDto> phones = new HashSet<>();
 
     private String firstName;
 
@@ -48,4 +38,8 @@ public class UserCreateDto {
 
     @JsonFormat(pattern = DATE_DEFAULT)
     private LocalDate dateOfBirth;
+
+    private List<EmailShortResponseDto> emails;
+
+    private List<PhoneShortResponseDto> phones;
 }

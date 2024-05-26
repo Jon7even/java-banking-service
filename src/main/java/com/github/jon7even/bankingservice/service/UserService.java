@@ -2,6 +2,10 @@ package com.github.jon7even.bankingservice.service;
 
 import com.github.jon7even.bankingservice.dto.user.UserCreateDto;
 import com.github.jon7even.bankingservice.dto.user.UserFullResponseDto;
+import com.github.jon7even.bankingservice.dto.user.UserShortResponseDto;
+import com.github.jon7even.bankingservice.dto.user.search.ParamsSearchUserRequestDto;
+
+import java.util.List;
 
 /**
  * Интерфейс для взаимодействия с пользователями
@@ -17,4 +21,12 @@ public interface UserService {
      * @return UserFullResponseDto объект DTO с подробными данными о пользователе
      */
     UserFullResponseDto createUser(UserCreateDto userCreateDto);
+
+    /**
+     * Метод поиска пользователей в системе
+     *
+     * @param paramsSearchUserRequestDto объект DTO с параметрами поиска
+     * @return UserShortResponseDto список объектов DTO с краткими данными о пользователе
+     */
+    List<UserShortResponseDto> getListUsersByParam(ParamsSearchUserRequestDto paramsSearchUserRequestDto);
 }

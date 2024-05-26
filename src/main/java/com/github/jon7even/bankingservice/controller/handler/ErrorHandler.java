@@ -1,4 +1,4 @@
-package com.github.jon7even.bankingservice.exception.handler;
+package com.github.jon7even.bankingservice.controller.handler;
 
 import com.github.jon7even.bankingservice.exception.model.ApiError;
 import com.github.jon7even.bankingservice.exception.parent.ApplicationException;

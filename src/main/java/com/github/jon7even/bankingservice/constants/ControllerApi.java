@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ControllerApi {
-    public static final String PATH_API = "/api/v1/";
-    public static final String PATH_ADMIN = "/admin";
+    public static final String PATH_API = "/api/v1";
+    public static final String PATH_SYSTEM = "/system";
 }

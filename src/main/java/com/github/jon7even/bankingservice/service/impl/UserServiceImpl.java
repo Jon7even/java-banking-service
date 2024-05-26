@@ -2,8 +2,10 @@ package com.github.jon7even.bankingservice.service.impl;
 
 import com.github.jon7even.bankingservice.dto.user.UserCreateDto;
 import com.github.jon7even.bankingservice.dto.user.UserFullResponseDto;
+import com.github.jon7even.bankingservice.dto.user.UserShortResponseDto;
 import com.github.jon7even.bankingservice.dto.user.email.EmailCreateDto;
 import com.github.jon7even.bankingservice.dto.user.phone.PhoneCreateDto;
+import com.github.jon7even.bankingservice.dto.user.search.ParamsSearchUserRequestDto;
 import com.github.jon7even.bankingservice.entity.UserEmailEntity;
 import com.github.jon7even.bankingservice.entity.UserEntity;
 import com.github.jon7even.bankingservice.entity.UserPhoneEntity;
@@ -14,14 +16,19 @@ import com.github.jon7even.bankingservice.repository.UserEmailRepository;
 import com.github.jon7even.bankingservice.repository.UserPhoneRepository;
 import com.github.jon7even.bankingservice.repository.UserRepository;
 import com.github.jon7even.bankingservice.service.UserService;
+import com.github.jon7even.bankingservice.utils.ConverterPageable;
+import com.github.jon7even.bankingservice.utils.ConverterSort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.github.jon7even.bankingservice.constants.LogsMessage.*;
@@ -66,6 +73,24 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserFullDtoFromUserEntity(savedUserFromRepository,
                 userMapper.toShortEmailDtoFromEmailEntity(savedUserFromRepository.getEmails()),
                 userMapper.toShortPhoneDtoFromPhoneEntity(savedUserFromRepository.getPhones())
+        );
+    }
+
+    @Override
+    public List<UserShortResponseDto> getListUsersByParam(ParamsSearchUserRequestDto paramsSearchUserRequestDto) {
+        log.debug("Начинаем получать список пользователей по запроса: {}", paramsSearchUserRequestDto);
+        Pageable pageable = getPageableFromParamsSearchUserRequestDto(paramsSearchUserRequestDto);
+
+        System.out.println(pageable);
+        System.out.println(paramsSearchUserRequestDto);
+        return Collections.emptyList();
+    }
+
+    private Pageable getPageableFromParamsSearchUserRequestDto(ParamsSearchUserRequestDto paramsSearchUserRequestDto) {
+        log.debug("Начинаем конвертировать пагинацию из запроса: {}", paramsSearchUserRequestDto);
+        Optional<Sort> sortOptional = ConverterSort.getSortingByParamsSearchUserRequest(paramsSearchUserRequestDto);
+        return ConverterPageable.getPageRequestByParams(
+                paramsSearchUserRequestDto.getFrom(), paramsSearchUserRequestDto.getSize(), sortOptional
         );
     }
 

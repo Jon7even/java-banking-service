@@ -3,7 +3,12 @@ package com.github.jon7even.bankingservice.dto.user;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.jon7even.bankingservice.dto.user.email.EmailShortResponseDto;
 import com.github.jon7even.bankingservice.dto.user.phone.PhoneShortResponseDto;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.Builder;
+import lombok.ToString;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -24,6 +29,7 @@ import static com.github.jon7even.bankingservice.constants.DateTimeFormat.DATE_T
 @Setter
 @Builder
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
 public class UserFullResponseDto {
     private Long id;
