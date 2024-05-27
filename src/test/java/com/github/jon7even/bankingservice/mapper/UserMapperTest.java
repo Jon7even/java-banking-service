@@ -1,6 +1,7 @@
 package com.github.jon7even.bankingservice.mapper;
 
 import com.github.jon7even.bankingservice.dto.user.UserFullResponseDto;
+import com.github.jon7even.bankingservice.dto.user.UserShortResponseDto;
 import com.github.jon7even.bankingservice.entity.UserEntity;
 import com.github.jon7even.bankingservice.setup.PreparationObjectsForTests;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,7 @@ public class UserMapperTest extends PreparationObjectsForTests {
         initUserEntity();
         initUserCreateDto();
         initUserFullResponseDto();
+        initUserShortResponseDto();
     }
 
     @DisplayName("Должен произойти правильный маппинг в сущность для создания новых пользователей в БД")
@@ -44,5 +46,16 @@ public class UserMapperTest extends PreparationObjectsForTests {
         assertThat(actualResult)
                 .isNotNull()
                 .isEqualTo(userFullResponseDtoFirst);
+    }
+
+    @DisplayName("Должен произойти правильный маппинг в DTO для краткого предоставления информации о пользователе")
+    @Test public void toDtoFromEntity_Return_UserShortResponseDto() {
+        UserShortResponseDto actualResult = userMapper.toUserShortDtoFromUserEntity(
+                userEntityFirst, emailShortResponseDtoFirst, phoneShortResponseDtoFirst
+        );
+
+        assertThat(actualResult)
+                .isNotNull()
+                .isEqualTo(userShortResponseDtoFirst);
     }
 }

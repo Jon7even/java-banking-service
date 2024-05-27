@@ -1,7 +1,7 @@
 package com.github.jon7even.bankingservice.utils;
 
 import com.github.jon7even.bankingservice.dto.user.search.ParamsSearchUserRequestDto;
-import com.github.jon7even.bankingservice.dto.user.search.UserSort;
+import com.github.jon7even.bankingservice.enums.user.UserSort;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

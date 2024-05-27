@@ -2,6 +2,7 @@ package com.github.jon7even.bankingservice.setup;
 
 import com.github.jon7even.bankingservice.dto.user.UserCreateDto;
 import com.github.jon7even.bankingservice.dto.user.UserFullResponseDto;
+import com.github.jon7even.bankingservice.dto.user.UserShortResponseDto;
 import com.github.jon7even.bankingservice.dto.user.email.EmailCreateDto;
 import com.github.jon7even.bankingservice.dto.user.email.EmailShortResponseDto;
 import com.github.jon7even.bankingservice.dto.user.phone.PhoneCreateDto;
@@ -59,6 +60,7 @@ public class PreparationObjectsForTests {
     protected Set<PhoneCreateDto> setPhoneCreateDtoThird;
 
     protected UserFullResponseDto userFullResponseDtoFirst;
+    protected UserShortResponseDto userShortResponseDtoFirst;
     protected List<EmailShortResponseDto> emailShortResponseDtoFirst;
     protected List<PhoneShortResponseDto> phoneShortResponseDtoFirst;
 
@@ -307,6 +309,24 @@ public class PreparationObjectsForTests {
                 PhoneCreateDto.builder()
                         .phone("+79000000033")
                         .build());
+    }
+
+    protected void initUserShortResponseDto() {
+        userShortResponseDtoFirst = UserShortResponseDto.builder()
+                .id(firstId)
+                .login("FirstLogin")
+                .firstName("FirstFirstName")
+                .lastName("FirstLastName")
+                .middleName("FirstMiddleName")
+                .dateOfBirth(firstDate)
+                .build();
+
+        emailShortResponseDtoFirst = List.of(EmailShortResponseDto.builder().email("First@email.ru").build());
+
+        phoneShortResponseDtoFirst = List.of(PhoneShortResponseDto.builder().phone("+79000000001").build());
+
+        userShortResponseDtoFirst.setEmails(emailShortResponseDtoFirst);
+        userShortResponseDtoFirst.setPhones(phoneShortResponseDtoFirst);
     }
 
     protected void initUserFullResponseDto() {

@@ -3,10 +3,8 @@ package com.github.jon7even.bankingservice.dto.user;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.jon7even.bankingservice.dto.user.email.EmailShortResponseDto;
 import com.github.jon7even.bankingservice.dto.user.phone.PhoneShortResponseDto;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.Builder;
-import lombok.ToString;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -25,10 +23,8 @@ import static com.github.jon7even.bankingservice.constants.DateTimeFormat.DATE_T
  * @author Jon7even
  * @version 1.0
  */
-@Getter
-@Setter
+@Data
 @Builder
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserFullResponseDto {

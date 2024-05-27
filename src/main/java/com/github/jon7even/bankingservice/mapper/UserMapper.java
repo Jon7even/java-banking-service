@@ -2,6 +2,7 @@ package com.github.jon7even.bankingservice.mapper;
 
 import com.github.jon7even.bankingservice.dto.user.UserCreateDto;
 import com.github.jon7even.bankingservice.dto.user.UserFullResponseDto;
+import com.github.jon7even.bankingservice.dto.user.UserShortResponseDto;
 import com.github.jon7even.bankingservice.dto.user.email.EmailCreateDto;
 import com.github.jon7even.bankingservice.dto.user.email.EmailShortResponseDto;
 import com.github.jon7even.bankingservice.dto.user.phone.PhoneCreateDto;
@@ -14,7 +15,6 @@ import org.mapstruct.Mapping;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Интерфейс для маппинга DTO и сущностей пользователя
@@ -49,6 +49,18 @@ public interface UserMapper {
     UserFullResponseDto toUserFullDtoFromUserEntity(UserEntity userEntity,
                                                     List<EmailShortResponseDto> emailShortResponseDto,
                                                     List<PhoneShortResponseDto> phoneShortResponseDto);
+
+    @Mapping(source = "userEntity.id", target = "id")
+    @Mapping(source = "userEntity.login", target = "login")
+    @Mapping(source = "emailShortResponseDto", target = "emails")
+    @Mapping(source = "phoneShortResponseDto", target = "phones")
+    @Mapping(source = "userEntity.firstName", target = "firstName")
+    @Mapping(source = "userEntity.lastName", target = "lastName")
+    @Mapping(source = "userEntity.middleName", target = "middleName")
+    @Mapping(source = "userEntity.dateOfBirth", target = "dateOfBirth")
+    UserShortResponseDto toUserShortDtoFromUserEntity(UserEntity userEntity,
+                                                      List<EmailShortResponseDto> emailShortResponseDto,
+                                                      List<PhoneShortResponseDto> phoneShortResponseDto);
 
     @Mapping(source = "emailCreateDto.email", target = "email")
     List<UserEmailEntity> toEntityEmailFromCreateDto(List<EmailCreateDto> emailCreateDto);

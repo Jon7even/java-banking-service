@@ -2,7 +2,7 @@ package com.github.jon7even.bankingservice.controller.api;
 
 import com.github.jon7even.bankingservice.dto.user.UserShortResponseDto;
 import com.github.jon7even.bankingservice.dto.user.search.ParamsSearchUserRequestDto;
-import com.github.jon7even.bankingservice.dto.user.search.UserSort;
+import com.github.jon7even.bankingservice.enums.user.UserSort;
 import com.github.jon7even.bankingservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

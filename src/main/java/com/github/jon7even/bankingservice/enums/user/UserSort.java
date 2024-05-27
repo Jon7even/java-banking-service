@@ -1,4 +1,4 @@
-package com.github.jon7even.bankingservice.dto.user.search;
+package com.github.jon7even.bankingservice.enums.user;
 
 /**
  * Перечисление возможных видов сортировки для параметров поиска

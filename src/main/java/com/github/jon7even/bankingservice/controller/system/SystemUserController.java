@@ -26,7 +26,7 @@ import static com.github.jon7even.bankingservice.constants.LogsMessage.IN_CONTRO
  * @author Jon7even
  * @version 1.0
  * @apiNote Используется для регистрации новых пользователей, операции удаления не предусмотрено, заранее предполагаем,
- * что это плохо:), JWT токен не требуется
+ * что это плохо:), JWT токен для этого эндпоинта не требуется
  */
 @Slf4j
 @RestController

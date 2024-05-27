@@ -9,6 +9,7 @@ import com.github.jon7even.bankingservice.dto.user.search.ParamsSearchUserReques
 import com.github.jon7even.bankingservice.entity.UserEmailEntity;
 import com.github.jon7even.bankingservice.entity.UserEntity;
 import com.github.jon7even.bankingservice.entity.UserPhoneEntity;
+import com.github.jon7even.bankingservice.enums.user.UserSearchType;
 import com.github.jon7even.bankingservice.exception.IncorrectMadeRequestException;
 import com.github.jon7even.bankingservice.exception.IntegrityConstraintException;
 import com.github.jon7even.bankingservice.mapper.UserMapper;
@@ -30,6 +31,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.github.jon7even.bankingservice.constants.LogsMessage.*;
 
@@ -78,12 +80,69 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserShortResponseDto> getListUsersByParam(ParamsSearchUserRequestDto paramsSearchUserRequestDto) {
-        log.debug("Начинаем получать список пользователей по запроса: {}", paramsSearchUserRequestDto);
+        log.debug("Начинаем получать список пользователей по запросу: {}", paramsSearchUserRequestDto);
         Pageable pageable = getPageableFromParamsSearchUserRequestDto(paramsSearchUserRequestDto);
+        UserSearchType userSearchType = getUserSearchTypeByParamsSearchUserRequestDto(paramsSearchUserRequestDto);
+        List<UserEntity> listOfUsersFromRepository = getListUserEntityFromRepository(
+                paramsSearchUserRequestDto, userSearchType, pageable);
+        log.debug("Получили список из [size={}] пользователей", listOfUsersFromRepository.size());
+        return listOfUsersFromRepository.stream()
+                .map((userEntity -> userMapper.toUserShortDtoFromUserEntity(userEntity,
+                        userMapper.toShortEmailDtoFromEmailEntity(userEntity.getEmails()),
+                        userMapper.toShortPhoneDtoFromPhoneEntity(userEntity.getPhones()))
+                ))
+                .collect(Collectors.toList());
+    }
 
-        System.out.println(pageable);
-        System.out.println(paramsSearchUserRequestDto);
-        return Collections.emptyList();
+    private List<UserEntity> getListUserEntityFromRepository(ParamsSearchUserRequestDto paramsSearchUserRequestDto,
+                                                             UserSearchType userSearchType,
+                                                             Pageable pageable) {
+        log.debug("Начинаем получать список пользователей из БД [параметры={}], [страницы и сортировка={}], [тип={}]",
+                paramsSearchUserRequestDto, pageable, userSearchType);
+        List<UserEntity> listOfUserEntitiesFromRepository;
+        switch (userSearchType) {
+            case GET_BY_NAME -> listOfUserEntitiesFromRepository =
+                    userRepository.getListUserByLikeName(paramsSearchUserRequestDto.getFirstName(),
+                            paramsSearchUserRequestDto.getLastName(),
+                            paramsSearchUserRequestDto.getMiddleName(),
+                            pageable);
+            case GET_BY_PHONE -> listOfUserEntitiesFromRepository =
+                    userRepository.getListUserByPhone(paramsSearchUserRequestDto.getPhone(), pageable);
+            case GET_BY_EMAIL -> listOfUserEntitiesFromRepository =
+                    userRepository.getListUserByEmail(paramsSearchUserRequestDto.getEmail(), pageable);
+            case GET_BY_DATE_OF_BIRTH -> listOfUserEntitiesFromRepository =
+                    userRepository.getListUserByAfterParamDate(paramsSearchUserRequestDto.getDateOfBirth(), pageable);
+            default -> listOfUserEntitiesFromRepository = userRepository.findAll(pageable).getContent();
+        }
+        return listOfUserEntitiesFromRepository;
+    }
+
+    private UserSearchType getUserSearchTypeByParamsSearchUserRequestDto(ParamsSearchUserRequestDto paramsDto) {
+        log.debug("Начинаем определять тип поиска по запросу: {}", paramsDto);
+        if (paramsDto.getEmail() != null && !paramsDto.getEmail().isBlank()) {
+            log.debug("{} [{}]", SEARCH_BY, PARAMETER_EMAIL);
+            return UserSearchType.GET_BY_EMAIL;
+        }
+
+        if (paramsDto.getPhone() != null && !paramsDto.getPhone().isBlank()) {
+            log.debug("{} [{}]", SEARCH_BY, PARAMETER_PHONE);
+            return UserSearchType.GET_BY_PHONE;
+        }
+
+        if (paramsDto.getDateOfBirth() != null) {
+            log.debug("{} [{}]", SEARCH_BY, PARAMETER_DATE_OF_BIRTH);
+            return UserSearchType.GET_BY_DATE_OF_BIRTH;
+        }
+
+        if (paramsDto.getFirstName() != null && !paramsDto.getFirstName().isBlank()
+                || paramsDto.getLastName() != null && !paramsDto.getLastName().isBlank()
+                || paramsDto.getMiddleName() != null && !paramsDto.getMiddleName().isBlank()) {
+            log.debug("{} [{}]", SEARCH_BY, PARAMETER_FULL_NAME);
+            return UserSearchType.GET_BY_NAME;
+        }
+
+        log.debug("{} [без ключевых параметров, поиск по всем пользователям]", SEARCH_BY);
+        return UserSearchType.GET_BY_NO_PARAMETERS;
     }
 
     private Pageable getPageableFromParamsSearchUserRequestDto(ParamsSearchUserRequestDto paramsSearchUserRequestDto) {
@@ -98,13 +157,11 @@ public class UserServiceImpl implements UserService {
         log.debug("Начинаем проверять поля нового пользователя перед сохранением в БД");
         var login = userCreateDto.getLogin();
         if (existsUserByLogin(login)) {
-            log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[логин={}]", login);
-            throw new IntegrityConstraintException("логин", login);
+            log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[{}={}]", PARAMETER_LOGIN, login);
+            throw new IntegrityConstraintException(PARAMETER_LOGIN, login);
         }
-
         checkEmailCreateDto(userCreateDto.getEmails());
         checkPhoneCreateDto(userCreateDto.getPhones());
-
         log.debug("Проверка успешно завершена, пользователя можно сохранять");
     }
 
@@ -118,7 +175,7 @@ public class UserServiceImpl implements UserService {
             }
         } else if (emails.size() > 1) {
             if (existsEmailBySetEmails(Collections.singleton(emails.toString()))) {
-                log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[список адресов электронной почты={}]", emails);
+                log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[{}={}]", PARAMETER_EMAIL, emails);
                 throw new IntegrityConstraintException(PARAMETER_EMAIL, emails.toString());
             }
         } else {
@@ -132,7 +189,7 @@ public class UserServiceImpl implements UserService {
             var phone = phones.stream().findFirst()
                     .orElseThrow(() -> new IntegrityConstraintException(PARAMETER_PHONE, phones.toString()));
             if (existsPhoneByStringPhone(phone.getPhone())) {
-                log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[номер телефона={}]", phone.getPhone());
+                log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[{}}={}]", PARAMETER_PHONE, phone.getPhone());
                 throw new IntegrityConstraintException(PARAMETER_PHONE, phone.getPhone());
             }
         } else if (phones.size() > 1) {
@@ -147,17 +204,17 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean existsUserByLogin(String login) {
-        log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[логин={}]", login);
+        log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[{}={}]", PARAMETER_LOGIN, login);
         return userRepository.existsByLogin(login);
     }
 
     private boolean existsEmailByStringEmail(String email) {
-        log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[почта={}]", email);
+        log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[{}={}]", PARAMETER_EMAIL, email);
         return userEmailRepository.existsByEmail(email);
     }
 
     private boolean existsPhoneByStringPhone(String phone) {
-        log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[телефон={}]", phone);
+        log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[{}={}]", PARAMETER_PHONE, phone);
         return userPhoneRepository.existsByPhone(phone);
     }
 

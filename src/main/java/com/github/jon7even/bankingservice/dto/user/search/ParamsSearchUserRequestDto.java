@@ -1,6 +1,7 @@
 package com.github.jon7even.bankingservice.dto.user.search;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.github.jon7even.bankingservice.enums.user.UserSort;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Builder;
