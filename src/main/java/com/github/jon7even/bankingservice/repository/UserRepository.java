@@ -72,9 +72,9 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query("    SELECT user"
             + "  FROM UserEntity AS user "
             + "  LEFT JOIN FETCH user.phones"
-            + " WHERE (COALESCE(:firstName, NULL)  IS NULL OR user.firstName  LIKE :firstName% )"
-            + "   AND (COALESCE(:lastName, NULL)   IS NULL OR user.lastName   LIKE :lastName% )"
-            + "   AND (COALESCE(:middleName, NULL) IS NULL OR user.middleName LIKE :middleName% )")
+            + " WHERE LOWER(user.firstName)  LIKE LOWER(CONCAT (COALESCE(:firstName, ''), '%') )"
+            + "   AND LOWER(user.lastName)   LIKE LOWER(CONCAT (COALESCE(:lastName,  ''), '%') )"
+            + "   AND LOWER(user.middleName) LIKE LOWER(CONCAT (COALESCE(:middleName,''), '%') )")
     List<UserEntity> getListUserByLikeName(@Param("firstName") String firstName,
                                            @Param("lastName") String lastName,
                                            @Param("middleName") String middleName,

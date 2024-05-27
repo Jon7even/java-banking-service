@@ -263,7 +263,7 @@ public class ApiUserSearchTypeControllerTest extends SetupControllerTest {
     @DisplayName("[searchUserByParam] Должен найти одного пользователя по имени")
     @Test public void shouldFindUsersByParamFirstName_thenReturn_Status200AndListOfOneUser() throws Exception {
         mockMvc.perform(get(PATH_API + PATH_USERS + PATH_SEARCH)
-                        .param("firstName", "FirstFirstName")
+                        .param("firstName", "FirstfirstName")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id").value(firstId))
@@ -283,7 +283,7 @@ public class ApiUserSearchTypeControllerTest extends SetupControllerTest {
     @DisplayName("[searchUserByParam] Должен найти одного пользователя по отчеству")
     @Test public void shouldFindUsersByParamMiddleName_thenReturn_Status200AndListOfOneUser() throws Exception {
         mockMvc.perform(get(PATH_API + PATH_USERS + PATH_SEARCH)
-                        .param("middleName", "Se")
+                        .param("middleName", "se")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id").value(secondId))
@@ -294,8 +294,8 @@ public class ApiUserSearchTypeControllerTest extends SetupControllerTest {
     @Test public void shouldFindUsersByParamFullName_thenReturn_Status200AndListOfOneUser() throws Exception {
         mockMvc.perform(get(PATH_API + PATH_USERS + PATH_SEARCH)
                         .param("firstName", "Thir")
-                        .param("lastName", "Thi")
-                        .param("middleName", "Th")
+                        .param("lastName", "thi")
+                        .param("middleName", "th")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id").value(thirdId))
