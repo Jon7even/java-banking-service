@@ -7,8 +7,9 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Column;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 
 import lombok.Setter;
@@ -52,6 +53,9 @@ public class UserEntity {
     @ToString.Exclude
     @Column(name = "password", nullable = false)
     private String password;
+
+    @OneToOne(mappedBy = "owner", fetch = FetchType.LAZY)
+    private BankAccountEntity bankAccountEntity;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @Builder.Default

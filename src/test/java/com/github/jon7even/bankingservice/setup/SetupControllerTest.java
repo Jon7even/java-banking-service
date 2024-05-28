@@ -10,11 +10,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 @ActiveProfiles(value = "test")
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestPropertySource(properties = {"SCHEMA_APP=application", "SERVER_TEST_PORT_APPLICATION=application"})
 public class SetupControllerTest extends SetupContainerTest {
     @Autowired protected MockMvc mockMvc;
     @Autowired protected ObjectMapper objectMapper;

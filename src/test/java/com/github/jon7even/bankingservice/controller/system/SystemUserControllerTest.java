@@ -29,6 +29,8 @@ public class SystemUserControllerTest extends SetupControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("id").value(firstId))
                 .andExpect(jsonPath("login").value(userFullResponseDtoFirst.getLogin()))
+                .andExpect(jsonPath("bankAccount.balance")
+                        .value(userFullResponseDtoFirst.getBankAccount().getBalance()))
                 .andExpect(jsonPath("$.emails.[0].email").value(userFullResponseDtoFirst.getEmails().stream()
                         .findFirst().get().getEmail()))
                 .andExpect(jsonPath("$.phones.[0].phone").value(userFullResponseDtoFirst.getPhones().stream()

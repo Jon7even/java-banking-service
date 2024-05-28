@@ -1,5 +1,6 @@
 package com.github.jon7even.bankingservice.setup;
 
+import com.github.jon7even.bankingservice.repository.BankAccountRepository;
 import com.github.jon7even.bankingservice.repository.UserEmailRepository;
 import com.github.jon7even.bankingservice.repository.UserPhoneRepository;
 import com.github.jon7even.bankingservice.repository.UserRepository;
@@ -17,6 +18,7 @@ public class SetupRepositoryTest extends SetupContainerTest {
     @Autowired protected UserRepository userRepository;
     @Autowired protected UserEmailRepository userEmailRepository;
     @Autowired protected UserPhoneRepository userPhoneRepository;
+    @Autowired protected BankAccountRepository bankAccountRepository;
     @Autowired private JdbcTemplate jdbcTemplate;
 
     @BeforeEach protected void clearRepositoriesAndInitUserEntity() {

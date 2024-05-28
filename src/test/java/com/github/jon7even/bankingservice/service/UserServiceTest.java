@@ -21,17 +21,21 @@ public class UserServiceTest extends SetupServiceTest {
     @BeforeEach public void setupMapperTest() {
         initUserEntity();
         initUserCreateDto();
+        initUserEntity();
         initUserFullResponseDto();
     }
 
     @DisplayName("[createUser] Новый пользователь должен создаться с релевантными полями")
     @Test public void shouldCreateNewUser_thenReturn_UserFullResponseDto() {
         when(userMapper.toUserEntityFromCreateDto(any(), any())).thenReturn(userEntityFirstWithoutId);
+        when(userMapper.toEntityBankAccountFromCreateDto(any(), any())).thenReturn(bankAccountEntityFirstWithoutId);
+        when(userMapper.toEntityEmailFromCreateDto(any())).thenReturn(listUserEmailEntitiesFirstWithoutId);
+        when(userMapper.toEntityPhoneFromCreateDto(any())).thenReturn(listUserPhoneEntitiesFirstWithoutId);
         when(userRepository.existsByLogin(userCreateDtoFirst.getLogin())).thenReturn(false);
         when(userEmailRepository.existsByEmail(any())).thenReturn(false);
         when(userPhoneRepository.existsByPhone(any())).thenReturn(false);
-        when(userRepository.save(userEntityFirstWithoutId)).thenReturn(userEntityFirst);
-        when(userMapper.toUserFullDtoFromUserEntity(any(), any(), any())).thenReturn(userFullResponseDtoFirst);
+        when(userRepository.save(any())).thenReturn(userEntityFirst);
+        when(userMapper.toUserFullDtoFromUserEntity(any(), any(), any(), any())).thenReturn(userFullResponseDtoFirst);
 
         UserFullResponseDto actualResult = userService.createUser(userCreateDtoFirst);
 
@@ -42,6 +46,8 @@ public class UserServiceTest extends SetupServiceTest {
         verify(userRepository, times(1)).existsByLogin(anyString());
         verify(userEmailRepository, times(1)).existsByEmail(anyString());
         verify(userPhoneRepository, times(1)).existsByPhone(anyString());
+        verify(userEmailRepository, never()).getEmailEntityBySetEmails(anySet());
+        verify(userPhoneRepository, never()).getPhoneEntityBySetPhones(anySet());
         verify(userRepository, times(1)).save(any(UserEntity.class));
     }
 
@@ -58,7 +64,7 @@ public class UserServiceTest extends SetupServiceTest {
     }
 
     @DisplayName("[createUser] Новый пользователь не должен создаться потому что такой [email] уже есть в БД")
-    @Test public void shouldNotCreateNewUser_thenReturn_ExceptionEmailAlreadyExist() {
+    @Test public void shouldNotCreateNewUserWithEmail_thenReturn_ExceptionEmailAlreadyExist() {
         when(userEmailRepository.existsByEmail(any())).thenReturn(true);
 
         assertThrows(IntegrityConstraintException.class, () -> userService.createUser(userCreateDtoFirst));
@@ -70,7 +76,7 @@ public class UserServiceTest extends SetupServiceTest {
     }
 
     @DisplayName("[createUser] Новый пользователь не должен создаться потому что такой [phone] уже есть в БД")
-    @Test public void shouldNotCreateNewUser_thenReturn_ExceptionPhoneAlreadyExist() {
+    @Test public void shouldNotCreateNewUserWithPhone_thenReturn_ExceptionPhoneAlreadyExist() {
         when(userPhoneRepository.existsByPhone(any())).thenReturn(true);
 
         assertThrows(IntegrityConstraintException.class, () -> userService.createUser(userCreateDtoFirst));
@@ -78,6 +84,36 @@ public class UserServiceTest extends SetupServiceTest {
         verify(userRepository, times(1)).existsByLogin(anyString());
         verify(userEmailRepository, times(1)).existsByEmail(anyString());
         verify(userPhoneRepository, times(1)).existsByPhone(anyString());
+        verify(userEmailRepository, never()).getEmailEntityBySetEmails(anySet());
+        verify(userPhoneRepository, never()).getPhoneEntityBySetPhones(anySet());
+        verify(userRepository, never()).save(any(UserEntity.class));
+    }
+
+    @DisplayName("[createUser] Новый пользователь не должен создаться потому что список из [email] уже есть в БД")
+    @Test public void shouldNotCreateNewUserWithListEmails_thenReturn_ExceptionEmailAlreadyExist() {
+        when(userEmailRepository.getEmailEntityBySetEmails(any())).thenReturn(listUserEmailEntitiesThird);
+
+        assertThrows(IntegrityConstraintException.class, () -> userService.createUser(userCreateDtoThird));
+
+        verify(userRepository, times(1)).existsByLogin(anyString());
+        verify(userEmailRepository, times(1)).getEmailEntityBySetEmails(anySet());
+        verify(userPhoneRepository, never()).getPhoneEntityBySetPhones(anySet());
+        verify(userEmailRepository, never()).existsByEmail(anyString());
+        verify(userPhoneRepository, never()).existsByPhone(anyString());
+        verify(userRepository, never()).save(any(UserEntity.class));
+    }
+
+    @DisplayName("[createUser] Новый пользователь не должен создаться потому что список из [phone] уже есть в БД")
+    @Test public void shouldNotCreateNewUserWithListPhones_thenReturn_ExceptionPhoneAlreadyExist() {
+        when(userPhoneRepository.getPhoneEntityBySetPhones(any())).thenReturn(listUserPhoneEntitiesThird);
+
+        assertThrows(IntegrityConstraintException.class, () -> userService.createUser(userCreateDtoThird));
+
+        verify(userRepository, times(1)).existsByLogin(anyString());
+        verify(userEmailRepository, times(1)).getEmailEntityBySetEmails(anySet());
+        verify(userPhoneRepository, times(1)).getPhoneEntityBySetPhones(anySet());
+        verify(userEmailRepository, never()).existsByEmail(anyString());
+        verify(userPhoneRepository, never()).existsByPhone(anyString());
         verify(userRepository, never()).save(any(UserEntity.class));
     }
 }

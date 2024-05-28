@@ -25,6 +25,9 @@ public class UserRepositoryTest extends SetupRepositoryTest {
                 .isNotNull()
                 .isEqualTo(userEntityFirst.getPassword());
 
+        assertThat(actualUserInRepository.getBankAccountEntity())
+                .isNull();
+
         assertThat(actualUserInRepository.getEmails())
                 .isEmpty();
 
@@ -58,8 +61,10 @@ public class UserRepositoryTest extends SetupRepositoryTest {
     @DisplayName("[findById] Должен найти пользователя по его ID")
     @Test public void shouldFindUserWithoutOneToMany_thenReturn_UserEntity() {
         UserEntity userInRepository = userRepository.saveAndFlush(userEntityFirstWithoutId);
+        bankAccountRepository.saveAndFlush(bankAccountEntityFirstWithoutId);
         userEmailRepository.saveAllAndFlush(listUserEmailEntitiesFirstWithoutId);
         userPhoneRepository.saveAllAndFlush(listUserPhoneEntitiesFirstWithoutId);
+
 
         UserEntity actualUserInRepository = userRepository.findById(userInRepository.getId()).get();
 
@@ -74,6 +79,9 @@ public class UserRepositoryTest extends SetupRepositoryTest {
         assertThat(actualUserInRepository.getPassword())
                 .isNotNull()
                 .isEqualTo(userEntityFirst.getPassword());
+
+        assertThat(actualUserInRepository.getBankAccountEntity())
+                .isNull();
 
         assertThat(actualUserInRepository.getEmails())
                 .isEmpty();

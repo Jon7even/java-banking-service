@@ -6,6 +6,7 @@ import com.github.jon7even.bankingservice.dto.user.UserShortResponseDto;
 import com.github.jon7even.bankingservice.dto.user.email.EmailCreateDto;
 import com.github.jon7even.bankingservice.dto.user.phone.PhoneCreateDto;
 import com.github.jon7even.bankingservice.dto.user.search.ParamsSearchUserRequestDto;
+import com.github.jon7even.bankingservice.entity.BankAccountEntity;
 import com.github.jon7even.bankingservice.entity.UserEmailEntity;
 import com.github.jon7even.bankingservice.entity.UserEntity;
 import com.github.jon7even.bankingservice.entity.UserPhoneEntity;
@@ -13,6 +14,7 @@ import com.github.jon7even.bankingservice.enums.user.UserSearchType;
 import com.github.jon7even.bankingservice.exception.IncorrectMadeRequestException;
 import com.github.jon7even.bankingservice.exception.IntegrityConstraintException;
 import com.github.jon7even.bankingservice.mapper.UserMapper;
+import com.github.jon7even.bankingservice.repository.BankAccountRepository;
 import com.github.jon7even.bankingservice.repository.UserEmailRepository;
 import com.github.jon7even.bankingservice.repository.UserPhoneRepository;
 import com.github.jon7even.bankingservice.repository.UserRepository;
@@ -49,6 +51,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserEmailRepository userEmailRepository;
     private final UserPhoneRepository userPhoneRepository;
+    private final BankAccountRepository bankAccountRepository;
     private final UserMapper userMapper;
 
     @Override
@@ -56,25 +59,34 @@ public class UserServiceImpl implements UserService {
     public UserFullResponseDto createUser(UserCreateDto userCreateDto) {
         log.trace(SAVE_IN_REPOSITORY + "[userCreateDto={}]", userCreateDto);
         checkUserCreateDto(userCreateDto);
-
-        List<UserEmailEntity> userEmailEntities =
-                userMapper.toEntityEmailFromCreateDto(userCreateDto.getEmails().stream().toList());
-        List<UserPhoneEntity> userPhoneEntities =
-                userMapper.toEntityPhoneFromCreateDto(userCreateDto.getPhones().stream().toList());
         UserEntity userForSaveInRepository = userMapper.toUserEntityFromCreateDto(userCreateDto, LocalDateTime.now());
+        UserEntity savedUserFromRepository = userRepository.saveAndFlush(userForSaveInRepository);
 
-        UserEntity savedUserFromRepository = userRepository.save(userForSaveInRepository);
+        BankAccountEntity bankAccountEntityForSaveInRepository = userMapper.toEntityBankAccountFromCreateDto(
+                userCreateDto.getBankAccountCreateDto(), savedUserFromRepository
+        );
+        BankAccountEntity savedBankAccountEntityInRepository =
+                bankAccountRepository.saveAndFlush(bankAccountEntityForSaveInRepository);
 
-        userEmailEntities.forEach(userEmailEntity -> userEmailEntity.setOwner(savedUserFromRepository));
-        userEmailRepository.saveAllAndFlush(userEmailEntities);
+        List<UserEmailEntity> userEmailEntitiesForSaveInRepository = userMapper.toEntityEmailFromCreateDto(
+                userCreateDto.getEmails().stream().toList()
+        );
+        userEmailEntitiesForSaveInRepository.forEach(userEmail -> userEmail.setOwner(savedUserFromRepository));
+        List<UserEmailEntity> savedUserEmailEntityInRepository =
+                userEmailRepository.saveAllAndFlush(userEmailEntitiesForSaveInRepository);
 
-        userPhoneEntities.forEach(userPhoneEntity -> userPhoneEntity.setOwner(savedUserFromRepository));
-        userPhoneRepository.saveAllAndFlush(userPhoneEntities);
+        List<UserPhoneEntity> userPhoneEntitiesForSaveInRepository = userMapper.toEntityPhoneFromCreateDto(
+                userCreateDto.getPhones().stream().toList()
+        );
+        userPhoneEntitiesForSaveInRepository.forEach(userPhone -> userPhone.setOwner(savedUserFromRepository));
+        List<UserPhoneEntity> savedUserPhoneEntityInRepository =
+                userPhoneRepository.saveAllAndFlush(userPhoneEntitiesForSaveInRepository);
 
         log.trace("У нас успешно зарегистрирован новый пользователь [user={}]", savedUserFromRepository);
         return userMapper.toUserFullDtoFromUserEntity(savedUserFromRepository,
-                userMapper.toShortEmailDtoFromEmailEntity(savedUserFromRepository.getEmails()),
-                userMapper.toShortPhoneDtoFromPhoneEntity(savedUserFromRepository.getPhones())
+                userMapper.toShortBalanceDtoFromBankAccountEntity(savedBankAccountEntityInRepository),
+                userMapper.toShortEmailDtoFromEmailEntity(savedUserEmailEntityInRepository),
+                userMapper.toShortPhoneDtoFromPhoneEntity(savedUserPhoneEntityInRepository)
         );
     }
 
@@ -88,6 +100,7 @@ public class UserServiceImpl implements UserService {
         log.debug("Получили список из [size={}] пользователей", listOfUsersFromRepository.size());
         return listOfUsersFromRepository.stream()
                 .map((userEntity -> userMapper.toUserShortDtoFromUserEntity(userEntity,
+                        userMapper.toShortBalanceDtoFromBankAccountEntity(userEntity.getBankAccountEntity()),
                         userMapper.toShortEmailDtoFromEmailEntity(userEntity.getEmails()),
                         userMapper.toShortPhoneDtoFromPhoneEntity(userEntity.getPhones()))
                 ))

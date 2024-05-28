@@ -40,7 +40,7 @@ public class UserMapperTest extends PreparationObjectsForTests {
     @DisplayName("Должен произойти правильный маппинг в DTO для полного предоставления информации о пользователе")
     @Test public void toDtoFromEntity_Return_UserFullResponseDto() {
         UserFullResponseDto actualResult = userMapper.toUserFullDtoFromUserEntity(
-                userEntityFirst, emailShortResponseDtoFirst, phoneShortResponseDtoFirst
+                userEntityFirst, bankAccountShortResponseDto, emailShortResponseDtoFirst, phoneShortResponseDtoFirst
         );
 
         assertThat(actualResult)
@@ -51,7 +51,7 @@ public class UserMapperTest extends PreparationObjectsForTests {
     @DisplayName("Должен произойти правильный маппинг в DTO для краткого предоставления информации о пользователе")
     @Test public void toDtoFromEntity_Return_UserShortResponseDto() {
         UserShortResponseDto actualResult = userMapper.toUserShortDtoFromUserEntity(
-                userEntityFirst, emailShortResponseDtoFirst, phoneShortResponseDtoFirst
+                userEntityFirst, bankAccountShortResponseDto, emailShortResponseDtoFirst, phoneShortResponseDtoFirst
         );
 
         assertThat(actualResult)

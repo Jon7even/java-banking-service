@@ -3,14 +3,18 @@ package com.github.jon7even.bankingservice.setup;
 import com.github.jon7even.bankingservice.dto.user.UserCreateDto;
 import com.github.jon7even.bankingservice.dto.user.UserFullResponseDto;
 import com.github.jon7even.bankingservice.dto.user.UserShortResponseDto;
+import com.github.jon7even.bankingservice.dto.user.account.BankAccountCreateDto;
+import com.github.jon7even.bankingservice.dto.user.account.BankAccountShortResponseDto;
 import com.github.jon7even.bankingservice.dto.user.email.EmailCreateDto;
 import com.github.jon7even.bankingservice.dto.user.email.EmailShortResponseDto;
 import com.github.jon7even.bankingservice.dto.user.phone.PhoneCreateDto;
 import com.github.jon7even.bankingservice.dto.user.phone.PhoneShortResponseDto;
+import com.github.jon7even.bankingservice.entity.BankAccountEntity;
 import com.github.jon7even.bankingservice.entity.UserEmailEntity;
 import com.github.jon7even.bankingservice.entity.UserEntity;
 import com.github.jon7even.bankingservice.entity.UserPhoneEntity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,35 +31,45 @@ public class PreparationObjectsForTests {
 
     protected UserEntity userEntityFirst;
     protected UserEntity userEntityFirstWithoutId;
+
     protected List<UserEmailEntity> listUserEmailEntitiesFirst;
     protected List<UserPhoneEntity> listUserPhoneEntitiesFirst;
+    protected BankAccountEntity bankAccountEntityFirst;
     protected List<UserEmailEntity> listUserEmailEntitiesFirstWithoutId;
     protected List<UserPhoneEntity> listUserPhoneEntitiesFirstWithoutId;
+    protected BankAccountEntity bankAccountEntityFirstWithoutId;
 
     protected UserEntity userEntitySecond;
     protected UserEntity userEntitySecondWithoutId;
+    protected BankAccountEntity bankAccountEntitySecond;
     protected List<UserEmailEntity> listUserEmailEntitiesSecond;
     protected List<UserPhoneEntity> listUserPhoneEntitiesSecond;
+    protected BankAccountEntity bankAccountEntitySecondWithoutId;
     protected List<UserEmailEntity> listUserEmailEntitiesSecondWithoutId;
     protected List<UserPhoneEntity> listUserPhoneEntitiesSecondWithoutId;
 
 
     protected UserEntity userEntityThird;
     protected UserEntity userEntityThirdWithoutId;
+    protected BankAccountEntity bankAccountEntityThird;
     protected List<UserEmailEntity> listUserEmailEntitiesThird;
     protected List<UserPhoneEntity> listUserPhoneEntitiesThird;
+    protected BankAccountEntity bankAccountEntityThirdWithoutId;
     protected List<UserEmailEntity> listUserEmailEntitiesThirdWithoutId;
     protected List<UserPhoneEntity> listUserPhoneEntitiesThirdWithoutId;
 
     protected UserCreateDto userCreateDtoFirst;
+    protected BankAccountCreateDto bankAccountCreateDtoFirst;
     protected Set<EmailCreateDto> setEmailCreateDtoFirst;
     protected Set<PhoneCreateDto> setPhoneCreateDtoFirst;
 
     protected UserCreateDto userCreateDtoSecond;
+    protected BankAccountCreateDto bankAccountCreateDtoSecond;
     protected Set<EmailCreateDto> setEmailCreateDtoSecond;
     protected Set<PhoneCreateDto> setPhoneCreateDtoSecond;
 
     protected UserCreateDto userCreateDtoThird;
+    protected BankAccountCreateDto bankAccountCreateDtoThird;
     protected Set<EmailCreateDto> setEmailCreateDtoThird;
     protected Set<PhoneCreateDto> setPhoneCreateDtoThird;
 
@@ -63,6 +77,7 @@ public class PreparationObjectsForTests {
     protected UserShortResponseDto userShortResponseDtoFirst;
     protected List<EmailShortResponseDto> emailShortResponseDtoFirst;
     protected List<PhoneShortResponseDto> phoneShortResponseDtoFirst;
+    protected BankAccountShortResponseDto bankAccountShortResponseDto;
 
     protected UserFullResponseDto userFullResponseDtoSecond;
     protected List<EmailShortResponseDto> emailShortResponseDtoSecond;
@@ -80,6 +95,10 @@ public class PreparationObjectsForTests {
     protected LocalDateTime secondDateTime = LocalDateTime.of(2024, 5, 17, 11, 20);
     protected LocalDateTime thirdDateTime = LocalDateTime.of(2024, 5, 16, 17, 17);
 
+    protected BigDecimal balanceFirst = BigDecimal.valueOf(50000);
+    protected BigDecimal balanceSecond = BigDecimal.valueOf(70000);
+    protected BigDecimal balanceThird = BigDecimal.valueOf(100000);
+
     protected void initUserEntity() {
         userEntityFirst = UserEntity.builder()
                 .id(firstId)
@@ -90,6 +109,12 @@ public class PreparationObjectsForTests {
                 .middleName("FirstMiddleName")
                 .dateOfBirth(firstDate)
                 .registeredOn(firstDateTime)
+                .build();
+
+        bankAccountEntityFirst = BankAccountEntity.builder()
+                .id(firstId)
+                .balance(balanceFirst)
+                .owner(userEntityFirst)
                 .build();
 
         listUserEmailEntitiesFirst = List.of(UserEmailEntity.builder()
@@ -110,6 +135,11 @@ public class PreparationObjectsForTests {
                 .registeredOn(firstDateTime)
                 .build();
 
+        bankAccountEntityFirstWithoutId = BankAccountEntity.builder()
+                .balance(balanceFirst)
+                .owner(userEntityFirst)
+                .build();
+
         listUserEmailEntitiesFirstWithoutId = List.of(UserEmailEntity.builder()
                 .email("First@email.ru").owner(userEntityFirst)
                 .build());
@@ -127,6 +157,12 @@ public class PreparationObjectsForTests {
                 .middleName("SecondMiddleName")
                 .dateOfBirth(secondDate)
                 .registeredOn(secondDateTime)
+                .build();
+
+        bankAccountEntitySecond = BankAccountEntity.builder()
+                .id(secondId)
+                .balance(balanceSecond)
+                .owner(userEntitySecond)
                 .build();
 
         listUserEmailEntitiesSecond = List.of(
@@ -155,6 +191,11 @@ public class PreparationObjectsForTests {
                 .registeredOn(secondDateTime)
                 .build();
 
+        bankAccountEntitySecondWithoutId = BankAccountEntity.builder()
+                .balance(balanceSecond)
+                .owner(userEntitySecond)
+                .build();
+
         listUserEmailEntitiesSecondWithoutId = List.of(
                 UserEmailEntity.builder()
                         .email("Second1@email.ru").owner(userEntitySecondWithoutId)
@@ -180,6 +221,12 @@ public class PreparationObjectsForTests {
                 .middleName("ThirdMiddleName")
                 .dateOfBirth(thirdDate)
                 .registeredOn(thirdDateTime)
+                .build();
+
+        bankAccountEntityThird = BankAccountEntity.builder()
+                .id(thirdId)
+                .balance(balanceThird)
+                .owner(userEntityThird)
                 .build();
 
         listUserEmailEntitiesThird = List.of(
@@ -212,6 +259,11 @@ public class PreparationObjectsForTests {
                 .middleName("ThirdMiddleName")
                 .dateOfBirth(thirdDate)
                 .registeredOn(thirdDateTime)
+                .build();
+
+        bankAccountEntityThirdWithoutId = BankAccountEntity.builder()
+                .balance(balanceThird)
+                .owner(userEntityThird)
                 .build();
 
         listUserEmailEntitiesThirdWithoutId = List.of(
@@ -251,8 +303,11 @@ public class PreparationObjectsForTests {
 
         setPhoneCreateDtoFirst = Set.of(PhoneCreateDto.builder().phone("+79000000001").build());
 
+        bankAccountCreateDtoFirst = BankAccountCreateDto.builder().balance(balanceFirst).build();
+
         userCreateDtoFirst.setEmails(setEmailCreateDtoFirst);
         userCreateDtoFirst.setPhones(setPhoneCreateDtoFirst);
+        userCreateDtoFirst.setBankAccountCreateDto(bankAccountCreateDtoFirst);
 
         userCreateDtoSecond = UserCreateDto.builder()
                 .login("SecondLogin")
@@ -262,6 +317,8 @@ public class PreparationObjectsForTests {
                 .middleName("SecondMiddleName")
                 .dateOfBirth(secondDate)
                 .build();
+
+        bankAccountCreateDtoSecond = BankAccountCreateDto.builder().balance(balanceSecond).build();
 
         setEmailCreateDtoSecond = Set.of(
                 EmailCreateDto.builder()
@@ -279,6 +336,10 @@ public class PreparationObjectsForTests {
                         .phone("+79000000022")
                         .build());
 
+        userCreateDtoSecond.setEmails(setEmailCreateDtoSecond);
+        userCreateDtoSecond.setPhones(setPhoneCreateDtoSecond);
+        userCreateDtoSecond.setBankAccountCreateDto(bankAccountCreateDtoSecond);
+
         userCreateDtoThird = UserCreateDto.builder()
                 .login("ThirdLogin")
                 .password("ThirdPassword")
@@ -287,6 +348,8 @@ public class PreparationObjectsForTests {
                 .middleName("ThirdMiddleName")
                 .dateOfBirth(thirdDate)
                 .build();
+
+        bankAccountCreateDtoThird = BankAccountCreateDto.builder().balance(balanceThird).build();
 
         setEmailCreateDtoThird = Set.of(
                 EmailCreateDto.builder()
@@ -309,6 +372,10 @@ public class PreparationObjectsForTests {
                 PhoneCreateDto.builder()
                         .phone("+79000000033")
                         .build());
+
+        userCreateDtoThird.setEmails(setEmailCreateDtoThird);
+        userCreateDtoThird.setPhones(setPhoneCreateDtoThird);
+        userCreateDtoThird.setBankAccountCreateDto(bankAccountCreateDtoThird);
     }
 
     protected void initUserShortResponseDto() {
@@ -325,6 +392,11 @@ public class PreparationObjectsForTests {
 
         phoneShortResponseDtoFirst = List.of(PhoneShortResponseDto.builder().phone("+79000000001").build());
 
+        bankAccountShortResponseDto = BankAccountShortResponseDto.builder()
+                .balance(BigDecimal.valueOf(50000.00))
+                .build();
+
+        userShortResponseDtoFirst.setBankAccount(bankAccountShortResponseDto);
         userShortResponseDtoFirst.setEmails(emailShortResponseDtoFirst);
         userShortResponseDtoFirst.setPhones(phoneShortResponseDtoFirst);
     }
@@ -345,8 +417,14 @@ public class PreparationObjectsForTests {
 
         phoneShortResponseDtoFirst = List.of(PhoneShortResponseDto.builder().phone("+79000000001").build());
 
+        bankAccountShortResponseDto = BankAccountShortResponseDto.builder()
+                .balance(balanceFirst)
+                .build();
+
+        userFullResponseDtoFirst.setBankAccount(bankAccountShortResponseDto);
         userFullResponseDtoFirst.setEmails(emailShortResponseDtoFirst);
         userFullResponseDtoFirst.setPhones(phoneShortResponseDtoFirst);
+
 
         userFullResponseDtoSecond = UserFullResponseDto.builder()
                 .id(secondId)

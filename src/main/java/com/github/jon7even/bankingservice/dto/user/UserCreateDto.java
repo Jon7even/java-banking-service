@@ -1,11 +1,11 @@
 package com.github.jon7even.bankingservice.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.github.jon7even.bankingservice.dto.user.account.BankAccountCreateDto;
 import com.github.jon7even.bankingservice.dto.user.email.EmailCreateDto;
 import com.github.jon7even.bankingservice.dto.user.phone.PhoneCreateDto;
 import lombok.Data;
 import lombok.Builder;
-import lombok.Builder.Default;
 import lombok.ToString;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -32,6 +32,8 @@ public class UserCreateDto {
 
     @ToString.Exclude
     private String password;
+
+    private BankAccountCreateDto bankAccountCreateDto;
 
     @Builder.Default
     private Set<EmailCreateDto> emails = new HashSet<>();

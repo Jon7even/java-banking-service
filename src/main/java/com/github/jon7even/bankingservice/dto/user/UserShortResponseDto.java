@@ -1,6 +1,7 @@
 package com.github.jon7even.bankingservice.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.github.jon7even.bankingservice.dto.user.account.BankAccountShortResponseDto;
 import com.github.jon7even.bankingservice.dto.user.email.EmailShortResponseDto;
 import com.github.jon7even.bankingservice.dto.user.phone.PhoneShortResponseDto;
 import lombok.Data;
@@ -27,6 +28,8 @@ public class UserShortResponseDto {
     private Long id;
 
     private String login;
+
+    private BankAccountShortResponseDto bankAccount;
 
     private String firstName;
 
