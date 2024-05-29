@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+  bs-main-db:
+    container_name: bs-main-db
+    env_file:
+      - .env
+    image: "postgres:${POSTGRES_VERSION}"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - "${EXTERNAL_PORT_POSTGRES}:${DB_INTERNAL_PORT}"
+    restart: on-failure
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+    networks:
+      - local
+
+  td-tomcat:
+    container_name: bs-main-service
+    env_file:
+      - .env
+    build: main-service/
+    depends_on:
+      - bs-main-db
+    links:
+      - bs-main-db
+    restart: on-failure
+    ports:
+      - "${SERVER_EXTERNAL_PORT_APPLICATION}:8080"
+    environment:
+      - SCHEMA_APP=${SCHEMA_APP}
+      - SERVER_EXTERNAL_PORT_APPLICATION=${SERVER_EXTERNAL_PORT_APPLICATION}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_INTERNAL_PORT=${DB_INTERNAL_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+    networks:
+      - local
+
+volumes:
+  pg_data: { }
+
+networks:
+  local:
