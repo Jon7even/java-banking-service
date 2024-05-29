@@ -1,11 +1,10 @@
 package com.github.jon7even.controller.system;
 
+import com.github.jon7even.constants.ControllerApi;
+import com.github.jon7even.constants.ControllerUser;
 import com.github.jon7even.dto.user.UserCreateDto;
 import com.github.jon7even.dto.user.UserFullResponseDto;
 import com.github.jon7even.service.UserService;
-import com.github.jon7even.constants.ControllerApi;
-import com.github.jon7even.constants.ControllerUser;
-import com.github.jon7even.constants.LogsMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -18,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import static com.github.jon7even.constants.LogsMessage.IN_CONTROLLER_METHOD;
 
 /**
  * Контроллер для служебного эндпоинта "Пользователи"
@@ -43,7 +44,7 @@ public class SystemUserController {
     @PostMapping
     public ResponseEntity<UserFullResponseDto> create(@RequestBody UserCreateDto userCreateDto,
                                                       HttpServletRequest request) {
-        log.debug("На {} {} {}", request.getRequestURL(), LogsMessage.IN_CONTROLLER_METHOD, request.getMethod());
+        log.debug("На {} {} {}", request.getRequestURL(), IN_CONTROLLER_METHOD, request.getMethod());
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(userCreateDto));
     }
 }

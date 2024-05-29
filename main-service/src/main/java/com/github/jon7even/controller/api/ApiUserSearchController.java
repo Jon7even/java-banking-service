@@ -1,13 +1,11 @@
 package com.github.jon7even.controller.api;
 
+import com.github.jon7even.constants.ControllerApi;
+import com.github.jon7even.constants.ControllerUser;
 import com.github.jon7even.dto.user.UserShortResponseDto;
 import com.github.jon7even.dto.user.search.ParamsSearchUserRequestDto;
 import com.github.jon7even.enums.user.UserSort;
 import com.github.jon7even.service.UserService;
-import com.github.jon7even.constants.ControllerApi;
-import com.github.jon7even.constants.ControllerUser;
-import com.github.jon7even.constants.DefaultValuesController;
-import com.github.jon7even.constants.LogsMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -23,6 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import static com.github.jon7even.constants.DateTimeFormat.DATE_DEFAULT;
+import static com.github.jon7even.constants.DefaultValuesController.*;
+import static com.github.jon7even.constants.LogsMessage.IN_CONTROLLER_METHOD;
 
 /**
  * Контроллер для поиска пользователей API эндпоинт "Пользователи"
@@ -46,18 +48,18 @@ public class ApiUserSearchController {
     })
     @GetMapping
     public ResponseEntity<List<UserShortResponseDto>> searchUserByParam(
-            @RequestParam(required = false) @DateTimeFormat(pattern = com.github.jon7even.constants.DateTimeFormat.DATE_DEFAULT) LocalDate dateOfBirth,
+            @RequestParam(required = false) @DateTimeFormat(pattern = DATE_DEFAULT) LocalDate dateOfBirth,
             @RequestParam(required = false) String phone,
             @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String lastName,
             @RequestParam(required = false) String middleName,
             @RequestParam(required = false) String email,
-            @RequestParam(required = false, defaultValue = DefaultValuesController.PARAM_SORT_DEFAULT) UserSort sort,
-            @RequestParam(name = DefaultValuesController.PARAM_FROM, defaultValue = DefaultValuesController.PARAM_FROM_DEFAULT) Integer from,
-            @RequestParam(name = DefaultValuesController.PARAM_SIZE, defaultValue = DefaultValuesController.PARAM_SIZE_DEFAULT) Integer size,
+            @RequestParam(required = false, defaultValue = PARAM_SORT_DEFAULT) UserSort sort,
+            @RequestParam(name = PARAM_FROM, defaultValue = PARAM_FROM_DEFAULT) Integer from,
+            @RequestParam(name = PARAM_SIZE, defaultValue = PARAM_SIZE_DEFAULT) Integer size,
             HttpServletRequest request) {
 
-        log.debug("On {} {} {}", request.getRequestURL(), LogsMessage.IN_CONTROLLER_METHOD, request.getMethod());
+        log.debug("On {} {} {}", request.getRequestURL(), IN_CONTROLLER_METHOD, request.getMethod());
 
         return ResponseEntity.ok().body(userService.getListUsersByParam(
                 ParamsSearchUserRequestDto.builder()

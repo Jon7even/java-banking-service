@@ -48,7 +48,6 @@ public class PreparationObjectsForTests {
     protected List<UserEmailEntity> listUserEmailEntitiesSecondWithoutId;
     protected List<UserPhoneEntity> listUserPhoneEntitiesSecondWithoutId;
 
-
     protected UserEntity userEntityThird;
     protected UserEntity userEntityThirdWithoutId;
     protected BankAccountEntity bankAccountEntityThird;
@@ -307,7 +306,7 @@ public class PreparationObjectsForTests {
 
         userCreateDtoFirst.setEmails(setEmailCreateDtoFirst);
         userCreateDtoFirst.setPhones(setPhoneCreateDtoFirst);
-        userCreateDtoFirst.setBankAccountCreateDto(bankAccountCreateDtoFirst);
+        userCreateDtoFirst.setBankAccount(bankAccountCreateDtoFirst);
 
         userCreateDtoSecond = UserCreateDto.builder()
                 .login("SecondLogin")
@@ -338,7 +337,7 @@ public class PreparationObjectsForTests {
 
         userCreateDtoSecond.setEmails(setEmailCreateDtoSecond);
         userCreateDtoSecond.setPhones(setPhoneCreateDtoSecond);
-        userCreateDtoSecond.setBankAccountCreateDto(bankAccountCreateDtoSecond);
+        userCreateDtoSecond.setBankAccount(bankAccountCreateDtoSecond);
 
         userCreateDtoThird = UserCreateDto.builder()
                 .login("ThirdLogin")
@@ -375,7 +374,7 @@ public class PreparationObjectsForTests {
 
         userCreateDtoThird.setEmails(setEmailCreateDtoThird);
         userCreateDtoThird.setPhones(setPhoneCreateDtoThird);
-        userCreateDtoThird.setBankAccountCreateDto(bankAccountCreateDtoThird);
+        userCreateDtoThird.setBankAccount(bankAccountCreateDtoThird);
     }
 
     protected void initUserShortResponseDto() {

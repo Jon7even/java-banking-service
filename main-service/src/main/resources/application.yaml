@@ -3,7 +3,7 @@ server.port: ${SERVER_EXTERNAL_PORT_APPLICATION}
 
 logging:
   level:
-    com.github.jon7even.bankingservice: DEBUG
+    com.github.jon7even: DEBUG
     org:
       springframework:
         orm:
@@ -45,7 +45,7 @@ server.port: ${SERVER_EXTERNAL_PORT_APPLICATION_TEST}
 
 logging:
   level:
-    com.github.jon7even.bankingservice: DEBUG
+    com.github.jon7even: DEBUG
     org:
       springframework:
         orm:

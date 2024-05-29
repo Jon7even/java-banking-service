@@ -33,11 +33,11 @@
 
 ## Архитектура приложения
 
-![Архитектура приложения на схеме](/docs/images/architecture.jpg?style=center)
+![Архитектура приложения на схеме](/docs/images/architecture.jpg){style="display: block; margin: 0 auto"}
 
 ## Диаграмма взаимодействия в БД
 
-![Диаграмма БД](/docs/images/diagram.png?style=center)
+![Диаграмма БД](/docs/images/diagram.png){style="display: block; margin: 0 auto"}
 
 > [!TIP]
 > Что можно улучшить:
@@ -72,14 +72,10 @@
 - После всех проделанных выше действий есть 2 варианта проверить работу проекта:
 - 1). С помощью любого REST клиента сделать запросы на эндпоинты (встроенный в IDEA, Insomnia, Postman и т.д.)
 - 2). Запустить установленный Postman и импортировать в него готовые тесты, которые находятся в папке
-  [postman](/docs/postman/)
+  [postman](/docs/postman/bs-main-service-spec.json)
+
   Важно! Тесты в postman нужно запускать на чистой БД, которая только создалась. Если в нее что-то добавить,
   то логика работы тестов может поломаться. После отработки, можно с помощью любого клиента подключиться к
-  Postgre БД и проверить наполнение данными, данные для подключения ниже, пароль можно посмотреть в файле .env:
+  Postgre БД и проверить наполнение данными, данные для подключения ниже, пароль можно посмотреть в файле `.env`
 
-![Подключение к БД через DBeaver](/docs/images/connection_bd_external.png?style=center)
-
-img[src$="center"] {
-display:block;
-margin: 0 auto;
-}
+![Подключение к БД через DBeaver](/docs/images/connection_bd_external.png){style="display: block; margin: 0 auto"}

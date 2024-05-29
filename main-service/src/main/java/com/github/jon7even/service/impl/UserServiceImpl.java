@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
         UserEntity savedUserFromRepository = userRepository.saveAndFlush(userForSaveInRepository);
 
         BankAccountEntity bankAccountEntityForSaveInRepository = userMapper.toEntityBankAccountFromCreateDto(
-                userCreateDto.getBankAccountCreateDto(), savedUserFromRepository
+                userCreateDto.getBankAccount(), savedUserFromRepository
         );
         BankAccountEntity savedBankAccountEntityInRepository =
                 bankAccountRepository.saveAndFlush(bankAccountEntityForSaveInRepository);
@@ -169,7 +169,7 @@ public class UserServiceImpl implements UserService {
 
     private void checkUserCreateDto(UserCreateDto userCreateDto) {
         log.debug("Начинаем проверять поля нового пользователя перед сохранением в БД");
-        var balance = userCreateDto.getBankAccountCreateDto().getBalance();
+        var balance = userCreateDto.getBankAccount().getBalance();
         if (balance.compareTo(BigDecimal.ZERO) < 0) {
             log.error(PARAMETER_BAD_REQUEST + PARAMETER_BALANCE + WRONG_CAN_NOT + "отрицательным");
             throw new IncorrectMadeRequestException(PARAMETER_BALANCE, WRONG_CAN_NOT + "отрицательным");

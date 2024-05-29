@@ -72,7 +72,7 @@ public class UserServiceTest extends SetupServiceTest {
     @DisplayName("[createUser] Новый пользователь не должен создаться, [balance] не может быть отрицательным")
     @Test public void shouldNotCreateNewUserWithBadBalance_thenReturn_ExceptionIncorrectMadeRequest() {
         bankAccountCreateDtoFirst.setBalance(BigDecimal.valueOf(-1.01));
-        userCreateDtoFirst.setBankAccountCreateDto(bankAccountCreateDtoFirst);
+        userCreateDtoFirst.setBankAccount(bankAccountCreateDtoFirst);
 
         assertThrows(IncorrectMadeRequestException.class, () -> userService.createUser(userCreateDtoFirst));
 

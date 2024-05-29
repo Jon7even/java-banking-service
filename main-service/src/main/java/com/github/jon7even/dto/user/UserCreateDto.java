@@ -33,7 +33,7 @@ public class UserCreateDto {
     @ToString.Exclude
     private String password;
 
-    private BankAccountCreateDto bankAccountCreateDto;
+    private BankAccountCreateDto bankAccount;
 
     @Builder.Default
     private Set<EmailCreateDto> emails = new HashSet<>();
