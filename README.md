@@ -33,11 +33,11 @@
 
 ## Архитектура приложения
 
-![Архитектура приложения на схеме](/docs/images/architecture.png)
+![Архитектура приложения на схеме](/docs/images/architecture.jpg?style=center)
 
 ## Диаграмма взаимодействия в БД
 
-![Диаграмма БД](/docs/images/diagram.png)
+![Диаграмма БД](/docs/images/diagram.png?style=center)
 
 > [!TIP]
 > Что можно улучшить:
@@ -77,4 +77,9 @@
   то логика работы тестов может поломаться. После отработки, можно с помощью любого клиента подключиться к
   Postgre БД и проверить наполнение данными, данные для подключения ниже, пароль можно посмотреть в файле .env:
 
-![Подключение к БД через DBeaver](/docs/images/connection_bd_external.png)
+![Подключение к БД через DBeaver](/docs/images/connection_bd_external.png?style=center)
+
+img[src$="center"] {
+display:block;
+margin: 0 auto;
+}
