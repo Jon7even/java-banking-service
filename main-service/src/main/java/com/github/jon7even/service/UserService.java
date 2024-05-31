@@ -17,7 +17,7 @@ public interface UserService {
     /**
      * Метод регистрирующий нового пользователя в системе
      *
-     * @param userCreateDto заполненный объект DTO
+     * @param userCreateDto заполненный объект DTO с данными пользователя
      * @return UserFullResponseDto объект DTO с подробными данными о пользователе
      */
     UserFullResponseDto createUser(UserCreateDto userCreateDto);

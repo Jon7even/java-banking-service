@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,10 +54,12 @@ public class UserServiceImpl implements UserService {
     private final UserPhoneRepository userPhoneRepository;
     private final BankAccountRepository bankAccountRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
     public UserFullResponseDto createUser(UserCreateDto userCreateDto) {
+        userCreateDto.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
         log.trace(SAVE_IN_REPOSITORY + "[userCreateDto={}]", userCreateDto);
         checkUserCreateDto(userCreateDto);
         UserEntity userForSaveInRepository = userMapper.toUserEntityFromCreateDto(userCreateDto, LocalDateTime.now());

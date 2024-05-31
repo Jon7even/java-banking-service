@@ -3,7 +3,6 @@ package com.github.jon7even.controller.system;
 import com.github.jon7even.setup.SetupControllerTest;
 import com.github.jon7even.constants.ControllerApi;
 import com.github.jon7even.constants.ControllerUser;
-import com.github.jon7even.constants.DateTimeFormat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +12,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.format.DateTimeFormatter;
 
+import static com.github.jon7even.constants.DateTimeFormat.DATE_DEFAULT;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,7 +42,7 @@ public class SystemUserControllerTest extends SetupControllerTest {
                 .andExpect(jsonPath("lastName").value(userFullResponseDtoFirst.getLastName()))
                 .andExpect(jsonPath("middleName").value(userFullResponseDtoFirst.getMiddleName()))
                 .andExpect(jsonPath("dateOfBirth").value(
-                        userFullResponseDtoFirst.getDateOfBirth().format(DateTimeFormatter.ofPattern(DateTimeFormat.DATE_DEFAULT)))
+                        userFullResponseDtoFirst.getDateOfBirth().format(DateTimeFormatter.ofPattern(DATE_DEFAULT)))
                 )
                 .andExpect(jsonPath("registeredOn").exists())
                 .andExpect(jsonPath("updatedOn").value(userFullResponseDtoFirst.getUpdatedOn()));

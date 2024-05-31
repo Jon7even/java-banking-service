@@ -5,10 +5,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Интерфейс DAO для пользователя(UserEntity), использует JpaRepository
@@ -24,6 +26,13 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
      * @param login логин
      */
     boolean existsByLogin(@Param("login") String login);
+
+    /**
+     * Метод для получения пользователя по логину для работы Spring Security
+     *
+     * @param login логин
+     */
+    Optional<User> finByLogin(@Param("login") String login);
 
     /**
      * Метод для получения пользователей по электронной почте

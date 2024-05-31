@@ -12,6 +12,9 @@
 > Создано с помощью:
 > - Java 17
 > - Spring Boot 3
+> - Spring MVC
+> - Spring Data JPA with Hibernate
+> - Spring Security 6
 > - PostgreSQL
 > - Liquibase
 > - Maven
@@ -26,7 +29,7 @@
 > - Postman
 
 > [!NOTE]
-> Что это? Это демонстрационное REST API приложение для банковских операций. Использует классическую архитектуру.
+> Что это? Это демонстрационное REST API приложение для банковских операций. Использует классическую MVC архитектуру.
 >
 > Контейнер c Main Service: `[<->Controller -> Service -> Repository<->]`
 >

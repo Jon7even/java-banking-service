@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * Общий класс для обработки собственных ошибок и  в контроллерах
+ * Общий класс для обработки перехвата нужных исключений
  *
  * @author Jon7even
  * @version 1.0
@@ -22,6 +22,9 @@ import java.util.Objects;
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
+    /**
+     * Перехват кастомных исключений нашего приложения
+     */
     @ExceptionHandler(ApplicationException.class)
     protected ResponseEntity<Object> handleApplicationException(ApplicationException exception) {
         HttpStatus responseStatus = exception.getHttpStatus();
@@ -39,6 +42,9 @@ public class ErrorHandler {
                 .body(exception.getResponseException());
     }
 
+    /**
+     * Перехват исключений валидации
+     */
     @ExceptionHandler({MethodArgumentNotValidException.class})
     protected ResponseEntity<Object> handleValidationException(MethodArgumentNotValidException exception) {
         log.error(exception.getMessage());

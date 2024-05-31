@@ -20,11 +20,17 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import static com.github.jon7even.enums.user.UserRole.NO_ROLE;
 
 /**
  * Класс описывающий сущность пользователя
@@ -40,7 +46,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "user", schema = "application")
-public class UserEntity {
+public class UserEntity implements UserDetails {
     @Id
     @SequenceGenerator(name = "UserGenId", sequenceName = "application.user_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "UserGenId")
@@ -119,5 +125,35 @@ public class UserEntity {
         hcb.append(registeredOn);
         hcb.append(updatedOn);
         return hcb.toHashCode();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(NO_ROLE.getRole()));
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

@@ -46,7 +46,8 @@ public class ApiUserSearchController {
             summary = "Поиск пользователей по параметрам",
             description = "Запросы на эндпоинт позволяют найти список пользователей по заданным критериям")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK список пользователей получен")
+            @ApiResponse(responseCode = "200", description = "OK список пользователей получен"),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST ошибки в случае неправильного запроса")
     })
     @GetMapping
     public ResponseEntity<List<UserShortResponseDto>> searchUserByParam(

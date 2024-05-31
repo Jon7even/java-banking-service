@@ -19,6 +19,9 @@ spring:
   application.name: Banking service
   main.banner-mode: off
   output.ansi.enabled: ALWAYS
+  token:
+    key: ${SECURITY_TOKEN_KEY_DEV}
+    lifetime: ${SECURITY_TOKEN_LIFETIME_DEV}
 
   liquibase:
     enabled: true
@@ -60,6 +63,9 @@ spring:
   config.activate.on-profile: test
   application.name: Banking service
   output.ansi.enabled: ALWAYS
+  token:
+    key: ${SECURITY_TOKEN_KEY_TEST}
+    lifetime: ${SECURITY_TOKEN_LIFETIME_TEST}
 
   liquibase:
     enabled: true
