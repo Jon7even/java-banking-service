@@ -8,14 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
- * Общий класс для обработки ошибок в контроллерах
+ * Общий класс для обработки собственных ошибок и  в контроллерах
  *
  * @author Jon7even
  * @version 1.0
@@ -46,7 +44,6 @@ public class ErrorHandler {
         log.error(exception.getMessage());
 
         ApiError responseException = ApiError.builder()
-                .errors(Arrays.asList(exception.getSuppressedFields()))
                 .status("BAD_REQUEST")
                 .reason("Incorrectly made request.")
                 .message(Objects.requireNonNull(exception.getFieldError()).getDefaultMessage())
@@ -54,19 +51,5 @@ public class ErrorHandler {
                 .build();
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseException);
-    }
-
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    protected ResponseEntity<Object> handleThrowable(final MethodArgumentTypeMismatchException exception) {
-        log.error(exception.getMessage());
-
-        ApiError responseException = ApiError.builder()
-                .status("INTERNAL_SERVER_ERROR")
-                .reason("Incorrectly response of service.")
-                .message("Unknown exception")
-                .timestamp(LocalDateTime.now())
-                .build();
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseException);
     }
 }

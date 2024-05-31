@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -42,7 +43,7 @@ public class SystemUserController {
             @ApiResponse(responseCode = "201", description = "Created пользователь создан")
     })
     @PostMapping
-    public ResponseEntity<UserFullResponseDto> create(@RequestBody UserCreateDto userCreateDto,
+    public ResponseEntity<UserFullResponseDto> create(@Valid @RequestBody UserCreateDto userCreateDto,
                                                       HttpServletRequest request) {
         log.debug("На {} {} {}", request.getRequestURL(), IN_CONTROLLER_METHOD, request.getMethod());
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(userCreateDto));

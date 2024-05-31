@@ -1,5 +1,6 @@
 package com.github.jon7even.dto.user.email;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,5 +17,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmailCreateDto {
+    @NotBlank(message = "Поле [email] не может быть пустым")
     private String email;
 }

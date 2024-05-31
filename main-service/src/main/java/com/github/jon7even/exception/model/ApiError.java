@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static com.github.jon7even.constants.DateTimeFormat.DATE_TIME_DEFAULT;
 
@@ -20,8 +19,6 @@ import static com.github.jon7even.constants.DateTimeFormat.DATE_TIME_DEFAULT;
 @Builder
 @RequiredArgsConstructor
 public class ApiError {
-    private final List<String> errors;
-
     private final String status;
 
     private final String reason;

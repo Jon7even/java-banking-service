@@ -1,5 +1,6 @@
 package com.github.jon7even.dto.user.phone;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,5 +17,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PhoneCreateDto {
+    @NotBlank(message = "Поле [phone] не может быть пустым")
     private String phone;
 }

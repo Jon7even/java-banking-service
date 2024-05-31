@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -55,8 +57,8 @@ public class ApiUserSearchController {
             @RequestParam(required = false) String middleName,
             @RequestParam(required = false) String email,
             @RequestParam(required = false, defaultValue = PARAM_SORT_DEFAULT) UserSort sort,
-            @RequestParam(name = PARAM_FROM, defaultValue = PARAM_FROM_DEFAULT) Integer from,
-            @RequestParam(name = PARAM_SIZE, defaultValue = PARAM_SIZE_DEFAULT) Integer size,
+            @PositiveOrZero @RequestParam(name = PARAM_FROM, defaultValue = PARAM_FROM_DEFAULT) Integer from,
+            @Positive @RequestParam(name = PARAM_SIZE, defaultValue = PARAM_SIZE_DEFAULT) Integer size,
             HttpServletRequest request) {
 
         log.debug("On {} {} {}", request.getRequestURL(), IN_CONTROLLER_METHOD, request.getMethod());

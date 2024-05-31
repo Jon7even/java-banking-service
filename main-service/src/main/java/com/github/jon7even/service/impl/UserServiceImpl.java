@@ -30,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -178,7 +177,7 @@ public class UserServiceImpl implements UserService {
         var login = userCreateDto.getLogin();
         if (existsUserByLogin(login)) {
             log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[{}={}]", PARAMETER_LOGIN, login);
-            throw new IntegrityConstraintException(PARAMETER_LOGIN, login);
+            throw new IntegrityConstraintException(PARAMETER_LOGIN, login + NOTE_ALREADY_EXIST);
         }
 
         checkEmailCreateDto(userCreateDto.getEmails());
@@ -189,15 +188,15 @@ public class UserServiceImpl implements UserService {
     private void checkEmailCreateDto(Set<EmailCreateDto> emails) {
         if (emails.size() == 1) {
             var email = emails.stream().findFirst()
-                    .orElseThrow(() -> new IntegrityConstraintException(PARAMETER_EMAIL, emails.toString()));
+                    .orElseThrow(() -> new IntegrityConstraintException(PARAMETER_EMAIL, emails + NOTE_ALREADY_EXIST));
             if (existsEmailByStringEmail(email.getEmail())) {
                 log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[адрес электронной почты={}]", email.getEmail());
-                throw new IntegrityConstraintException(PARAMETER_EMAIL, email.getEmail());
+                throw new IntegrityConstraintException(PARAMETER_EMAIL, email.getEmail() + NOTE_ALREADY_EXIST);
             }
         } else if (emails.size() > 1) {
-            if (existsEmailBySetEmails(Collections.singleton(emails.toString()))) {
+            if (existsEmailBySetEmails(emails.stream().map(EmailCreateDto::getEmail).collect(Collectors.toSet()))) {
                 log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[{}={}]", PARAMETER_EMAIL, emails);
-                throw new IntegrityConstraintException(PARAMETER_EMAIL, emails.toString());
+                throw new IntegrityConstraintException(PARAMETER_EMAIL, emails + NOTE_ALREADY_EXIST);
             }
         } else {
             log.error(PARAMETER_BAD_REQUEST + "список [email адресов] оказался пуст");
@@ -208,15 +207,15 @@ public class UserServiceImpl implements UserService {
     private void checkPhoneCreateDto(Set<PhoneCreateDto> phones) {
         if (phones.size() == 1) {
             var phone = phones.stream().findFirst()
-                    .orElseThrow(() -> new IntegrityConstraintException(PARAMETER_PHONE, phones.toString()));
+                    .orElseThrow(() -> new IntegrityConstraintException(PARAMETER_PHONE, phones + NOTE_ALREADY_EXIST));
             if (existsPhoneByStringPhone(phone.getPhone())) {
                 log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[{}}={}]", PARAMETER_PHONE, phone.getPhone());
-                throw new IntegrityConstraintException(PARAMETER_PHONE, phone.getPhone());
+                throw new IntegrityConstraintException(PARAMETER_PHONE, phone.getPhone() + NOTE_ALREADY_EXIST);
             }
         } else if (phones.size() > 1) {
-            if (existsPhoneBySetPhones(Collections.singleton(phones.toString()))) {
+            if (existsPhoneBySetPhones(phones.stream().map(PhoneCreateDto::getPhone).collect(Collectors.toSet()))) {
                 log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[список номеров={}]", phones);
-                throw new IntegrityConstraintException(PARAMETER_PHONE, phones.toString());
+                throw new IntegrityConstraintException(PARAMETER_PHONE, phones + NOTE_ALREADY_EXIST);
             }
         } else {
             log.error(PARAMETER_BAD_REQUEST + "список [номеров] оказался пуст");

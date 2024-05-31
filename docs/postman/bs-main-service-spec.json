@@ -1,8 +1,10 @@
 {
 	"info": {
+		"_postman_id": "d17890fb-0778-4dff-b981-93ef040cef46",
 		"name": "Banking Service - тесты создания пользователей",
 		"description": "Коллекция тестов для проверки приложения \"Banking Service\" API v1.0",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27169996"
 	},
 	"item": [
 		{
@@ -104,7 +106,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"login\": \"FirstLogin\",\n  \"password\": \"FirstPassword\",\n  \"bankAccountCreateDto\": {\"balance\": 50000},\n  \"emails\": [{\"email\":\"First@email.ru\"}],\n  \"phones\": [{\"phone\":\"+79000000001\"}],\n  \"firstName\": \"FirstFirstName\",\n  \"lastName\": \"FirstLastName\",\n  \"middleName\": \"FirstMiddleName\",\n  \"dateOfBirth\": \"01-01-1980\"\n}",
+									"raw": "{\n  \"login\": \"FirstLogin\",\n  \"password\": \"FirstPassword\",\n  \"bankAccount\": {\"balance\": 50000},\n  \"emails\": [{\"email\":\"First@email.ru\"}],\n  \"phones\": [{\"phone\":\"+79000000001\"}],\n  \"firstName\": \"FirstFirstName\",\n  \"lastName\": \"FirstLastName\",\n  \"middleName\": \"FirstMiddleName\",\n  \"dateOfBirth\": \"01-01-1980\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -160,9 +162,9 @@
 											"pm.test(\"Test Emails 'phones' field\", function () {",
 											"    var jsonData = pm.response.json().phones;",
 											"    pm.expect(jsonData[0]).to.have.property('phone');",
-											"    pm.expect(jsonData[0].phone, '\"phone\" must be \"+79000000002\"').to.eql('+79000000002');",
+											"    pm.expect(jsonData[0].phone, '\"phone\" must be \"+79000000022\"').to.eql('+79000000022');",
 											"    pm.expect(jsonData[1]).to.have.property('phone');",
-											"    pm.expect(jsonData[1].phone, '\"phone\" must be \"+79000000022\"').to.eql('+79000000022');",
+											"    pm.expect(jsonData[1].phone, '\"phone\" must be \"+79000000002\"').to.eql('+79000000002');",
 											"});",
 											"pm.test(\"Test user 'firstName' field\", function () {",
 											"    var jsonData = pm.response.json();",
@@ -215,7 +217,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"login\": \"SecondLogin\",\n  \"password\": \"SecondPassword\",\n  \"bankAccountCreateDto\": {\"balance\": 70000},\n  \"emails\": [{\"email\":\"Second@email.ru\"}],\n  \"phones\": [{\"phone\":\"+79000000002\"}, {\"phone\":\"+79000000022\"}],\n  \"firstName\": \"SecondFirstName\",\n  \"lastName\": \"SecondLastName\",\n  \"middleName\": \"SecondMiddleName\",\n  \"dateOfBirth\": \"25-04-1985\"\n}",
+									"raw": "{\n  \"login\": \"SecondLogin\",\n  \"password\": \"SecondPassword\",\n  \"bankAccount\": {\"balance\": 70000},\n  \"emails\": [{\"email\":\"Second@email.ru\"}],\n  \"phones\": [{\"phone\":\"+79000000002\"}, {\"phone\":\"+79000000022\"}],\n  \"firstName\": \"SecondFirstName\",\n  \"lastName\": \"SecondLastName\",\n  \"middleName\": \"SecondMiddleName\",\n  \"dateOfBirth\": \"25-04-1985\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -266,20 +268,20 @@
 											"pm.test(\"Test Emails 'emails' field\", function () {",
 											"    var jsonData = pm.response.json().emails;",
 											"    pm.expect(jsonData[0]).to.have.property('email');",
-											"    pm.expect(jsonData[0].email, '\"email\" must be \"Third1@email.ru\"').to.eql('Third1@email.ru');",
+											"    pm.expect(jsonData[0].email, '\"email\" must be \"Third3@email.ru\"').to.eql('Third3@email.ru');",
 											"    pm.expect(jsonData[1]).to.have.property('email');",
 											"    pm.expect(jsonData[1].email, '\"email\" must be \"Third2@email.ru\"').to.eql('Third2@email.ru');",
 											"    pm.expect(jsonData[2]).to.have.property('email');",
-											"    pm.expect(jsonData[2].email, '\"email\" must be \"Third3@email.ru\"').to.eql('Third3@email.ru');",
+											"    pm.expect(jsonData[2].email, '\"email\" must be \"Third1@email.ru\"').to.eql('Third1@email.ru');",
 											"});",
 											"pm.test(\"Test Emails 'phones' field\", function () {",
 											"    var jsonData = pm.response.json().phones;",
 											"    pm.expect(jsonData[0]).to.have.property('phone');",
-											"    pm.expect(jsonData[0].phone, '\"phone\" must be \"+79000000003\"').to.eql('+79000000003');",
+											"    pm.expect(jsonData[0].phone, '\"phone\" must be \"+79000000033\"').to.eql('+79000000033');",
 											"    pm.expect(jsonData[1]).to.have.property('phone');",
 											"    pm.expect(jsonData[1].phone, '\"phone\" must be \"+79000000032\"').to.eql('+79000000032');",
 											"    pm.expect(jsonData[2]).to.have.property('phone');",
-											"    pm.expect(jsonData[2].phone, '\"phone\" must be \"+79000000033\"').to.eql('+79000000033');",
+											"    pm.expect(jsonData[2].phone, '\"phone\" must be \"+79000000003\"').to.eql('+79000000003');",
 											"});",
 											"pm.test(\"Test user 'firstName' field\", function () {",
 											"    var jsonData = pm.response.json();",
@@ -332,7 +334,671 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"login\": \"ThirdLogin\",\n  \"password\": \"ThirdPassword\",\n  \"bankAccountCreateDto\": {\"balance\": 70000},\n  \"emails\": [{\"email\":\"Third1@email.ru\"}, {\"email\":\"Third2@email.ru\"}, {\"email\":\"Third3@email.ru\"}],\n  \"phones\": [{\"phone\":\"+79000000003\"}, {\"phone\":\"+79000000032\"}, {\"phone\":\"+79000000033\"}],\n  \"firstName\": \"ThirdFirstName\",\n  \"lastName\": \"ThirdLastName\",\n  \"middleName\": \"ThirdMiddleName\",\n  \"dateOfBirth\": \"17-02-1980\"\n}",
+									"raw": "{\n  \"login\": \"ThirdLogin\",\n  \"password\": \"ThirdPassword\",\n  \"bankAccount\": {\"balance\": 100000},\n  \"emails\": [{\"email\":\"Third1@email.ru\"}, {\"email\":\"Third2@email.ru\"}, {\"email\":\"Third3@email.ru\"}],\n  \"phones\": [{\"phone\":\"+79000000003\"}, {\"phone\":\"+79000000032\"}, {\"phone\":\"+79000000033\"}],\n  \"firstName\": \"ThirdFirstName\",\n  \"lastName\": \"ThirdLastName\",\n  \"middleName\": \"ThirdMiddleName\",\n  \"dateOfBirth\": \"17-02-1980\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}",
+									"host": [
+										"{{baseUrl}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User create Fail Login Already Exist 409",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 409\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([409]);",
+											"});",
+											"pm.test(\"Content-Type header is application/json\", () => {",
+											"  pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
+											"});",
+											"pm.test(\"Has ApiError response\", function () {",
+											"    pm.response.to.be.withBody;",
+											"    pm.response.to.be.json;",
+											"});",
+											"pm.test(\"Has field of 'status in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"        pm.expect(jsonData).to.have.property('status');",
+											"    pm.expect(jsonData.status, '\"status\" must be \"CONFLICT\"').to.eql('CONFLICT');",
+											"});",
+											"pm.test(\"Has field of 'reason in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('reason');",
+											"    pm.expect(jsonData.reason, '\"reason\" must be \"Integrity constraint has been violated.\"').to.eql('Integrity constraint has been violated.');",
+											"});",
+											"pm.test(\"Has field of 'message in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('message');",
+											"    pm.expect(jsonData.message, '\"message\" must be \"При проверке поля [логин] произошла ошибка, пришло нерелевантное значение: [FirstLogin уже существует]\"').to.eql('При проверке поля [логин] произошла ошибка, пришло нерелевантное значение: [FirstLogin уже существует]');",
+											"});",
+											"pm.test(\"Has field of 'timestamp in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('timestamp');",
+											"    pm.expect(jsonData.timestamp, '\"timestamp\" must be not empty').to.not.empty;",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"FirstLogin\",\n  \"password\": \"FirstPassword\",\n  \"bankAccount\": {\"balance\": 50000},\n  \"emails\": [{\"email\":\"First@email.ru\"}],\n  \"phones\": [{\"phone\":\"+79000000001\"}],\n  \"firstName\": \"FirstFirstName\",\n  \"lastName\": \"FirstLastName\",\n  \"middleName\": \"FirstMiddleName\",\n  \"dateOfBirth\": \"01-01-1980\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}",
+									"host": [
+										"{{baseUrl}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User create Fail Email Already Exist 409",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 409\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([409]);",
+											"});",
+											"pm.test(\"Content-Type header is application/json\", () => {",
+											"  pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
+											"});",
+											"pm.test(\"Has ApiError response\", function () {",
+											"    pm.response.to.be.withBody;",
+											"    pm.response.to.be.json;",
+											"});",
+											"pm.test(\"Has field of 'status in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"        pm.expect(jsonData).to.have.property('status');",
+											"    pm.expect(jsonData.status, '\"status\" must be \"CONFLICT\"').to.eql('CONFLICT');",
+											"});",
+											"pm.test(\"Has field of 'reason in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('reason');",
+											"    pm.expect(jsonData.reason, '\"reason\" must be \"Integrity constraint has been violated.\"').to.eql('Integrity constraint has been violated.');",
+											"});",
+											"pm.test(\"Has field of 'message in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('message');",
+											"    pm.expect(jsonData.message, '\"message\" must be \"При проверке поля [адрес электронной почты] произошла ошибка, пришло нерелевантное значение: [First@email.ru уже существует]\"').to.eql('При проверке поля [адрес электронной почты] произошла ошибка, пришло нерелевантное значение: [First@email.ru уже существует]');",
+											"});",
+											"pm.test(\"Has field of 'timestamp in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('timestamp');",
+											"    pm.expect(jsonData.timestamp, '\"timestamp\" must be not empty').to.not.empty;",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"FirstLogin1\",\n  \"password\": \"FirstPassword\",\n  \"bankAccount\": {\"balance\": 50000},\n  \"emails\": [{\"email\":\"First@email.ru\"}],\n  \"phones\": [{\"phone\":\"+79000000001\"}],\n  \"firstName\": \"FirstFirstName\",\n  \"lastName\": \"FirstLastName\",\n  \"middleName\": \"FirstMiddleName\",\n  \"dateOfBirth\": \"01-01-1980\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}",
+									"host": [
+										"{{baseUrl}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User create Fail Phone Already Exist 409",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 409\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([409]);",
+											"});",
+											"pm.test(\"Content-Type header is application/json\", () => {",
+											"  pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
+											"});",
+											"pm.test(\"Has ApiError response\", function () {",
+											"    pm.response.to.be.withBody;",
+											"    pm.response.to.be.json;",
+											"});",
+											"pm.test(\"Has field of 'status in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"        pm.expect(jsonData).to.have.property('status');",
+											"    pm.expect(jsonData.status, '\"status\" must be \"CONFLICT\"').to.eql('CONFLICT');",
+											"});",
+											"pm.test(\"Has field of 'reason in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('reason');",
+											"    pm.expect(jsonData.reason, '\"reason\" must be \"Integrity constraint has been violated.\"').to.eql('Integrity constraint has been violated.');",
+											"});",
+											"pm.test(\"Has field of 'message in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('message');",
+											"    pm.expect(jsonData.message, '\"message\" must be \"При проверке поля [номер телефона] произошла ошибка, пришло нерелевантное значение: [+79000000001 уже существует]\"').to.eql('При проверке поля [номер телефона] произошла ошибка, пришло нерелевантное значение: [+79000000001 уже существует]');",
+											"});",
+											"pm.test(\"Has field of 'timestamp in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('timestamp');",
+											"    pm.expect(jsonData.timestamp, '\"timestamp\" must be not empty').to.not.empty;",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"FirstLogin1\",\n  \"password\": \"FirstPassword\",\n  \"bankAccount\": {\"balance\": 50000},\n  \"emails\": [{\"email\":\"First@email.ru1\"}],\n  \"phones\": [{\"phone\":\"+79000000001\"}],\n  \"firstName\": \"FirstFirstName\",\n  \"lastName\": \"FirstLastName\",\n  \"middleName\": \"FirstMiddleName\",\n  \"dateOfBirth\": \"01-01-1980\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}",
+									"host": [
+										"{{baseUrl}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User create Fail Login Not Must Empty 400",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([400]);",
+											"});",
+											"pm.test(\"Content-Type header is application/json\", () => {",
+											"  pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
+											"});",
+											"pm.test(\"Has ApiError response\", function () {",
+											"    pm.response.to.be.withBody;",
+											"    pm.response.to.be.json;",
+											"});",
+											"pm.test(\"Has field of 'status in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"        pm.expect(jsonData).to.have.property('status');",
+											"    pm.expect(jsonData.status, '\"status\" must be \"BAD_REQUEST\"').to.eql('BAD_REQUEST');",
+											"});",
+											"pm.test(\"Has field of 'reason in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('reason');",
+											"    pm.expect(jsonData.reason, '\"reason\" must be \"Incorrectly made request.\"').to.eql('Incorrectly made request.');",
+											"});",
+											"pm.test(\"Has field of 'message in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('message');",
+											"    pm.expect(jsonData.message, '\"message\" must be \"Поле [login] не может быть пуcтым\"').to.eql('Поле [login] не может быть пуcтым');",
+											"});",
+											"pm.test(\"Has field of 'timestamp in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('timestamp');",
+											"    pm.expect(jsonData.timestamp, '\"timestamp\" must be not empty').to.not.empty;",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"password\": \"FirstPassword\",\n  \"bankAccount\": {\"balance\": 50000},\n  \"emails\": [{\"email\":\"First@email.ru1\"}],\n  \"phones\": [{\"phone\":\"+790000000011\"}],\n  \"firstName\": \"FirstFirstName\",\n  \"lastName\": \"FirstLastName\",\n  \"middleName\": \"FirstMiddleName\",\n  \"dateOfBirth\": \"01-01-1980\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}",
+									"host": [
+										"{{baseUrl}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User create Fail Password Not Must Empty 400",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([400]);",
+											"});",
+											"pm.test(\"Content-Type header is application/json\", () => {",
+											"  pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
+											"});",
+											"pm.test(\"Has ApiError response\", function () {",
+											"    pm.response.to.be.withBody;",
+											"    pm.response.to.be.json;",
+											"});",
+											"pm.test(\"Has field of 'status in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"        pm.expect(jsonData).to.have.property('status');",
+											"    pm.expect(jsonData.status, '\"status\" must be \"BAD_REQUEST\"').to.eql('BAD_REQUEST');",
+											"});",
+											"pm.test(\"Has field of 'reason in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('reason');",
+											"    pm.expect(jsonData.reason, '\"reason\" must be \"Incorrectly made request.\"').to.eql('Incorrectly made request.');",
+											"});",
+											"pm.test(\"Has field of 'message in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('message');",
+											"    pm.expect(jsonData.message, '\"message\" must be \"Поле [password] не может быть пуcтым\"').to.eql('Поле [password] не может быть пуcтым');",
+											"});",
+											"pm.test(\"Has field of 'timestamp in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('timestamp');",
+											"    pm.expect(jsonData.timestamp, '\"timestamp\" must be not empty').to.not.empty;",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"FirstLogin1\",\n  \"password\": \"\",\n  \"bankAccount\": {\"balance\": 50000},\n  \"emails\": [{\"email\":\"First@email.ru1\"}],\n  \"phones\": [{\"phone\":\"+790000000011\"}],\n  \"firstName\": \"FirstFirstName\",\n  \"lastName\": \"FirstLastName\",\n  \"middleName\": \"FirstMiddleName\",\n  \"dateOfBirth\": \"01-01-1980\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}",
+									"host": [
+										"{{baseUrl}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User create Fail FirstName Not Must Empty 400",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([400]);",
+											"});",
+											"pm.test(\"Content-Type header is application/json\", () => {",
+											"  pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
+											"});",
+											"pm.test(\"Has ApiError response\", function () {",
+											"    pm.response.to.be.withBody;",
+											"    pm.response.to.be.json;",
+											"});",
+											"pm.test(\"Has field of 'status in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"        pm.expect(jsonData).to.have.property('status');",
+											"    pm.expect(jsonData.status, '\"status\" must be \"BAD_REQUEST\"').to.eql('BAD_REQUEST');",
+											"});",
+											"pm.test(\"Has field of 'reason in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('reason');",
+											"    pm.expect(jsonData.reason, '\"reason\" must be \"Incorrectly made request.\"').to.eql('Incorrectly made request.');",
+											"});",
+											"pm.test(\"Has field of 'message in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('message');",
+											"    pm.expect(jsonData.message, '\"message\" must be \"Поле [firstName] не может быть пуcтым\"').to.eql('Поле [firstName] не может быть пуcтым');",
+											"});",
+											"pm.test(\"Has field of 'timestamp in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('timestamp');",
+											"    pm.expect(jsonData.timestamp, '\"timestamp\" must be not empty').to.not.empty;",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"FirstLogin11\",\n  \"password\": \"123\",\n  \"bankAccount\": {\"balance\": 50000},\n  \"emails\": [{\"email\":\"First@email.ru1\"}],\n  \"phones\": [{\"phone\":\"+790000000011\"}],\n  \"firstName\": \"\",\n  \"lastName\": \"FirstLastName\",\n  \"middleName\": \"FirstMiddleName\",\n  \"dateOfBirth\": \"01-01-1980\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}",
+									"host": [
+										"{{baseUrl}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User create Fail LastName Not Must Empty 400",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([400]);",
+											"});",
+											"pm.test(\"Content-Type header is application/json\", () => {",
+											"  pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
+											"});",
+											"pm.test(\"Has ApiError response\", function () {",
+											"    pm.response.to.be.withBody;",
+											"    pm.response.to.be.json;",
+											"});",
+											"pm.test(\"Has field of 'status in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"        pm.expect(jsonData).to.have.property('status');",
+											"    pm.expect(jsonData.status, '\"status\" must be \"BAD_REQUEST\"').to.eql('BAD_REQUEST');",
+											"});",
+											"pm.test(\"Has field of 'reason in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('reason');",
+											"    pm.expect(jsonData.reason, '\"reason\" must be \"Incorrectly made request.\"').to.eql('Incorrectly made request.');",
+											"});",
+											"pm.test(\"Has field of 'message in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('message');",
+											"    pm.expect(jsonData.message, '\"message\" must be \"Поле [lastName] не может быть пуcтым\"').to.eql('Поле [lastName] не может быть пуcтым');",
+											"});",
+											"pm.test(\"Has field of 'timestamp in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('timestamp');",
+											"    pm.expect(jsonData.timestamp, '\"timestamp\" must be not empty').to.not.empty;",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"FirstLogin11\",\n  \"password\": \"123\",\n  \"bankAccount\": {\"balance\": 50000},\n  \"emails\": [{\"email\":\"First@email.ru1\"}],\n  \"phones\": [{\"phone\":\"+790000000011\"}],\n  \"firstName\": \"FirstLastName\",\n  \"lastName\": \"\",\n  \"middleName\": \"FirstMiddleName\",\n  \"dateOfBirth\": \"01-01-1980\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}",
+									"host": [
+										"{{baseUrl}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User create Fail MiddleName Not Must Empty 400",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([400]);",
+											"});",
+											"pm.test(\"Content-Type header is application/json\", () => {",
+											"  pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
+											"});",
+											"pm.test(\"Has ApiError response\", function () {",
+											"    pm.response.to.be.withBody;",
+											"    pm.response.to.be.json;",
+											"});",
+											"pm.test(\"Has field of 'status in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"        pm.expect(jsonData).to.have.property('status');",
+											"    pm.expect(jsonData.status, '\"status\" must be \"BAD_REQUEST\"').to.eql('BAD_REQUEST');",
+											"});",
+											"pm.test(\"Has field of 'reason in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('reason');",
+											"    pm.expect(jsonData.reason, '\"reason\" must be \"Incorrectly made request.\"').to.eql('Incorrectly made request.');",
+											"});",
+											"pm.test(\"Has field of 'message in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('message');",
+											"    pm.expect(jsonData.message, '\"message\" must be \"Поле [middleName] не может быть пуcтым\"').to.eql('Поле [middleName] не может быть пуcтым');",
+											"});",
+											"pm.test(\"Has field of 'timestamp in ApiError response \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('timestamp');",
+											"    pm.expect(jsonData.timestamp, '\"timestamp\" must be not empty').to.not.empty;",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"FirstLogin11\",\n  \"password\": \"123\",\n  \"bankAccount\": {\"balance\": 50000},\n  \"emails\": [{\"email\":\"First@email.ru1\"}],\n  \"phones\": [{\"phone\":\"+790000000011\"}],\n  \"firstName\": \"FirstLastName\",\n  \"lastName\": \"FirstMiddleName\",\n  \"middleName\": \"\",\n  \"dateOfBirth\": \"01-01-1980\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"

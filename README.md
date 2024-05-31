@@ -27,17 +27,20 @@
 
 > [!NOTE]
 > Что это? Это демонстрационное REST API приложение для банковских операций. Использует классическую архитектуру.
-> Контейнер c Main Service: [<->Controller -> Service -> Repository<->]
-> Контейнер с Базой данных: [<->PostgreSQL]
+>
+> Контейнер c Main Service: `[<->Controller -> Service -> Repository<->]`
+>
+> Контейнер с Базой данных: `[<->PostgreSQL]`
+>
 > Общение между контейнерами происходит по локальной сети с помощью специальной настройки в Docker-compose
 
 ## Архитектура приложения
 
-![Архитектура приложения на схеме](/docs/images/architecture.jpg){style="display: block; margin: 0 auto"}
+![Архитектура приложения на схеме](/docs/images/architecture.jpg)
 
 ## Диаграмма взаимодействия в БД
 
-![Диаграмма БД](/docs/images/diagram.png){style="display: block; margin: 0 auto"}
+![Диаграмма БД](/docs/images/diagram.png)
 
 > [!TIP]
 > Что можно улучшить:
@@ -78,4 +81,4 @@
   то логика работы тестов может поломаться. После отработки, можно с помощью любого клиента подключиться к
   Postgre БД и проверить наполнение данными, данные для подключения ниже, пароль можно посмотреть в файле `.env`
 
-![Подключение к БД через DBeaver](/docs/images/connection_bd_external.png){style="display: block; margin: 0 auto"}
+![Подключение к БД через DBeaver](/docs/images/connection_bd_external.png)

@@ -26,4 +26,5 @@ public final class LogsMessage {
     public static final String SORT_NOT_REQUIRED = "Сортировка не требуется, поиск будет по:";
     public static final String SEARCH_BY = "Поиск будет выполнен по:";
     public static final String WRONG_CAN_NOT = " не может быть ";
+    public static final String NOTE_ALREADY_EXIST = " уже существует";
 }
