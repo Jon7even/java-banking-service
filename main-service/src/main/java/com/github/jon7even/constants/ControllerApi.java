@@ -13,4 +13,5 @@ import lombok.NoArgsConstructor;
 public final class ControllerApi {
     public static final String PATH_API = "/api/v1";
     public static final String PATH_SYSTEM = "/system";
+    public static final String PATH_AUTH = "/auth";
 }

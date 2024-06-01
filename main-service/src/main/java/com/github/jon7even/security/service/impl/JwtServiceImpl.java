@@ -1,5 +1,6 @@
 package com.github.jon7even.security.service.impl;
 
+import com.github.jon7even.configuration.TokenConfig;
 import com.github.jon7even.entity.UserEntity;
 import com.github.jon7even.security.service.JwtService;
 import io.jsonwebtoken.Claims;
@@ -7,11 +8,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
@@ -26,14 +26,10 @@ import java.util.function.Function;
  * @version 1.0
  */
 @Slf4j
-@Service
-@RequiredArgsConstructor
+@Component
+@AllArgsConstructor
 public class JwtServiceImpl implements JwtService {
-    @Value("${token.key}")
-    private final String jwtSigningKey;
-
-    @Value("${token.lifeTime}")
-    private final Integer jwtLifeTime;
+    private final TokenConfig tokenConfig;
 
     @Override
     public String extractUserName(String token) {
@@ -92,7 +88,7 @@ public class JwtServiceImpl implements JwtService {
      * @return ключ
      */
     private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtSigningKey);
+        byte[] keyBytes = Decoders.BASE64.decode(tokenConfig.getKey());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -108,7 +104,7 @@ public class JwtServiceImpl implements JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtLifeTime))
+                .setExpiration(new Date(System.currentTimeMillis() + tokenConfig.getLifeTime()))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
 

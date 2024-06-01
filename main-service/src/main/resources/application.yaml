@@ -61,7 +61,7 @@ logging:
 
 spring:
   config.activate.on-profile: test
-  application.name: Banking service
+  application.name: Banking service Test
   output.ansi.enabled: ALWAYS
   token:
     key: ${SECURITY_TOKEN_KEY_TEST}

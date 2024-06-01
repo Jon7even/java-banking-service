@@ -130,4 +130,11 @@ public class UserRepositoryTest extends SetupRepositoryTest {
         assertThat(userRepository.existsByLogin(userEntityFirst.getLogin()))
                 .isFalse();
     }
+
+    @DisplayName("[findByLogin] Должен найти пользователя для Spring Security ")
+    @Test public void shouldFindUserByLogin_thenReturn_UserForSecurity() {
+        userRepository.saveAndFlush(userEntitySecondWithoutId);
+
+        System.out.println(userRepository.findByLogin(userEntityFirst.getLogin()));
+    }
 }

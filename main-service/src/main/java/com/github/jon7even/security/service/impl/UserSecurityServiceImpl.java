@@ -24,8 +24,8 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 
     @Override
     public User getByUsername(String login) {
-        log.debug("Пришел запрос на получение пользователями по [login={}] из репозитория", login);
-        return userRepository.finByLogin(login)
+        log.debug("Пришел запрос на получение пользователя по [login={}] из репозитория", login);
+        return userRepository.findByLogin(login)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Пользователь с [login=%s]", login)));
     }
 
