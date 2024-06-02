@@ -1,4 +1,4 @@
-package com.github.jon7even.configuration;
+package com.github.jon7even.security.configuration;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @Setter
 @Configuration
-@ConfigurationProperties("token")
+@ConfigurationProperties("spring.token")
 public class TokenConfig {
     private String key;
-    private int lifeTime;
+    private Integer lifetime;
 }

@@ -1,6 +1,6 @@
 package com.github.jon7even.security.service;
 
-import org.springframework.security.core.userdetails.User;
+import com.github.jon7even.entity.UserEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
@@ -17,7 +17,7 @@ public interface UserSecurityService {
      * @param username логин пользователя
      * @return User
      */
-    User getByUsername(String username);
+    UserEntity getByUsername(String username);
 
     /**
      * Метод получения пользователя по логину
@@ -31,5 +31,5 @@ public interface UserSecurityService {
      *
      * @return User
      */
-    User getCurrentUser();
+    UserEntity getCurrentUser();
 }

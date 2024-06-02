@@ -56,8 +56,8 @@ public class UserEntity implements UserDetails {
     @Column(name = "login", nullable = false, unique = true)
     private String login;
 
-    @ToString.Exclude
     @Column(name = "password", nullable = false)
+    @ToString.Exclude
     private String password;
 
     @OneToOne(mappedBy = "owner", fetch = FetchType.LAZY)

@@ -1,7 +1,7 @@
 package com.github.jon7even.security.service.impl;
 
-import com.github.jon7even.configuration.TokenConfig;
 import com.github.jon7even.entity.UserEntity;
+import com.github.jon7even.security.configuration.TokenConfig;
 import com.github.jon7even.security.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -46,14 +46,13 @@ public class JwtServiceImpl implements JwtService {
             claims.put("firstName", customUserDetails.getFirstName());
             claims.put("lastName", customUserDetails.getLastName());
             claims.put("middleName", customUserDetails.getMiddleName());
-            claims.put("dateOfBirth", customUserDetails.getDateOfBirth());
         }
         return generateToken(claims, userDetails);
     }
 
     @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        log.debug("Пришел запрос на проверку валидности токена: [{}] от пользователя [{}]", userDetails, userDetails);
+        log.debug("Пришел запрос на проверку валидности токена: [{}] от пользователя: [{}]", userDetails, userDetails);
         final String userName = extractUserName(token);
         return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
@@ -100,11 +99,12 @@ public class JwtServiceImpl implements JwtService {
      * @return String токен
      */
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        log.debug("Генерируем токен для: [{}]", userDetails);
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + tokenConfig.getLifeTime()))
+                .setExpiration(new Date(System.currentTimeMillis() + tokenConfig.getLifetime()))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
 
@@ -115,6 +115,7 @@ public class JwtServiceImpl implements JwtService {
      * @return boolean true если просрочен
      */
     private boolean isTokenExpired(String token) {
+        log.debug("Проверяем токен на просроченность: [{}]", token);
         return extractExpiration(token).before(new Date());
     }
 

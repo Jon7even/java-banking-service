@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -75,21 +76,23 @@ public class UserServiceImpl implements UserService {
                 userCreateDto.getEmails().stream().toList()
         );
         userEmailEntitiesForSaveInRepository.forEach(userEmail -> userEmail.setOwner(savedUserFromRepository));
-        List<UserEmailEntity> savedUserEmailEntityInRepository =
-                userEmailRepository.saveAllAndFlush(userEmailEntitiesForSaveInRepository);
+        List<UserEmailEntity> savedUserEmailEntityInRepository = userEmailRepository.saveAllAndFlush(
+                sortListUserEmailsByLexicographic(userEmailEntitiesForSaveInRepository)
+        );
 
         List<UserPhoneEntity> userPhoneEntitiesForSaveInRepository = userMapper.toEntityPhoneFromCreateDto(
                 userCreateDto.getPhones().stream().toList()
         );
         userPhoneEntitiesForSaveInRepository.forEach(userPhone -> userPhone.setOwner(savedUserFromRepository));
-        List<UserPhoneEntity> savedUserPhoneEntityInRepository =
-                userPhoneRepository.saveAllAndFlush(userPhoneEntitiesForSaveInRepository);
+        List<UserPhoneEntity> savedUserPhoneEntityInRepository = userPhoneRepository.saveAllAndFlush(
+                sortListUserPhonesByLexicographic(userPhoneEntitiesForSaveInRepository)
+        );
 
         log.trace("У нас успешно зарегистрирован новый пользователь [user={}]", savedUserFromRepository);
         return userMapper.toUserFullDtoFromUserEntity(savedUserFromRepository,
                 userMapper.toShortBalanceDtoFromBankAccountEntity(savedBankAccountEntityInRepository),
-                userMapper.toShortEmailDtoFromEmailEntity(savedUserEmailEntityInRepository),
-                userMapper.toShortPhoneDtoFromPhoneEntity(savedUserPhoneEntityInRepository)
+                userMapper.toShortEmailDtoFromEmailEntity(sortListUserEmailsId(savedUserEmailEntityInRepository)),
+                userMapper.toShortPhoneDtoFromPhoneEntity(sortListUserPhonesId(savedUserPhoneEntityInRepository))
         );
     }
 
@@ -251,5 +254,25 @@ public class UserServiceImpl implements UserService {
         log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[список номеров телефонов={}]", phones);
         var listOfPhones = userPhoneRepository.getPhoneEntityBySetPhones(phones);
         return !listOfPhones.isEmpty();
+    }
+
+    private List<UserEmailEntity> sortListUserEmailsByLexicographic(List<UserEmailEntity> listNoSorted) {
+        return listNoSorted.stream()
+                .sorted(Comparator.comparing(UserEmailEntity::getEmail).reversed()).collect(Collectors.toList());
+    }
+
+    private List<UserPhoneEntity> sortListUserPhonesByLexicographic(List<UserPhoneEntity> listNoSorted) {
+        return listNoSorted.stream()
+                .sorted(Comparator.comparing(UserPhoneEntity::getPhone).reversed()).collect(Collectors.toList());
+    }
+
+    private List<UserEmailEntity> sortListUserEmailsId(List<UserEmailEntity> listNoSorted) {
+        return listNoSorted.stream()
+                .sorted(Comparator.comparing(UserEmailEntity::getId).reversed()).collect(Collectors.toList());
+    }
+
+    private List<UserPhoneEntity> sortListUserPhonesId(List<UserPhoneEntity> listNoSorted) {
+        return listNoSorted.stream()
+                .sorted(Comparator.comparing(UserPhoneEntity::getId).reversed()).collect(Collectors.toList());
     }
 }

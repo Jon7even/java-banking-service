@@ -27,4 +27,5 @@ public final class LogsMessage {
     public static final String SEARCH_BY = "Поиск будет выполнен по:";
     public static final String WRONG_CAN_NOT = " не может быть ";
     public static final String NOTE_ALREADY_EXIST = " уже существует";
+    public static final String ACCESS_DENIED = " доступ запрещен";
 }

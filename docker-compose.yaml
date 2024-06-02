@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   bs-main-db:
     container_name: bs-main-db

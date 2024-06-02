@@ -32,7 +32,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
      *
      * @param login логин
      */
-    Optional<User> findByLogin(@Param("login") String login);
+    Optional<UserEntity> findByLogin(@Param("login") String login);
 
     /**
      * Метод для получения пользователей по электронной почте

@@ -8,6 +8,7 @@ import com.github.jon7even.repository.UserRepository;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
 public class SetupServiceTest extends PreparationObjectsForTests {
@@ -16,4 +17,5 @@ public class SetupServiceTest extends PreparationObjectsForTests {
     @Mock protected UserPhoneRepository userPhoneRepository;
     @Mock protected BankAccountRepository bankAccountRepository;
     @Mock protected UserMapper userMapper;
+    @Mock protected PasswordEncoder passwordEncoder;
 }

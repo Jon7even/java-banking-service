@@ -15,6 +15,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,7 +66,7 @@ public class ApiUserSearchController {
 
         log.debug("On {} {} {}", request.getRequestURL(), IN_CONTROLLER_METHOD, request.getMethod());
 
-        return ResponseEntity.ok().body(userService.getListUsersByParam(
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getListUsersByParam(
                 ParamsSearchUserRequestDto.builder()
                         .dateOfBirth(dateOfBirth)
                         .phone(phone)
