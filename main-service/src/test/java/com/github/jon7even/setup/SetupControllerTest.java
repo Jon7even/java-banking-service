@@ -19,7 +19,9 @@ import org.springframework.test.web.servlet.MockMvc;
 @Slf4j
 @SpringBootTest(classes = BankingServiceApp.class)
 @AutoConfigureMockMvc(addFilters = false)
-@TestPropertySource(properties = {"SERVER_EXTERNAL_PORT_APPLICATION_TEST=8097", "SCHEMA_APP=application"})
+@TestPropertySource(properties = {"SERVER_EXTERNAL_PORT_APPLICATION_TEST=8097", "SCHEMA_APP=application",
+        "SECURITY_TOKEN_KEY_TEST=2kjhgO987TG969876RF98ftGR8765DE465877908y90GOIUF8676RF86",
+        "SECURITY_TOKEN_LIFETIME_TEST=1800000"})
 public class SetupControllerTest extends SetupContainerTest {
     @Autowired protected MockMvc mockMvc;
     @Autowired protected ObjectMapper objectMapper;

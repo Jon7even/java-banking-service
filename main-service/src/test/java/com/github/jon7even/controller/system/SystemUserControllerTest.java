@@ -1,8 +1,8 @@
 package com.github.jon7even.controller.system;
 
-import com.github.jon7even.setup.SetupControllerTest;
 import com.github.jon7even.constants.ControllerApi;
 import com.github.jon7even.constants.ControllerUser;
+import com.github.jon7even.setup.SetupControllerTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -3,7 +3,6 @@ package com.github.jon7even.repository;
 import com.github.jon7even.entity.UserEmailEntity;
 import com.github.jon7even.entity.UserEntity;
 import com.github.jon7even.setup.SetupRepositoryTest;
-import com.github.jon7even.entity.UserEmailEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.annotation.DirtiesContext;
