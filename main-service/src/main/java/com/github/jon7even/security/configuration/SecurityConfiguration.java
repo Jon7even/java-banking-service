@@ -1,5 +1,6 @@
 package com.github.jon7even.security.configuration;
 
+import com.github.jon7even.security.filter.JwtAccessDeniedEntryPoint;
 import com.github.jon7even.security.filter.JwtAuthenticationFilter;
 import com.github.jon7even.security.service.UserSecurityService;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserSecurityService userSecurityService;
+    private final JwtAccessDeniedEntryPoint jwtAccessDeniedEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -49,6 +51,7 @@ public class SecurityConfiguration {
                     corsConfiguration.setAllowCredentials(true);
                     return corsConfiguration;
                 }))
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAccessDeniedEntryPoint))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(PATH_AUTH + "/**").permitAll()
                         .requestMatchers(PATH_SYSTEM + "/**").permitAll()

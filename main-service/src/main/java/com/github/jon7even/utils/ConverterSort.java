@@ -1,8 +1,8 @@
 package com.github.jon7even.utils;
 
+import com.github.jon7even.constants.LogsMessage;
 import com.github.jon7even.dto.user.search.ParamsSearchUserRequestDto;
 import com.github.jon7even.enums.user.UserSort;
-import com.github.jon7even.constants.LogsMessage;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
