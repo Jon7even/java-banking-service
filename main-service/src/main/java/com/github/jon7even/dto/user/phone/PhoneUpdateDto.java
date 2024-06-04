@@ -1,4 +1,4 @@
-package com.github.jon7even.dto.user.email;
+package com.github.jon7even.dto.user.phone;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Класс DTO для обновления существующей электронной почты пользователя
+ * Класс DTO для обновления существующего номера телефона пользователя
  *
  * @author Jon7even
  * @version 1.0
@@ -18,11 +18,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmailUpdateDto {
+public class PhoneUpdateDto {
     @NotNull(message = "Поле [id] не может быть пустым")
     @Positive(message = "Поле [id] должно быть положительным")
     private Long id;
 
-    @NotBlank(message = "Поле [email] не может быть пустым")
-    private String email;
+    @NotBlank(message = "Поле [phone] не может быть пустым")
+    private String phone;
 }
+
