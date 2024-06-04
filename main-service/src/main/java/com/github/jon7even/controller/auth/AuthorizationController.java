@@ -39,13 +39,14 @@ public class AuthorizationController {
             description = "Чтобы войти в систему нужно ввести существующий логин и правильный пароль к нему")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK пользователь авторизован, токен выдан"),
-            @ApiResponse(responseCode = "403", description = "FORBIDDEN пользователь не авторизован"),
-            @ApiResponse(responseCode = "404", description = "NOT_FOUND пользователь не найден")
+            @ApiResponse(responseCode = "403", description = "Forbidden пользователь не авторизован"),
+            @ApiResponse(responseCode = "404", description = "Not Found пользователь не найден")
     })
     @PostMapping
     public ResponseEntity<JwtAuthResponseDto> signIn(@Valid @RequestBody SignInRequestDto signInRequestDto,
                                                      HttpServletRequest request) {
         log.debug("На {} {} {}", request.getRequestURL(), IN_CONTROLLER_METHOD, request.getMethod());
+
         return ResponseEntity.status(HttpStatus.OK).body(authenticationService.signIn(signInRequestDto));
     }
 }

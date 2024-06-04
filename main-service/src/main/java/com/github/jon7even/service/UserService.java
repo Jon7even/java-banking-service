@@ -3,6 +3,9 @@ package com.github.jon7even.service;
 import com.github.jon7even.dto.user.UserCreateDto;
 import com.github.jon7even.dto.user.UserFullResponseDto;
 import com.github.jon7even.dto.user.UserShortResponseDto;
+import com.github.jon7even.dto.user.email.EmailCreateDto;
+import com.github.jon7even.dto.user.email.EmailShortResponseDto;
+import com.github.jon7even.dto.user.email.EmailUpdateDto;
 import com.github.jon7even.dto.user.search.ParamsSearchUserRequestDto;
 
 import java.util.List;
@@ -29,4 +32,29 @@ public interface UserService {
      * @return UserShortResponseDto список объектов DTO с краткими данными о пользователе
      */
     List<UserShortResponseDto> getListUsersByParam(ParamsSearchUserRequestDto paramsSearchUserRequestDto);
+
+    /**
+     * Метод добавляющий новую электронную почту в профиль пользователя
+     *
+     * @param emailCreateDto заполненный объект DTO с новым email
+     * @return EmailShortResponseDto объект DTO с добавленным email
+     */
+    EmailShortResponseDto addNewEmail(EmailCreateDto emailCreateDto, Long userId);
+
+    /**
+     * Метод обновляющий существующую почту в профиле пользователя
+     *
+     * @param emailUpdateDto заполненный объект DTO с email
+     * @param userId         ID пользователя
+     * @return EmailShortResponseDto объект DTO с обновленным email
+     */
+    EmailShortResponseDto updateEmailById(EmailUpdateDto emailUpdateDto, Long userId);
+
+    /**
+     * Метод для удаления электронного адреса из профиля пользователя
+     *
+     * @param userId  ID пользователя
+     * @param emailId ID почты, которую требуется удалить
+     */
+    void deleteEmailById(Long userId, Long emailId);
 }

@@ -30,11 +30,11 @@ import static com.github.jon7even.constants.DefaultValuesController.*;
 import static com.github.jon7even.constants.LogsMessage.IN_CONTROLLER_METHOD;
 
 /**
- * Контроллер для поиска пользователей API эндпоинт "Пользователи"
+ * Контроллер для поиска пользователей по параметрам
  *
  * @author Jon7even
  * @version 1.0
- * @apiNote Используется для поиска пользователей по параметрам. Требуется JWT токен для аутентификации
+ * @apiNote API эндпоинт "Пользователи": Требуется JWT токен для аутентификации.
  */
 @Slf4j
 @RestController
@@ -48,7 +48,7 @@ public class ApiUserSearchController {
             description = "Запросы на эндпоинт позволяют найти список пользователей по заданным критериям")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK список пользователей получен"),
-            @ApiResponse(responseCode = "400", description = "BAD_REQUEST ошибки в случае неправильного запроса"),
+            @ApiResponse(responseCode = "400", description = "Bad Request ошибки в случае неправильного запроса"),
             @ApiResponse(responseCode = "403", description = "Forbidden пользователь не авторизован")
     })
     @GetMapping

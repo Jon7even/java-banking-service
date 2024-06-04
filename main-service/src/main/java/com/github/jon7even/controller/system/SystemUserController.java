@@ -41,15 +41,16 @@ public class SystemUserController {
             description = "Для создания нового пользователя требуется заполненный объект UserCreateDto")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Created пользователь создан"),
-            @ApiResponse(responseCode = "400", description = "BAD_REQUEST ошибки в случае неправильного запроса"),
-            @ApiResponse(responseCode = "409", description = "CONFLICT пользователь с таким login уже существует"),
-            @ApiResponse(responseCode = "409", description = "CONFLICT пользователь с таким phone уже существует"),
-            @ApiResponse(responseCode = "409", description = "CONFLICT пользователь с таким email уже существует")
+            @ApiResponse(responseCode = "400", description = "Bad Request ошибки в случае неправильного запроса"),
+            @ApiResponse(responseCode = "409", description = "Conflict пользователь с таким login уже существует"),
+            @ApiResponse(responseCode = "409", description = "Conflict пользователь с таким phone уже существует"),
+            @ApiResponse(responseCode = "409", description = "Conflict пользователь с таким email уже существует")
     })
     @PostMapping
     public ResponseEntity<UserFullResponseDto> create(@Valid @RequestBody UserCreateDto userCreateDto,
                                                       HttpServletRequest request) {
         log.debug("На {} {} {}", request.getRequestURL(), IN_CONTROLLER_METHOD, request.getMethod());
+
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(userCreateDto));
     }
 }
