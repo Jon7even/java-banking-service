@@ -75,18 +75,34 @@ public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "emailCreateDto.email", target = "email")
     @Mapping(target = "owner", ignore = true)
-    List<UserEmailEntity> toEntityEmailFromCreateDto(List<EmailCreateDto> emailCreateDto);
+    List<UserEmailEntity> toListEntityEmailFromCreateDto(List<EmailCreateDto> emailCreateDto);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(source = "emailCreateDto.email", target = "email")
+    @Mapping(source = "userEntity", target = "owner")
+    UserEmailEntity toEntityEmailFromCreateDto(EmailCreateDto emailCreateDto, UserEntity userEntity);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "phoneCreateDto.phone", target = "phone")
     @Mapping(target = "owner", ignore = true)
-    List<UserPhoneEntity> toEntityPhoneFromCreateDto(List<PhoneCreateDto> phoneCreateDto);
+    List<UserPhoneEntity> toListEntityPhoneFromCreateDto(List<PhoneCreateDto> phoneCreateDto);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(source = "phoneCreateDto.phone", target = "phone")
+    @Mapping(source = "userEntity", target = "owner")
+    UserPhoneEntity toEntityPhoneFromCreateDto(PhoneCreateDto phoneCreateDto, UserEntity userEntity);
 
     @Mapping(source = "userEmailEntities.email", target = "email")
-    List<EmailShortResponseDto> toShortEmailDtoFromEmailEntity(List<UserEmailEntity> userEmailEntities);
+    List<EmailShortResponseDto> toShortListEmailDtoFromEmailEntity(List<UserEmailEntity> userEmailEntities);
+
+    @Mapping(source = "userEmailEntity.email", target = "email")
+    EmailShortResponseDto toShortEmailDtoFromEmailEntity(UserEmailEntity userEmailEntity);
 
     @Mapping(source = "userPhoneEntities.phone", target = "phone")
-    List<PhoneShortResponseDto> toShortPhoneDtoFromPhoneEntity(List<UserPhoneEntity> userPhoneEntities);
+    List<PhoneShortResponseDto> toShortListPhoneDtoFromPhoneEntity(List<UserPhoneEntity> userPhoneEntities);
+
+    @Mapping(source = "userPhoneEntity.phone", target = "phone")
+    PhoneShortResponseDto toShortPhoneDtoFromPhoneEntity(UserPhoneEntity userPhoneEntity);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "bankAccountCreateDto.balance", target = "balance")
