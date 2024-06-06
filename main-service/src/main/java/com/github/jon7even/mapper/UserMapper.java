@@ -3,14 +3,10 @@ package com.github.jon7even.mapper;
 import com.github.jon7even.dto.user.UserCreateDto;
 import com.github.jon7even.dto.user.UserFullResponseDto;
 import com.github.jon7even.dto.user.UserShortResponseDto;
-import com.github.jon7even.dto.user.account.BankAccountCreateDto;
 import com.github.jon7even.dto.user.account.BankAccountShortResponseDto;
-import com.github.jon7even.dto.user.email.EmailCreateDto;
 import com.github.jon7even.dto.user.email.EmailShortResponseDto;
 import com.github.jon7even.dto.user.phone.PhoneCreateDto;
 import com.github.jon7even.dto.user.phone.PhoneShortResponseDto;
-import com.github.jon7even.entity.BankAccountEntity;
-import com.github.jon7even.entity.UserEmailEntity;
 import com.github.jon7even.entity.UserEntity;
 import com.github.jon7even.entity.UserPhoneEntity;
 import org.mapstruct.Mapper;
@@ -73,16 +69,6 @@ public interface UserMapper {
                                                       List<PhoneShortResponseDto> phoneShortResponseDto);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(source = "emailCreateDto.email", target = "email")
-    @Mapping(target = "owner", ignore = true)
-    List<UserEmailEntity> toListEntityEmailFromCreateDto(List<EmailCreateDto> emailCreateDto);
-
-    @Mapping(target = "id", ignore = true)
-    @Mapping(source = "emailCreateDto.email", target = "email")
-    @Mapping(source = "userEntity", target = "owner")
-    UserEmailEntity toEntityEmailFromCreateDto(EmailCreateDto emailCreateDto, UserEntity userEntity);
-
-    @Mapping(target = "id", ignore = true)
     @Mapping(source = "phoneCreateDto.phone", target = "phone")
     @Mapping(target = "owner", ignore = true)
     List<UserPhoneEntity> toListEntityPhoneFromCreateDto(List<PhoneCreateDto> phoneCreateDto);
@@ -92,24 +78,9 @@ public interface UserMapper {
     @Mapping(source = "userEntity", target = "owner")
     UserPhoneEntity toEntityPhoneFromCreateDto(PhoneCreateDto phoneCreateDto, UserEntity userEntity);
 
-    @Mapping(source = "userEmailEntities.email", target = "email")
-    List<EmailShortResponseDto> toShortListEmailDtoFromEmailEntity(List<UserEmailEntity> userEmailEntities);
-
-    @Mapping(source = "userEmailEntity.email", target = "email")
-    EmailShortResponseDto toShortEmailDtoFromEmailEntity(UserEmailEntity userEmailEntity);
-
     @Mapping(source = "userPhoneEntities.phone", target = "phone")
     List<PhoneShortResponseDto> toShortListPhoneDtoFromPhoneEntity(List<UserPhoneEntity> userPhoneEntities);
 
     @Mapping(source = "userPhoneEntity.phone", target = "phone")
     PhoneShortResponseDto toShortPhoneDtoFromPhoneEntity(UserPhoneEntity userPhoneEntity);
-
-    @Mapping(target = "id", ignore = true)
-    @Mapping(source = "bankAccountCreateDto.balance", target = "balance")
-    @Mapping(source = "ownerEntity", target = "owner")
-    BankAccountEntity toEntityBankAccountFromCreateDto(BankAccountCreateDto bankAccountCreateDto,
-                                                       UserEntity ownerEntity);
-
-    @Mapping(source = "bankAccountEntity.balance", target = "balance")
-    BankAccountShortResponseDto toShortBalanceDtoFromBankAccountEntity(BankAccountEntity bankAccountEntity);
 }

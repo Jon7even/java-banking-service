@@ -3,15 +3,12 @@ package com.github.jon7even.service.impl;
 import com.github.jon7even.dto.user.UserCreateDto;
 import com.github.jon7even.dto.user.UserFullResponseDto;
 import com.github.jon7even.dto.user.UserShortResponseDto;
-import com.github.jon7even.dto.user.email.EmailCreateDto;
 import com.github.jon7even.dto.user.email.EmailShortResponseDto;
-import com.github.jon7even.dto.user.email.EmailUpdateDto;
 import com.github.jon7even.dto.user.phone.PhoneCreateDto;
 import com.github.jon7even.dto.user.phone.PhoneShortResponseDto;
 import com.github.jon7even.dto.user.phone.PhoneUpdateDto;
 import com.github.jon7even.dto.user.search.ParamsSearchUserRequestDto;
 import com.github.jon7even.entity.BankAccountEntity;
-import com.github.jon7even.entity.UserEmailEntity;
 import com.github.jon7even.entity.UserEntity;
 import com.github.jon7even.entity.UserPhoneEntity;
 import com.github.jon7even.enums.user.UserSearchType;
@@ -19,11 +16,13 @@ import com.github.jon7even.exception.AccessDeniedException;
 import com.github.jon7even.exception.EntityNotFoundException;
 import com.github.jon7even.exception.IncorrectMadeRequestException;
 import com.github.jon7even.exception.IntegrityConstraintException;
+import com.github.jon7even.mapper.BankAccountMapper;
+import com.github.jon7even.mapper.UserEmailMapper;
 import com.github.jon7even.mapper.UserMapper;
 import com.github.jon7even.repository.BankAccountRepository;
-import com.github.jon7even.repository.UserEmailRepository;
 import com.github.jon7even.repository.UserPhoneRepository;
 import com.github.jon7even.repository.UserRepository;
+import com.github.jon7even.service.UserEmailService;
 import com.github.jon7even.service.UserService;
 import com.github.jon7even.utils.ConverterPageable;
 import com.github.jon7even.utils.ConverterSort;
@@ -57,10 +56,12 @@ import static com.github.jon7even.constants.LogsMessage.*;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final UserEmailRepository userEmailRepository;
+    private final UserEmailService userEmailService;
     private final UserPhoneRepository userPhoneRepository;
     private final BankAccountRepository bankAccountRepository;
     private final UserMapper userMapper;
+    private final BankAccountMapper bankAccountMapper;
+    private final UserEmailMapper userEmailMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -72,18 +73,14 @@ public class UserServiceImpl implements UserService {
         UserEntity userForSaveInRepository = userMapper.toUserEntityFromCreateDto(userCreateDto, LocalDateTime.now());
         UserEntity savedUserFromRepository = userRepository.saveAndFlush(userForSaveInRepository);
 
-        BankAccountEntity bankAccountEntityForSaveInRepository = userMapper.toEntityBankAccountFromCreateDto(
+        BankAccountEntity bankAccountEntityForSaveInRepository = bankAccountMapper.toEntityBankAccountFromCreateDto(
                 userCreateDto.getBankAccount(), savedUserFromRepository
         );
         BankAccountEntity savedBankAccountEntityInRepository =
                 bankAccountRepository.saveAndFlush(bankAccountEntityForSaveInRepository);
 
-        List<UserEmailEntity> userEmailEntitiesForSaveInRepository = userMapper.toListEntityEmailFromCreateDto(
-                userCreateDto.getEmails().stream().toList()
-        );
-        userEmailEntitiesForSaveInRepository.forEach(userEmail -> userEmail.setOwner(savedUserFromRepository));
-        List<UserEmailEntity> savedUserEmailEntityInRepository = userEmailRepository.saveAllAndFlush(
-                sortListUserEmailsByLexicographic(userEmailEntitiesForSaveInRepository)
+        List<EmailShortResponseDto> savedUserEmailsInRepository = userEmailService.createNewEmails(
+                userCreateDto.getEmails(), savedUserFromRepository
         );
 
         List<UserPhoneEntity> userPhoneEntitiesForSaveInRepository = userMapper.toListEntityPhoneFromCreateDto(
@@ -96,8 +93,8 @@ public class UserServiceImpl implements UserService {
 
         log.trace("У нас успешно зарегистрирован новый пользователь [user={}]", savedUserFromRepository);
         return userMapper.toUserFullDtoFromUserEntity(savedUserFromRepository,
-                userMapper.toShortBalanceDtoFromBankAccountEntity(savedBankAccountEntityInRepository),
-                userMapper.toShortListEmailDtoFromEmailEntity(sortListUserEmailsId(savedUserEmailEntityInRepository)),
+                bankAccountMapper.toShortBalanceDtoFromBankAccountEntity(savedBankAccountEntityInRepository),
+                savedUserEmailsInRepository,
                 userMapper.toShortListPhoneDtoFromPhoneEntity(sortListUserPhonesId(savedUserPhoneEntityInRepository))
         );
     }
@@ -114,63 +111,11 @@ public class UserServiceImpl implements UserService {
 
         return listOfUsersFromRepository.stream()
                 .map((userEntity -> userMapper.toUserShortDtoFromUserEntity(userEntity,
-                        userMapper.toShortBalanceDtoFromBankAccountEntity(userEntity.getBankAccountEntity()),
-                        userMapper.toShortListEmailDtoFromEmailEntity(userEntity.getEmails()),
+                        bankAccountMapper.toShortBalanceDtoFromBankAccountEntity(userEntity.getBankAccountEntity()),
+                        userEmailMapper.toShortListEmailDtoFromEmailEntity(userEntity.getEmails()),
                         userMapper.toShortListPhoneDtoFromPhoneEntity(userEntity.getPhones()))
                 ))
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public EmailShortResponseDto addNewEmail(EmailCreateDto emailCreateDto, Long userId) {
-        log.debug(SAVE_IN_REPOSITORY + "[emailCreateDto={}] для [userId={}]", emailCreateDto, userId);
-        if (existsEmailByStringEmail(emailCreateDto.getEmail())) {
-            log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[{}={}]", PARAMETER_EMAIL, emailCreateDto.getEmail());
-            throw new IntegrityConstraintException(PARAMETER_EMAIL, emailCreateDto.getEmail() + NOTE_ALREADY_EXIST);
-        }
-        UserEntity ownerEmail = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Пользователь с [userId=%d]", userId)));
-        UserEmailEntity userEmailEntityForSave = userMapper.toEntityEmailFromCreateDto(emailCreateDto, ownerEmail);
-
-        UserEmailEntity savedUserEmailEntityInRepository = userEmailRepository.saveAndFlush(userEmailEntityForSave);
-
-        return userMapper.toShortEmailDtoFromEmailEntity(savedUserEmailEntityInRepository);
-    }
-
-    @Override
-    public EmailShortResponseDto updateEmailById(EmailUpdateDto emailUpdateDto, Long userId) {
-        log.debug(UPDATE_IN_REPOSITORY + "[emailUpdateDto={}] для [userId={}]", emailUpdateDto, userId);
-        if (existsEmailByStringEmail(emailUpdateDto.getEmail())) {
-            log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[{}={}]", PARAMETER_EMAIL, emailUpdateDto.getEmail());
-            throw new IntegrityConstraintException(PARAMETER_EMAIL, emailUpdateDto.getEmail() + NOTE_ALREADY_EXIST);
-        }
-        var emailId = emailUpdateDto.getId();
-        UserEmailEntity userEmailEntityFromRepository = userEmailRepository.findById(emailId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Email с [emailId=%d]", emailId)));
-
-        if (userEmailEntityFromRepository.getOwner().getId().equals(userId)) {
-            userEmailEntityFromRepository.setEmail(emailUpdateDto.getEmail());
-            UserEmailEntity updatedEmail = userEmailRepository.saveAndFlush(userEmailEntityFromRepository);
-            log.debug("В БД произошло обновление электронной почты: [{}]", updatedEmail);
-            return userMapper.toShortEmailDtoFromEmailEntity(updatedEmail);
-        } else {
-            log.error("Произошел инцидент: [{}] не является владельцем электронной почты: [{}]", userId, emailId);
-            throw new AccessDeniedException(String.format("Вы не являетесь владельцем [%s]", PARAMETER_PHONE));
-        }
-    }
-
-    @Override
-    public void deleteEmailById(Long userId, Long emailId) {
-        log.debug(DELETE_IN_REPOSITORY + "[emailId={}] для [userId={}]", emailId, userId);
-        UserEmailEntity userEmailEntityFromRepository = userEmailRepository.findById(emailId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Email с [emailId=%d]", emailId)));
-
-        if (userEmailEntityFromRepository.getOwner().getId().equals(userId)) {
-            userEmailRepository.deleteById(emailId);
-        } else {
-            log.error("Произошел инцидент: [{}] не является владельцем email [{}]", userId, emailId);
-            throw new AccessDeniedException(String.format("Вы не являетесь владельцем [%s]", PARAMETER_EMAIL));
-        }
     }
 
     @Override
@@ -299,28 +244,8 @@ public class UserServiceImpl implements UserService {
             throw new IntegrityConstraintException(PARAMETER_LOGIN, login + NOTE_ALREADY_EXIST);
         }
 
-        checkEmailCreateDto(userCreateDto.getEmails());
         checkPhoneCreateDto(userCreateDto.getPhones());
         log.debug("Проверка успешно завершена, пользователя можно сохранять");
-    }
-
-    private void checkEmailCreateDto(Set<EmailCreateDto> emails) {
-        if (emails.size() == 1) {
-            var email = emails.stream().findFirst()
-                    .orElseThrow(() -> new IntegrityConstraintException(PARAMETER_EMAIL, emails + NOTE_ALREADY_EXIST));
-            if (existsEmailByStringEmail(email.getEmail())) {
-                log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[{}={}]", PARAMETER_EMAIL, email.getEmail());
-                throw new IntegrityConstraintException(PARAMETER_EMAIL, email.getEmail() + NOTE_ALREADY_EXIST);
-            }
-        } else if (emails.size() > 1) {
-            if (existsEmailBySetEmails(emails.stream().map(EmailCreateDto::getEmail).collect(Collectors.toSet()))) {
-                log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[{}={}]", PARAMETER_EMAIL, emails);
-                throw new IntegrityConstraintException(PARAMETER_EMAIL, emails + NOTE_ALREADY_EXIST);
-            }
-        } else {
-            log.error(PARAMETER_BAD_REQUEST + "список [email адресов] оказался пуст");
-            throw new IncorrectMadeRequestException(PARAMETER_EMAIL, "не может быть пустым");
-        }
     }
 
     private void checkPhoneCreateDto(Set<PhoneCreateDto> phones) {
@@ -347,20 +272,9 @@ public class UserServiceImpl implements UserService {
         return userRepository.existsByLogin(login);
     }
 
-    private boolean existsEmailByStringEmail(String email) {
-        log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[{}={}]", PARAMETER_EMAIL, email);
-        return userEmailRepository.existsByEmail(email);
-    }
-
     private boolean existsPhoneByStringPhone(String phone) {
         log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[{}={}]", PARAMETER_PHONE, phone);
         return userPhoneRepository.existsByPhone(phone);
-    }
-
-    private boolean existsEmailBySetEmails(Set<String> emails) {
-        log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[список адресов={}]", emails);
-        var listOfEmails = userEmailRepository.getEmailEntityBySetEmails(emails);
-        return !listOfEmails.isEmpty();
     }
 
     private boolean existsPhoneBySetPhones(Set<String> phones) {
@@ -369,23 +283,15 @@ public class UserServiceImpl implements UserService {
         return !listOfPhones.isEmpty();
     }
 
-    private List<UserEmailEntity> sortListUserEmailsByLexicographic(List<UserEmailEntity> listNoSorted) {
-        return listNoSorted.stream()
-                .sorted(Comparator.comparing(UserEmailEntity::getEmail).reversed()).collect(Collectors.toList());
-    }
-
     private List<UserPhoneEntity> sortListUserPhonesByLexicographic(List<UserPhoneEntity> listNoSorted) {
         return listNoSorted.stream()
                 .sorted(Comparator.comparing(UserPhoneEntity::getPhone).reversed()).collect(Collectors.toList());
-    }
-
-    private List<UserEmailEntity> sortListUserEmailsId(List<UserEmailEntity> listNoSorted) {
-        return listNoSorted.stream()
-                .sorted(Comparator.comparing(UserEmailEntity::getId).reversed()).collect(Collectors.toList());
     }
 
     private List<UserPhoneEntity> sortListUserPhonesId(List<UserPhoneEntity> listNoSorted) {
         return listNoSorted.stream()
                 .sorted(Comparator.comparing(UserPhoneEntity::getId).reversed()).collect(Collectors.toList());
     }
+
+
 }

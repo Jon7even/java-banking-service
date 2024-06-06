@@ -35,9 +35,9 @@ public class UserServiceTest extends SetupServiceTest {
     @Test public void shouldCreateNewUser_thenReturn_UserFullResponseDto() {
         when(userMapper.toUserEntityFromCreateDto(any(UserCreateDto.class), any()))
                 .thenReturn(userEntityFirstWithoutId);
-        when(userMapper.toEntityBankAccountFromCreateDto(any(BankAccountCreateDto.class), any(UserEntity.class)))
+        when(bankAccountMapper.toEntityBankAccountFromCreateDto(any(BankAccountCreateDto.class), any(UserEntity.class)))
                 .thenReturn(bankAccountEntityFirstWithoutId);
-        when(userMapper.toListEntityEmailFromCreateDto(any()))
+        when(userEmailMapper.toListEntityEmailFromCreateDto(any()))
                 .thenReturn(listUserEmailEntitiesFirstWithoutId);
         when(userMapper.toListEntityPhoneFromCreateDto(any()))
                 .thenReturn(listUserPhoneEntitiesFirstWithoutId);

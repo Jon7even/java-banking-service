@@ -4,7 +4,7 @@ import com.github.jon7even.constants.ControllerApi;
 import com.github.jon7even.dto.user.email.EmailCreateDto;
 import com.github.jon7even.dto.user.email.EmailShortResponseDto;
 import com.github.jon7even.dto.user.email.EmailUpdateDto;
-import com.github.jon7even.service.UserService;
+import com.github.jon7even.service.UserEmailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,7 +32,7 @@ import static com.github.jon7even.constants.LogsMessage.IN_CONTROLLER_METHOD;
 @RequiredArgsConstructor
 @RequestMapping(path = ControllerApi.PATH_API + PATH_USERS)
 public class ApiUserEmailController {
-    private final UserService userService;
+    private final UserEmailService userEmailService;
 
     @Operation(
             summary = "Добавить новый email",
@@ -49,7 +49,7 @@ public class ApiUserEmailController {
                                                         HttpServletRequest request) {
         log.debug("На {} {} {}", request.getRequestURL(), IN_CONTROLLER_METHOD, request.getMethod());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.addNewEmail(emailCreateDto, userId));
+        return ResponseEntity.status(HttpStatus.CREATED).body(userEmailService.addNewEmail(emailCreateDto, userId));
     }
 
     @Operation(
@@ -66,7 +66,8 @@ public class ApiUserEmailController {
                                                         HttpServletRequest request) {
         log.debug("На {} {} {}", request.getRequestURL(), IN_CONTROLLER_METHOD, request.getMethod());
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userService.updateEmailById(emailUpdateDto, userId));
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(userEmailService.updateEmailById(emailUpdateDto, userId));
     }
 
     @Operation(
@@ -83,7 +84,7 @@ public class ApiUserEmailController {
                                        HttpServletRequest request) {
         log.debug("На {} {} {}", request.getRequestURL(), IN_CONTROLLER_METHOD, request.getMethod());
 
-        userService.deleteEmailById(userId, emailId);
+        userEmailService.deleteEmailById(userId, emailId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
