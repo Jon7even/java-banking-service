@@ -41,9 +41,9 @@ public class SystemUserControllerTest extends SetupControllerTest {
                 .andExpect(jsonPath("firstName").value(userFullResponseDtoFirst.getFirstName()))
                 .andExpect(jsonPath("lastName").value(userFullResponseDtoFirst.getLastName()))
                 .andExpect(jsonPath("middleName").value(userFullResponseDtoFirst.getMiddleName()))
-                .andExpect(jsonPath("dateOfBirth").value(
-                        userFullResponseDtoFirst.getDateOfBirth().format(DateTimeFormatter.ofPattern(DATE_DEFAULT)))
-                )
+                .andExpect(jsonPath("dateOfBirth")
+                        .value(userFullResponseDtoFirst.getDateOfBirth()
+                                .format(DateTimeFormatter.ofPattern(DATE_DEFAULT))))
                 .andExpect(jsonPath("registeredOn").exists())
                 .andExpect(jsonPath("updatedOn").value(userFullResponseDtoFirst.getUpdatedOn()));
     }

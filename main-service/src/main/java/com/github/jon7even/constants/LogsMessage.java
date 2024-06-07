@@ -32,4 +32,5 @@ public final class LogsMessage {
     public static final String NOT_EXIST = " не существует";
     public static final String ACCESS_DENIED = " доступ запрещен";
     public static final String SEARCH_IN_REPOSITORY = "Начинаем искать существует ли запись в БД по: ";
+    public static final String START_CHECKING = "Начинаем проверять:";
 }

@@ -39,7 +39,7 @@ public class UserServiceTest extends SetupServiceTest {
                 .thenReturn(bankAccountEntityFirstWithoutId);
         when(userEmailMapper.toListEntityEmailFromCreateDto(any()))
                 .thenReturn(listUserEmailEntitiesFirstWithoutId);
-        when(userMapper.toListEntityPhoneFromCreateDto(any()))
+        when(userPhoneMapper.toListEntityPhoneFromCreateDto(any()))
                 .thenReturn(listUserPhoneEntitiesFirstWithoutId);
         when(userRepository.existsByLogin(userCreateDtoFirst.getLogin()))
                 .thenReturn(false);

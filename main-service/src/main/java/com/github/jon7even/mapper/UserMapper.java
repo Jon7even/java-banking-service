@@ -67,20 +67,4 @@ public interface UserMapper {
                                                       BankAccountShortResponseDto bankAccountShortResponseDto,
                                                       List<EmailShortResponseDto> emailShortResponseDto,
                                                       List<PhoneShortResponseDto> phoneShortResponseDto);
-
-    @Mapping(target = "id", ignore = true)
-    @Mapping(source = "phoneCreateDto.phone", target = "phone")
-    @Mapping(target = "owner", ignore = true)
-    List<UserPhoneEntity> toListEntityPhoneFromCreateDto(List<PhoneCreateDto> phoneCreateDto);
-
-    @Mapping(target = "id", ignore = true)
-    @Mapping(source = "phoneCreateDto.phone", target = "phone")
-    @Mapping(source = "userEntity", target = "owner")
-    UserPhoneEntity toEntityPhoneFromCreateDto(PhoneCreateDto phoneCreateDto, UserEntity userEntity);
-
-    @Mapping(source = "userPhoneEntities.phone", target = "phone")
-    List<PhoneShortResponseDto> toShortListPhoneDtoFromPhoneEntity(List<UserPhoneEntity> userPhoneEntities);
-
-    @Mapping(source = "userPhoneEntity.phone", target = "phone")
-    PhoneShortResponseDto toShortPhoneDtoFromPhoneEntity(UserPhoneEntity userPhoneEntity);
 }

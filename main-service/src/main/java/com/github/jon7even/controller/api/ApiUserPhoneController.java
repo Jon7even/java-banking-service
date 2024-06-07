@@ -4,7 +4,7 @@ import com.github.jon7even.constants.ControllerApi;
 import com.github.jon7even.dto.user.phone.PhoneCreateDto;
 import com.github.jon7even.dto.user.phone.PhoneShortResponseDto;
 import com.github.jon7even.dto.user.phone.PhoneUpdateDto;
-import com.github.jon7even.service.UserService;
+import com.github.jon7even.service.UserPhoneService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,7 +32,7 @@ import static com.github.jon7even.constants.LogsMessage.IN_CONTROLLER_METHOD;
 @RequiredArgsConstructor
 @RequestMapping(path = ControllerApi.PATH_API + PATH_USERS)
 public class ApiUserPhoneController {
-    private final UserService userService;
+    private final UserPhoneService userPhoneService;
 
     @Operation(
             summary = "Добавить новый phone",
@@ -49,7 +49,7 @@ public class ApiUserPhoneController {
                                                         HttpServletRequest request) {
         log.debug("На {} {} {}", request.getRequestURL(), IN_CONTROLLER_METHOD, request.getMethod());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.addNewPhone(phoneCreateDto, userId));
+        return ResponseEntity.status(HttpStatus.CREATED).body(userPhoneService.addNewPhone(phoneCreateDto, userId));
     }
 
     @Operation(
@@ -66,7 +66,8 @@ public class ApiUserPhoneController {
                                                         HttpServletRequest request) {
         log.debug("На {} {} {}", request.getRequestURL(), IN_CONTROLLER_METHOD, request.getMethod());
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userService.updatePhoneById(phoneUpdateDto, userId));
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(userPhoneService.updatePhoneById(phoneUpdateDto, userId));
     }
 
     @Operation(
@@ -83,7 +84,7 @@ public class ApiUserPhoneController {
                                        HttpServletRequest request) {
         log.debug("На {} {} {}", request.getRequestURL(), IN_CONTROLLER_METHOD, request.getMethod());
 
-        userService.deletePhoneById(userId, phoneId);
+        userPhoneService.deletePhoneById(userId, phoneId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

@@ -34,21 +34,21 @@ import static com.github.jon7even.constants.LogsMessage.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class UserEmailServiceImpl implements UserEmailService {
     private final UserEmailRepository userEmailRepository;
     private final UserEmailMapper userEmailMapper;
     private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public List<EmailShortResponseDto> createNewEmails(Set<EmailCreateDto> emailsCreateDto, UserEntity newUserEntity) {
         log.trace(SAVE_IN_REPOSITORY + "[emailsCreateDto={}]", emailsCreateDto);
         checkListEmailsCreateDto(emailsCreateDto);
 
         List<UserEmailEntity> userEmailEntitiesForSaveInRepository =
                 userEmailMapper.toListEntityEmailFromCreateDto(emailsCreateDto.stream().toList());
-
         userEmailEntitiesForSaveInRepository.forEach(userEmail -> userEmail.setOwner(newUserEntity));
+
         List<UserEmailEntity> savedEmails = userEmailRepository.saveAllAndFlush(
                 sortListUserEmailsByLexicographic(userEmailEntitiesForSaveInRepository)
         );
@@ -57,6 +57,7 @@ public class UserEmailServiceImpl implements UserEmailService {
     }
 
     @Override
+    @Transactional
     public EmailShortResponseDto addNewEmail(EmailCreateDto emailCreateDto, Long userId) {
         log.debug(SAVE_IN_REPOSITORY + "[emailCreateDto={}] для [userId={}]", emailCreateDto, userId);
         checkEmailInRepositoryByStringEmail(emailCreateDto.getEmail());
@@ -70,6 +71,7 @@ public class UserEmailServiceImpl implements UserEmailService {
     }
 
     @Override
+    @Transactional
     public EmailShortResponseDto updateEmailById(EmailUpdateDto emailUpdateDto, Long userId) {
         log.debug(UPDATE_IN_REPOSITORY + "[emailUpdateDto={}] для [userId={}]", emailUpdateDto, userId);
         checkEmailInRepositoryByStringEmail(emailUpdateDto.getEmail());
@@ -84,6 +86,7 @@ public class UserEmailServiceImpl implements UserEmailService {
     }
 
     @Override
+    @Transactional
     public void deleteEmailById(Long userId, Long emailId) {
         log.debug(DELETE_IN_REPOSITORY + "[emailId={}] для [userId={}]", emailId, userId);
         UserEmailEntity userEmailEntityFromRepository = findUserEmailEntityById(emailId);
@@ -125,7 +128,7 @@ public class UserEmailServiceImpl implements UserEmailService {
     }
 
     private void checkUserIsOwnerEmail(UserEmailEntity userEmail, Long userId) {
-        log.debug("Начинаем проверять является ли пользователь с [userId={}] владельцем [email={}]", userId, userEmail);
+        log.debug("{} является ли пользователь с [userId={}] владельцем [email={}]", START_CHECKING, userId, userEmail);
         if (!userEmail.getOwner().getId().equals(userId)) {
             log.error("Произошел инцидент: [userId={}] не является владельцем [email={}]", userId, userEmail);
             throw new AccessDeniedException(String.format("Вы не являетесь владельцем [%s]", PARAMETER_EMAIL));
@@ -136,7 +139,6 @@ public class UserEmailServiceImpl implements UserEmailService {
         log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[{}={}]", PARAMETER_EMAIL, email);
         return userEmailRepository.existsByEmail(email);
     }
-
 
     private boolean existsEmailBySetEmails(Set<String> emails) {
         log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[список адресов={}]", emails);

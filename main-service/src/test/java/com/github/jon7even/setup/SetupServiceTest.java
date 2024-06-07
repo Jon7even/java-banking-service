@@ -3,6 +3,7 @@ package com.github.jon7even.setup;
 import com.github.jon7even.mapper.BankAccountMapper;
 import com.github.jon7even.mapper.UserEmailMapper;
 import com.github.jon7even.mapper.UserMapper;
+import com.github.jon7even.mapper.UserPhoneMapper;
 import com.github.jon7even.repository.BankAccountRepository;
 import com.github.jon7even.repository.UserEmailRepository;
 import com.github.jon7even.repository.UserPhoneRepository;
@@ -21,5 +22,6 @@ public class SetupServiceTest extends PreparationObjectsForTests {
     @Mock protected UserMapper userMapper;
     @Mock protected BankAccountMapper bankAccountMapper;
     @Mock protected UserEmailMapper userEmailMapper;
+    @Mock protected UserPhoneMapper userPhoneMapper;
     @Mock protected PasswordEncoder passwordEncoder;
 }

@@ -20,7 +20,7 @@ public interface UserEmailService {
      *
      * @param emailsCreateDto список заполненных объектов DTO с новыми электронными адресами, минимум 1 запись
      * @param newUserEntity   пользователь, который будет являться владельцем электронных адресов
-     * @return EmailShortResponseDto список объектов DTO с созданными em
+     * @return EmailShortResponseDto список объектов DTO
      */
     List<EmailShortResponseDto> createNewEmails(Set<EmailCreateDto> emailsCreateDto, UserEntity newUserEntity);
 

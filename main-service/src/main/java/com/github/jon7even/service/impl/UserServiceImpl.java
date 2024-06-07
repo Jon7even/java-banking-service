@@ -4,25 +4,21 @@ import com.github.jon7even.dto.user.UserCreateDto;
 import com.github.jon7even.dto.user.UserFullResponseDto;
 import com.github.jon7even.dto.user.UserShortResponseDto;
 import com.github.jon7even.dto.user.email.EmailShortResponseDto;
-import com.github.jon7even.dto.user.phone.PhoneCreateDto;
 import com.github.jon7even.dto.user.phone.PhoneShortResponseDto;
-import com.github.jon7even.dto.user.phone.PhoneUpdateDto;
 import com.github.jon7even.dto.user.search.ParamsSearchUserRequestDto;
 import com.github.jon7even.entity.BankAccountEntity;
 import com.github.jon7even.entity.UserEntity;
-import com.github.jon7even.entity.UserPhoneEntity;
 import com.github.jon7even.enums.user.UserSearchType;
-import com.github.jon7even.exception.AccessDeniedException;
-import com.github.jon7even.exception.EntityNotFoundException;
 import com.github.jon7even.exception.IncorrectMadeRequestException;
 import com.github.jon7even.exception.IntegrityConstraintException;
 import com.github.jon7even.mapper.BankAccountMapper;
 import com.github.jon7even.mapper.UserEmailMapper;
 import com.github.jon7even.mapper.UserMapper;
+import com.github.jon7even.mapper.UserPhoneMapper;
 import com.github.jon7even.repository.BankAccountRepository;
-import com.github.jon7even.repository.UserPhoneRepository;
 import com.github.jon7even.repository.UserRepository;
 import com.github.jon7even.service.UserEmailService;
+import com.github.jon7even.service.UserPhoneService;
 import com.github.jon7even.service.UserService;
 import com.github.jon7even.utils.ConverterPageable;
 import com.github.jon7even.utils.ConverterSort;
@@ -36,10 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.github.jon7even.constants.LogsMessage.*;
@@ -57,11 +51,12 @@ import static com.github.jon7even.constants.LogsMessage.*;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserEmailService userEmailService;
-    private final UserPhoneRepository userPhoneRepository;
+    private final UserPhoneService userPhoneService;
     private final BankAccountRepository bankAccountRepository;
     private final UserMapper userMapper;
     private final BankAccountMapper bankAccountMapper;
     private final UserEmailMapper userEmailMapper;
+    private final UserPhoneMapper userPhoneMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -71,11 +66,13 @@ public class UserServiceImpl implements UserService {
         log.trace(SAVE_IN_REPOSITORY + "[userCreateDto={}]", userCreateDto);
         checkUserCreateDto(userCreateDto);
         UserEntity userForSaveInRepository = userMapper.toUserEntityFromCreateDto(userCreateDto, LocalDateTime.now());
+
         UserEntity savedUserFromRepository = userRepository.saveAndFlush(userForSaveInRepository);
 
         BankAccountEntity bankAccountEntityForSaveInRepository = bankAccountMapper.toEntityBankAccountFromCreateDto(
                 userCreateDto.getBankAccount(), savedUserFromRepository
         );
+
         BankAccountEntity savedBankAccountEntityInRepository =
                 bankAccountRepository.saveAndFlush(bankAccountEntityForSaveInRepository);
 
@@ -83,19 +80,14 @@ public class UserServiceImpl implements UserService {
                 userCreateDto.getEmails(), savedUserFromRepository
         );
 
-        List<UserPhoneEntity> userPhoneEntitiesForSaveInRepository = userMapper.toListEntityPhoneFromCreateDto(
-                userCreateDto.getPhones().stream().toList()
+        List<PhoneShortResponseDto> savedUserPhonesInRepository = userPhoneService.createNewPhones(
+                userCreateDto.getPhones(), savedUserFromRepository
         );
-        userPhoneEntitiesForSaveInRepository.forEach(userPhone -> userPhone.setOwner(savedUserFromRepository));
-        List<UserPhoneEntity> savedUserPhoneEntityInRepository = userPhoneRepository.saveAllAndFlush(
-                sortListUserPhonesByLexicographic(userPhoneEntitiesForSaveInRepository)
-        );
-
         log.trace("У нас успешно зарегистрирован новый пользователь [user={}]", savedUserFromRepository);
         return userMapper.toUserFullDtoFromUserEntity(savedUserFromRepository,
                 bankAccountMapper.toShortBalanceDtoFromBankAccountEntity(savedBankAccountEntityInRepository),
                 savedUserEmailsInRepository,
-                userMapper.toShortListPhoneDtoFromPhoneEntity(sortListUserPhonesId(savedUserPhoneEntityInRepository))
+                savedUserPhonesInRepository
         );
     }
 
@@ -113,62 +105,9 @@ public class UserServiceImpl implements UserService {
                 .map((userEntity -> userMapper.toUserShortDtoFromUserEntity(userEntity,
                         bankAccountMapper.toShortBalanceDtoFromBankAccountEntity(userEntity.getBankAccountEntity()),
                         userEmailMapper.toShortListEmailDtoFromEmailEntity(userEntity.getEmails()),
-                        userMapper.toShortListPhoneDtoFromPhoneEntity(userEntity.getPhones()))
+                        userPhoneMapper.toShortListPhoneDtoFromPhoneEntity(userEntity.getPhones()))
                 ))
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public PhoneShortResponseDto addNewPhone(PhoneCreateDto phoneCreateDto, Long userId) {
-        log.debug(SAVE_IN_REPOSITORY + "[phoneCreateDto={}] для [userId={}]", phoneCreateDto, userId);
-        if (existsPhoneByStringPhone(phoneCreateDto.getPhone())) {
-            log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[{}={}]", PARAMETER_PHONE, phoneCreateDto.getPhone());
-            throw new IntegrityConstraintException(PARAMETER_PHONE, phoneCreateDto.getPhone() + NOTE_ALREADY_EXIST);
-        }
-        UserEntity ownerPhone = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Пользователь с [userId=%d]", userId)));
-        UserPhoneEntity userPhoneEntityForSave = userMapper.toEntityPhoneFromCreateDto(phoneCreateDto, ownerPhone);
-
-        UserPhoneEntity savedUserPhoneEntityInRepository = userPhoneRepository.saveAndFlush(userPhoneEntityForSave);
-
-        return userMapper.toShortPhoneDtoFromPhoneEntity(savedUserPhoneEntityInRepository);
-    }
-
-    @Override
-    public PhoneShortResponseDto updatePhoneById(PhoneUpdateDto phoneUpdateDto, Long userId) {
-        log.debug(UPDATE_IN_REPOSITORY + "[phoneUpdateDto={}] для [userId={}]", phoneUpdateDto, userId);
-        if (existsPhoneByStringPhone(phoneUpdateDto.getPhone())) {
-            log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[{}={}]", PARAMETER_PHONE, phoneUpdateDto.getPhone());
-            throw new IntegrityConstraintException(PARAMETER_PHONE, phoneUpdateDto.getPhone() + NOTE_ALREADY_EXIST);
-        }
-
-        var phoneId = phoneUpdateDto.getId();
-        UserPhoneEntity userPhoneEntityFromRepository = userPhoneRepository.findById(phoneId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Телефон с [phoneId=%d]", phoneId)));
-
-        if (userPhoneEntityFromRepository.getOwner().getId().equals(userId)) {
-            userPhoneEntityFromRepository.setPhone(phoneUpdateDto.getPhone());
-            UserPhoneEntity updatedPhone = userPhoneRepository.saveAndFlush(userPhoneEntityFromRepository);
-            log.debug("В БД произошло обновление номера телефона: [{}]", updatedPhone);
-            return userMapper.toShortPhoneDtoFromPhoneEntity(updatedPhone);
-        } else {
-            log.error("Произошел инцидент: [{}] не является владельцем номера телефона [{}]", userId, phoneId);
-            throw new AccessDeniedException(String.format("Вы не являетесь владельцем [%s]", PARAMETER_PHONE));
-        }
-    }
-
-    @Override
-    public void deletePhoneById(Long userId, Long phoneId) {
-        log.debug(DELETE_IN_REPOSITORY + "[phoneId={}] для [userId={}]", phoneId, userId);
-        UserPhoneEntity userPhoneEntityFromRepository = userPhoneRepository.findById(phoneId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Телефон с [phoneId=%d]", phoneId)));
-
-        if (userPhoneEntityFromRepository.getOwner().getId().equals(userId)) {
-            userPhoneRepository.deleteById(phoneId);
-        } else {
-            log.error("Произошел инцидент: [{}] не является владельцем номера телефона [{}]", userId, phoneId);
-            throw new AccessDeniedException(String.format("Вы не являетесь владельцем [%s]", PARAMETER_PHONE));
-        }
     }
 
     private List<UserEntity> getListUserEntityFromRepository(ParamsSearchUserRequestDto paramsSearchUserRequestDto,
@@ -231,7 +170,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkUserCreateDto(UserCreateDto userCreateDto) {
-        log.debug("Начинаем проверять поля нового пользователя перед сохранением в БД");
+        log.debug("{} поля нового пользователя перед сохранением в БД", START_CHECKING);
         var balance = userCreateDto.getBankAccount().getBalance();
         if (balance.compareTo(BigDecimal.ZERO) < 0) {
             log.error(PARAMETER_BAD_REQUEST + PARAMETER_BALANCE + WRONG_CAN_NOT + "отрицательным");
@@ -243,55 +182,11 @@ public class UserServiceImpl implements UserService {
             log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[{}={}]", PARAMETER_LOGIN, login);
             throw new IntegrityConstraintException(PARAMETER_LOGIN, login + NOTE_ALREADY_EXIST);
         }
-
-        checkPhoneCreateDto(userCreateDto.getPhones());
         log.debug("Проверка успешно завершена, пользователя можно сохранять");
-    }
-
-    private void checkPhoneCreateDto(Set<PhoneCreateDto> phones) {
-        if (phones.size() == 1) {
-            var phone = phones.stream().findFirst()
-                    .orElseThrow(() -> new IntegrityConstraintException(PARAMETER_PHONE, phones + NOTE_ALREADY_EXIST));
-            if (existsPhoneByStringPhone(phone.getPhone())) {
-                log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[{}={}]", PARAMETER_PHONE, phone.getPhone());
-                throw new IntegrityConstraintException(PARAMETER_PHONE, phone.getPhone() + NOTE_ALREADY_EXIST);
-            }
-        } else if (phones.size() > 1) {
-            if (existsPhoneBySetPhones(phones.stream().map(PhoneCreateDto::getPhone).collect(Collectors.toSet()))) {
-                log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[список номеров={}]", phones);
-                throw new IntegrityConstraintException(PARAMETER_PHONE, phones + NOTE_ALREADY_EXIST);
-            }
-        } else {
-            log.error(PARAMETER_BAD_REQUEST + "список [номеров] оказался пуст");
-            throw new IncorrectMadeRequestException(PARAMETER_PHONE, "не может быть пустым");
-        }
     }
 
     private boolean existsUserByLogin(String login) {
         log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[{}={}]", PARAMETER_LOGIN, login);
         return userRepository.existsByLogin(login);
     }
-
-    private boolean existsPhoneByStringPhone(String phone) {
-        log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[{}={}]", PARAMETER_PHONE, phone);
-        return userPhoneRepository.existsByPhone(phone);
-    }
-
-    private boolean existsPhoneBySetPhones(Set<String> phones) {
-        log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[список номеров телефонов={}]", phones);
-        var listOfPhones = userPhoneRepository.getPhoneEntityBySetPhones(phones);
-        return !listOfPhones.isEmpty();
-    }
-
-    private List<UserPhoneEntity> sortListUserPhonesByLexicographic(List<UserPhoneEntity> listNoSorted) {
-        return listNoSorted.stream()
-                .sorted(Comparator.comparing(UserPhoneEntity::getPhone).reversed()).collect(Collectors.toList());
-    }
-
-    private List<UserPhoneEntity> sortListUserPhonesId(List<UserPhoneEntity> listNoSorted) {
-        return listNoSorted.stream()
-                .sorted(Comparator.comparing(UserPhoneEntity::getId).reversed()).collect(Collectors.toList());
-    }
-
-
 }
