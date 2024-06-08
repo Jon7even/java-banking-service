@@ -88,6 +88,7 @@ public class UserPhoneServiceImpl implements UserPhoneService {
     @Override
     public void deletePhoneById(Long userId, Long phoneId) {
         log.debug(DELETE_IN_REPOSITORY + "[phoneId={}] для [userId={}]", phoneId, userId);
+        checkSizeListOfPhoneUserByUserId(userId);
         UserPhoneEntity userPhoneEntityFromRepository = findUserPhoneEntityById(phoneId);
         checkUserIsOwnerPhone(userPhoneEntityFromRepository, userId);
         userPhoneRepository.deleteById(phoneId);
@@ -143,6 +144,19 @@ public class UserPhoneServiceImpl implements UserPhoneService {
         log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[список номеров телефонов={}]", phones);
         var listOfPhones = userPhoneRepository.getPhoneEntityBySetPhones(phones);
         return !listOfPhones.isEmpty();
+    }
+
+    private void checkSizeListOfPhoneUserByUserId(Long userId) {
+        log.debug("{} количество записей phone по [userId={}]", START_CHECKING, userId);
+        if (getListOfPhonesByOwnerId(userId).size() < 2) {
+            log.warn("Пользователь с [userId={}] пытается удалить свою единственную {}", userId, PARAMETER_PHONE);
+            throw new IntegrityConstraintException(PARAMETER_PHONE, MIN_SIZE_LIST);
+        }
+    }
+
+    List<UserPhoneEntity> getListOfPhonesByOwnerId(Long userId) {
+        log.debug("{}list phones by [userId={}]", SEARCH_IN_REPOSITORY, userId);
+        return userPhoneRepository.findByOwnerId(userId);
     }
 
     private UserPhoneEntity findUserPhoneEntityById(Long phoneId) {

@@ -122,4 +122,16 @@ public class ApiUserEmailControllerTest extends SetupControllerTest {
         assertThat(userEmailRepository.findById(firstId))
                 .isNotEmpty();
     }
+
+    @DisplayName("[delete] Email не должен удалиться: не найден по ID")
+    @Test public void shouldNotDeletePhone_thenReturn_Status404_NotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete(ControllerApi.PATH_API + PATH_USERS
+                        + PATH_USER_ID + PATH_EMAIL + PATH_EMAIL_ID, userEntitySecond.getId(), sixthId))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("status").value("NOT_FOUND"))
+                .andExpect(jsonPath("reason").value("The required object was not found."))
+                .andExpect(jsonPath("message")
+                        .value("Email с [emailId=6] не был найден"))
+                .andExpect(jsonPath("timestamp").value(notNullValue()));
+    }
 }

@@ -35,13 +35,14 @@ public class ApiUserPhoneController {
     private final UserPhoneService userPhoneService;
 
     @Operation(
-            summary = "Добавить новый phone",
+            summary = "Добавить новый телефон",
             description = "Добавление в профиль пользователя нового номера телефона, "
                     + "требуется заполненный объект PhoneCreateDto")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Created phone успешно добавлен"),
+            @ApiResponse(responseCode = "201", description = "Created телефон успешно добавлен"),
             @ApiResponse(responseCode = "400", description = "Bad Request ошибки в случае неправильного запроса"),
-            @ApiResponse(responseCode = "403", description = "Forbidden пользователь не авторизован")
+            @ApiResponse(responseCode = "403", description = "Forbidden пользователь не авторизован"),
+            @ApiResponse(responseCode = "409", description = "Conflict телефон занят: уже существует в БД")
     })
     @PostMapping(PATH_USER_ID + PATH_PHONE)
     public ResponseEntity<PhoneShortResponseDto> create(@PathVariable @Positive Long userId,
@@ -53,12 +54,13 @@ public class ApiUserPhoneController {
     }
 
     @Operation(
-            summary = "Обновить существующий phone",
+            summary = "Обновить существующий телефон",
             description = "Обновить номер телефона у пользователя")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "No Content phone успешно обновлен"),
+            @ApiResponse(responseCode = "200", description = "OK существующий телефон успешно обновлен"),
             @ApiResponse(responseCode = "400", description = "Bad Request ошибки в случае неправильного запроса"),
-            @ApiResponse(responseCode = "403", description = "Forbidden пользователь не авторизован")
+            @ApiResponse(responseCode = "403", description = "Forbidden пользователь не авторизован"),
+            @ApiResponse(responseCode = "409", description = "Conflict телефон занят: уже существует в БД")
     })
     @PatchMapping(PATH_USER_ID + PATH_PHONE + PATH_PHONE_ID)
     public ResponseEntity<PhoneShortResponseDto> update(@PathVariable @Positive Long userId,
@@ -66,17 +68,18 @@ public class ApiUserPhoneController {
                                                         HttpServletRequest request) {
         log.debug("На {} {} {}", request.getRequestURL(), IN_CONTROLLER_METHOD, request.getMethod());
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(userPhoneService.updatePhoneById(phoneUpdateDto, userId));
     }
 
     @Operation(
-            summary = "Удалить существующий phone",
+            summary = "Удалить существующий телефон",
             description = "Удалить из профиля пользователя существующий номер телефона")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "No Content phone успешно удален"),
+            @ApiResponse(responseCode = "204", description = "No Content телефон успешно удален"),
             @ApiResponse(responseCode = "400", description = "Bad Request ошибки в случае неправильного запроса"),
-            @ApiResponse(responseCode = "403", description = "Forbidden пользователь не авторизован")
+            @ApiResponse(responseCode = "403", description = "Forbidden пользователь не авторизован"),
+            @ApiResponse(responseCode = "409", description = "Conflict нельзя удалить последний телефон из списка")
     })
     @DeleteMapping(PATH_USER_ID + PATH_PHONE + PATH_PHONE_ID)
     public ResponseEntity<Void> delete(@PathVariable @Positive Long userId,

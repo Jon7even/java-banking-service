@@ -35,14 +35,14 @@ public class ApiUserEmailController {
     private final UserEmailService userEmailService;
 
     @Operation(
-            summary = "Добавить новый email",
+            summary = "Добавить новую почту",
             description = "Добавление в профиль пользователя нового адреса электронной почты, "
                     + "требуется заполненный объект EmailCreateDto")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Created новый email успешно добавлен"),
+            @ApiResponse(responseCode = "201", description = "Created новая почта успешно добавлена"),
             @ApiResponse(responseCode = "400", description = "Bad Request ошибки в случае неправильного запроса"),
             @ApiResponse(responseCode = "403", description = "Forbidden пользователь не авторизован"),
-            @ApiResponse(responseCode = "409", description = "Conflict email занят: уже существует в БД")
+            @ApiResponse(responseCode = "409", description = "Conflict почта занята: уже существует в БД")
     })
     @PostMapping(PATH_USER_ID + PATH_EMAIL)
     public ResponseEntity<EmailShortResponseDto> create(@PathVariable @Positive Long userId,
@@ -54,13 +54,13 @@ public class ApiUserEmailController {
     }
 
     @Operation(
-            summary = "Обновить существующий email",
+            summary = "Обновить существующую почту",
             description = "Обновить адрес электронной почты у пользователя")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK существующий email успешно обновлен"),
+            @ApiResponse(responseCode = "200", description = "OK существующая почта успешно обновлена"),
             @ApiResponse(responseCode = "400", description = "Bad Request ошибки в случае неправильного запроса"),
             @ApiResponse(responseCode = "403", description = "Forbidden пользователь не авторизован"),
-            @ApiResponse(responseCode = "409", description = "Conflict email занят: уже существует в БД")
+            @ApiResponse(responseCode = "409", description = "Conflict почта занята: уже существует в БД")
     })
     @PatchMapping(PATH_USER_ID + PATH_EMAIL + PATH_EMAIL_ID)
     public ResponseEntity<EmailShortResponseDto> update(@PathVariable @Positive Long userId,
@@ -73,13 +73,13 @@ public class ApiUserEmailController {
     }
 
     @Operation(
-            summary = "Удалить существующий email",
+            summary = "Удалить существующую почту",
             description = "Удалить из профиля пользователя существующий адрес электронный адрес")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "No Content email успешно удален"),
+            @ApiResponse(responseCode = "204", description = "No Content почта успешно удалена"),
             @ApiResponse(responseCode = "400", description = "Bad Request ошибки в случае неправильного запроса"),
             @ApiResponse(responseCode = "403", description = "Forbidden пользователь не авторизован"),
-            @ApiResponse(responseCode = "409", description = "Conflict нельзя удалить последний email")
+            @ApiResponse(responseCode = "409", description = "Conflict нельзя удалить последнюю почту из списка")
     })
     @DeleteMapping(PATH_USER_ID + PATH_EMAIL + PATH_EMAIL_ID)
     public ResponseEntity<Void> delete(@PathVariable @Positive Long userId,
