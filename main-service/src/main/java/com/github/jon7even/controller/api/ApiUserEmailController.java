@@ -41,7 +41,8 @@ public class ApiUserEmailController {
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Created новый email успешно добавлен"),
             @ApiResponse(responseCode = "400", description = "Bad Request ошибки в случае неправильного запроса"),
-            @ApiResponse(responseCode = "403", description = "Forbidden пользователь не авторизован")
+            @ApiResponse(responseCode = "403", description = "Forbidden пользователь не авторизован"),
+            @ApiResponse(responseCode = "409", description = "Conflict email занят: уже существует в БД")
     })
     @PostMapping(PATH_USER_ID + PATH_EMAIL)
     public ResponseEntity<EmailShortResponseDto> create(@PathVariable @Positive Long userId,
@@ -56,9 +57,10 @@ public class ApiUserEmailController {
             summary = "Обновить существующий email",
             description = "Обновить адрес электронной почты у пользователя")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "No Content email успешно обновлен"),
+            @ApiResponse(responseCode = "200", description = "OK существующий email успешно обновлен"),
             @ApiResponse(responseCode = "400", description = "Bad Request ошибки в случае неправильного запроса"),
-            @ApiResponse(responseCode = "403", description = "Forbidden пользователь не авторизован")
+            @ApiResponse(responseCode = "403", description = "Forbidden пользователь не авторизован"),
+            @ApiResponse(responseCode = "409", description = "Conflict email занят: уже существует в БД")
     })
     @PatchMapping(PATH_USER_ID + PATH_EMAIL + PATH_EMAIL_ID)
     public ResponseEntity<EmailShortResponseDto> update(@PathVariable @Positive Long userId,
@@ -66,7 +68,7 @@ public class ApiUserEmailController {
                                                         HttpServletRequest request) {
         log.debug("На {} {} {}", request.getRequestURL(), IN_CONTROLLER_METHOD, request.getMethod());
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(userEmailService.updateEmailById(emailUpdateDto, userId));
     }
 
@@ -76,7 +78,8 @@ public class ApiUserEmailController {
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "No Content email успешно удален"),
             @ApiResponse(responseCode = "400", description = "Bad Request ошибки в случае неправильного запроса"),
-            @ApiResponse(responseCode = "403", description = "Forbidden пользователь не авторизован")
+            @ApiResponse(responseCode = "403", description = "Forbidden пользователь не авторизован"),
+            @ApiResponse(responseCode = "409", description = "Conflict нельзя удалить последний email")
     })
     @DeleteMapping(PATH_USER_ID + PATH_EMAIL + PATH_EMAIL_ID)
     public ResponseEntity<Void> delete(@PathVariable @Positive Long userId,

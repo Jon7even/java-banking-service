@@ -89,6 +89,7 @@ public class UserEmailServiceImpl implements UserEmailService {
     @Transactional
     public void deleteEmailById(Long userId, Long emailId) {
         log.debug(DELETE_IN_REPOSITORY + "[emailId={}] для [userId={}]", emailId, userId);
+        checkSizeListOfEmailUserByUserId(userId);
         UserEmailEntity userEmailEntityFromRepository = findUserEmailEntityById(emailId);
         checkUserIsOwnerEmail(userEmailEntityFromRepository, userId);
         userEmailRepository.deleteById(emailId);
@@ -144,6 +145,19 @@ public class UserEmailServiceImpl implements UserEmailService {
         log.debug(CHECK_PARAMETER_IN_REPOSITORY + "[список адресов={}]", emails);
         var listOfEmails = userEmailRepository.getEmailEntityBySetEmails(emails);
         return !listOfEmails.isEmpty();
+    }
+
+    private void checkSizeListOfEmailUserByUserId(Long userId) {
+        log.debug("{} количество записей email по [userId={}]", START_CHECKING, userId);
+        if (getListOfEmailsByOwnerId(userId).size() < 2) {
+            log.warn("Пользователь с [userId={}] пытается удалить свою единственную {}", userId, PARAMETER_EMAIL);
+            throw new IntegrityConstraintException(PARAMETER_EMAIL, MIN_SIZE_LIST);
+        }
+    }
+
+    List<UserEmailEntity> getListOfEmailsByOwnerId(Long userId) {
+        log.debug("{}list emails by [userId={}]", SEARCH_IN_REPOSITORY, userId);
+        return userEmailRepository.findByOwnerId(userId);
     }
 
     private UserEmailEntity findUserEmailEntityById(Long emailId) {

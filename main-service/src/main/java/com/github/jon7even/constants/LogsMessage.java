@@ -33,4 +33,5 @@ public final class LogsMessage {
     public static final String ACCESS_DENIED = " доступ запрещен";
     public static final String SEARCH_IN_REPOSITORY = "Начинаем искать существует ли запись в БД по: ";
     public static final String START_CHECKING = "Начинаем проверять:";
+    public static final String MIN_SIZE_LIST = "чтобы выполнить эту операцию минимальный размер должен быть больше 1";
 }
