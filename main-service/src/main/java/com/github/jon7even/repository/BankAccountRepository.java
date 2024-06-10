@@ -5,10 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Интерфейс DAO для банковского счета пользователя(UserEmailEntity), использует JpaRepository
+ * Интерфейс DAO для работы с банковским счетом пользователя(BankAccountEntity)
  *
  * @author Jon7even
  * @version 1.0
+ * @apiNote Использует JpaRepository
  */
 @Repository
 public interface BankAccountRepository extends JpaRepository<BankAccountEntity, Long> {

@@ -12,10 +12,11 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Интерфейс DAO для пользователя(UserEntity), использует JpaRepository
+ * Интерфейс DAO для пользователя(UserEntity)
  *
  * @author Jon7even
  * @version 1.0
+ * @apiNote Использует JpaRepository
  */
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {

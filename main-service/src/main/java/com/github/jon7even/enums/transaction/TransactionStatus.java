@@ -7,7 +7,7 @@ package com.github.jon7even.enums.transaction;
  * @version 1.0
  */
 public enum TransactionStatus {
-    PENDING,
+    QUEUE,
     SUCCESS,
     FAILURE
 }

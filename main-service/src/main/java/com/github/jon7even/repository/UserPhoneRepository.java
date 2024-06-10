@@ -10,10 +10,11 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Интерфейс DAO для номеров телефона пользователя(UserPhoneEntity), использует JpaRepository
+ * Интерфейс DAO для номеров телефона пользователя(UserPhoneEntity)
  *
  * @author Jon7even
  * @version 1.0
+ * @apiNote Использует JpaRepository
  */
 @Repository
 public interface UserPhoneRepository extends JpaRepository<UserPhoneEntity, Long> {

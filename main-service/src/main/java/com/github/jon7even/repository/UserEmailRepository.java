@@ -10,10 +10,11 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Интерфейс DAO для электронной почты пользователя(UserEmailEntity), использует JpaRepository
+ * Интерфейс DAO для электронной почты пользователя(UserEmailEntity)
  *
  * @author Jon7even
  * @version 1.0
+ * @apiNote Использует JpaRepository
  */
 @Repository
 public interface UserEmailRepository extends JpaRepository<UserEmailEntity, Long> {

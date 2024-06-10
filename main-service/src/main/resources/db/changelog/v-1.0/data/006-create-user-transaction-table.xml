@@ -27,7 +27,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="amount" type="DECIMAL" defaultValue="0">
-                <constraints nullable="false" checkConstraint="CHECK (balance >= 0)"/>
+                <constraints nullable="false" checkConstraint="CHECK (amount >= 0)"/>
             </column>
             <column name="status" type="VARCHAR(255)">
                 <constraints nullable="false"/>
