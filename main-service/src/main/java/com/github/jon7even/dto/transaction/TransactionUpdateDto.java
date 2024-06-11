@@ -19,8 +19,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TransactionUpdateDto {
-    @Positive(message = "Поле [accountId] должно быть положительным")
-    private Long accountId;
+    @Positive(message = "Поле [transactionId] должно быть положительным")
+    private Long transactionId;
 
     @NotNull(message = "Поле [status] не может быть пустым")
     private TransactionStatus status;

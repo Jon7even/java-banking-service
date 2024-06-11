@@ -8,7 +8,7 @@ import com.github.jon7even.dto.transaction.TransactionUpdateDto;
  *
  * @author Jon7even
  * @version 1.0
- * @apiNote Используется внутренними сервисами приложения для логирования истории операций с банковским счетом
+ * @apiNote Используется внутренними сервисами приложения для логирования операций с банковским счетом пользователя
  */
 public interface TransactionService {
     /**
@@ -21,7 +21,7 @@ public interface TransactionService {
     /**
      * Метод сохраняющий статус существующей транзакции
      *
-     * @param transactionUpdateDto заполненный объект DTO со всеми необходимыми полями
+     * @param transactionUpdateDto заполненный объект DTO с ID транзакции и новым статусом транзакции
      */
     void updateStatusTransaction(TransactionUpdateDto transactionUpdateDto);
 }

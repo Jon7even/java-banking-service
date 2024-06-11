@@ -1,6 +1,5 @@
 package com.github.jon7even.dto.transaction;
 
-import com.github.jon7even.enums.transaction.TransactionStatus;
 import com.github.jon7even.enums.transaction.TransactionType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -29,12 +28,9 @@ public class TransactionCreateDto {
     @NotBlank(message = "Поле [from] не может быть пустым")
     private String from;
 
-    @Positive(message = "Поле [balance] должно быть положительным")
+    @Positive(message = "Поле [amount] должно быть положительным")
     @Builder.Default
     private BigDecimal amount = BigDecimal.ZERO;
-
-    @NotNull(message = "Поле [status] не может быть пустым")
-    private TransactionStatus status;
 
     @NotNull(message = "Поле [type] не может быть пустым")
     private TransactionType type;

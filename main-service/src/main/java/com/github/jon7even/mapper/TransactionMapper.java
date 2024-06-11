@@ -22,7 +22,7 @@ public interface TransactionMapper {
     @Mapping(source = "bankAccountEntity", target = "target")
     @Mapping(source = "transactionCreateDto.from", target = "from")
     @Mapping(source = "transactionCreateDto.amount", target = "amount")
-    @Mapping(source = "transactionCreateDto.status", target = "status")
+    @Mapping(constant = "QUEUE", target = "status")
     @Mapping(source = "transactionCreateDto.type", target = "type")
     @Mapping(source = "now", target = "createdOn")
     @Mapping(target = "updatedOn", ignore = true)
