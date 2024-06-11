@@ -37,6 +37,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.github.jon7even.constants.LogsMessage.*;
+import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
 
 /**
  * Реализация сервиса взаимодействия с пользователями
@@ -60,7 +61,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    @Transactional
+    @Transactional(isolation = REPEATABLE_READ)
     public UserFullResponseDto createUser(UserCreateDto userCreateDto) {
         userCreateDto.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
         log.trace(SAVE_IN_REPOSITORY + "[userCreateDto={}]", userCreateDto);

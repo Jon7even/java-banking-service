@@ -16,6 +16,7 @@ import com.github.jon7even.service.UserPhoneService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
@@ -24,6 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.github.jon7even.constants.LogsMessage.*;
+import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
 
 /**
  * Реализация сервиса взаимодействия с номерами телефонов пользователей
@@ -41,7 +43,7 @@ public class UserPhoneServiceImpl implements UserPhoneService {
     private final UserRepository userRepository;
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.MANDATORY)
     public List<PhoneShortResponseDto> createNewPhones(Set<PhoneCreateDto> phonesCreateDto, UserEntity newUserEntity) {
         log.trace(SAVE_IN_REPOSITORY + "[phonesCreateDto={}]", phonesCreateDto);
         checkListPhonesCreateDto(phonesCreateDto);
@@ -58,7 +60,7 @@ public class UserPhoneServiceImpl implements UserPhoneService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = REPEATABLE_READ)
     public PhoneShortResponseDto addNewPhone(PhoneCreateDto phoneCreateDto, Long userId) {
         log.debug(SAVE_IN_REPOSITORY + "[phoneCreateDto={}] для [userId={}]", phoneCreateDto, userId);
         checkPhoneInRepositoryByStringPhone(phoneCreateDto.getPhone());
@@ -72,6 +74,7 @@ public class UserPhoneServiceImpl implements UserPhoneService {
     }
 
     @Override
+    @Transactional(isolation = REPEATABLE_READ)
     public PhoneShortResponseDto updatePhoneById(PhoneUpdateDto phoneUpdateDto, Long userId) {
         log.debug(UPDATE_IN_REPOSITORY + "[phoneUpdateDto={}] для [userId={}]", phoneUpdateDto, userId);
         checkPhoneInRepositoryByStringPhone(phoneUpdateDto.getPhone());
@@ -86,6 +89,7 @@ public class UserPhoneServiceImpl implements UserPhoneService {
     }
 
     @Override
+    @Transactional(isolation = REPEATABLE_READ)
     public void deletePhoneById(Long userId, Long phoneId) {
         log.debug(DELETE_IN_REPOSITORY + "[phoneId={}] для [userId={}]", phoneId, userId);
         checkSizeListOfPhoneUserByUserId(userId);

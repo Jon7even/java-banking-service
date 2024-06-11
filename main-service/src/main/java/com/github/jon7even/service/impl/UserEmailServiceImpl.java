@@ -16,6 +16,7 @@ import com.github.jon7even.service.UserEmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
@@ -24,6 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.github.jon7even.constants.LogsMessage.*;
+import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
 
 /**
  * Реализация сервиса взаимодействия с электронной почтой пользователей
@@ -40,7 +42,7 @@ public class UserEmailServiceImpl implements UserEmailService {
     private final UserRepository userRepository;
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.MANDATORY)
     public List<EmailShortResponseDto> createNewEmails(Set<EmailCreateDto> emailsCreateDto, UserEntity newUserEntity) {
         log.trace(SAVE_IN_REPOSITORY + "[emailsCreateDto={}]", emailsCreateDto);
         checkListEmailsCreateDto(emailsCreateDto);
@@ -57,7 +59,7 @@ public class UserEmailServiceImpl implements UserEmailService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = REPEATABLE_READ)
     public EmailShortResponseDto addNewEmail(EmailCreateDto emailCreateDto, Long userId) {
         log.debug(SAVE_IN_REPOSITORY + "[emailCreateDto={}] для [userId={}]", emailCreateDto, userId);
         checkEmailInRepositoryByStringEmail(emailCreateDto.getEmail());
@@ -71,7 +73,7 @@ public class UserEmailServiceImpl implements UserEmailService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = REPEATABLE_READ)
     public EmailShortResponseDto updateEmailById(EmailUpdateDto emailUpdateDto, Long userId) {
         log.debug(UPDATE_IN_REPOSITORY + "[emailUpdateDto={}] для [userId={}]", emailUpdateDto, userId);
         checkEmailInRepositoryByStringEmail(emailUpdateDto.getEmail());
@@ -86,7 +88,7 @@ public class UserEmailServiceImpl implements UserEmailService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = REPEATABLE_READ)
     public void deleteEmailById(Long userId, Long emailId) {
         log.debug(DELETE_IN_REPOSITORY + "[emailId={}] для [userId={}]", emailId, userId);
         checkSizeListOfEmailUserByUserId(userId);
