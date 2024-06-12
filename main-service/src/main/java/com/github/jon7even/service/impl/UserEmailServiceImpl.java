@@ -54,28 +54,28 @@ public class UserEmailServiceImpl implements UserEmailService {
         List<UserEmailEntity> savedEmails = userEmailRepository.saveAllAndFlush(
                 sortListUserEmailsByLexicographic(userEmailEntitiesForSaveInRepository)
         );
-        log.debug("Успешно сохранен новый список электронных адресов нового пользователя: [emails={}]", savedEmails);
+        log.trace("Успешно сохранен новый список электронных адресов нового пользователя: [emails={}]", savedEmails);
         return userEmailMapper.toShortListEmailDtoFromEmailEntity(sortListUserEmailsId(savedEmails));
     }
 
     @Override
     @Transactional(isolation = REPEATABLE_READ)
     public EmailShortResponseDto addNewEmail(EmailCreateDto emailCreateDto, Long userId) {
-        log.debug(SAVE_IN_REPOSITORY + "[emailCreateDto={}] для [userId={}]", emailCreateDto, userId);
+        log.trace(SAVE_IN_REPOSITORY + "[emailCreateDto={}] для [userId={}]", emailCreateDto, userId);
         checkEmailInRepositoryByStringEmail(emailCreateDto.getEmail());
 
         UserEntity ownerEmail = findUserEntityById(userId);
         UserEmailEntity userEmailEntityForSave = userEmailMapper.toEntityEmailFromCreateDto(emailCreateDto, ownerEmail);
 
         UserEmailEntity savedUserEmailEntityInRepository = userEmailRepository.saveAndFlush(userEmailEntityForSave);
-
+        log.trace("В БД добавлен новый [{}]: [{}]", PARAMETER_EMAIL, userEmailEntityForSave);
         return userEmailMapper.toShortEmailDtoFromEmailEntity(savedUserEmailEntityInRepository);
     }
 
     @Override
     @Transactional(isolation = REPEATABLE_READ)
     public EmailShortResponseDto updateEmailById(EmailUpdateDto emailUpdateDto, Long userId) {
-        log.debug(UPDATE_IN_REPOSITORY + "[emailUpdateDto={}] для [userId={}]", emailUpdateDto, userId);
+        log.trace(UPDATE_IN_REPOSITORY + "[emailUpdateDto={}] для [userId={}]", emailUpdateDto, userId);
         checkEmailInRepositoryByStringEmail(emailUpdateDto.getEmail());
 
         UserEmailEntity userEmailEntityFromRepository = findUserEmailEntityById(emailUpdateDto.getId());
@@ -83,14 +83,14 @@ public class UserEmailServiceImpl implements UserEmailService {
         userEmailEntityFromRepository.setEmail(emailUpdateDto.getEmail());
 
         UserEmailEntity updatedEmail = userEmailRepository.saveAndFlush(userEmailEntityFromRepository);
-        log.debug("В БД произошло обновление [{}]: [{}]", PARAMETER_EMAIL, updatedEmail);
+        log.trace("В БД произошло обновление [{}]: [{}]", PARAMETER_EMAIL, updatedEmail);
         return userEmailMapper.toShortEmailDtoFromEmailEntity(updatedEmail);
     }
 
     @Override
     @Transactional(isolation = REPEATABLE_READ)
     public void deleteEmailById(Long userId, Long emailId) {
-        log.debug(DELETE_IN_REPOSITORY + "[emailId={}] для [userId={}]", emailId, userId);
+        log.trace(DELETE_IN_REPOSITORY + "[emailId={}] для [userId={}]", emailId, userId);
         checkSizeListOfEmailUserByUserId(userId);
         UserEmailEntity userEmailEntityFromRepository = findUserEmailEntityById(emailId);
         checkUserIsOwnerEmail(userEmailEntityFromRepository, userId);

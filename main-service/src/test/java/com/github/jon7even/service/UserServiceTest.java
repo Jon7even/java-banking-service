@@ -7,6 +7,7 @@ import com.github.jon7even.entity.BankAccountEntity;
 import com.github.jon7even.entity.UserEntity;
 import com.github.jon7even.exception.IncorrectMadeRequestException;
 import com.github.jon7even.exception.IntegrityConstraintException;
+import com.github.jon7even.service.impl.BankAccountServiceImpl;
 import com.github.jon7even.service.impl.UserEmailServiceImpl;
 import com.github.jon7even.service.impl.UserPhoneServiceImpl;
 import com.github.jon7even.service.impl.UserServiceImpl;
@@ -28,6 +29,7 @@ public class UserServiceTest extends SetupServiceTest {
     @InjectMocks private UserServiceImpl userService;
     @Mock private UserEmailServiceImpl userEmailService;
     @Mock private UserPhoneServiceImpl userPhoneService;
+    @Mock private BankAccountServiceImpl bankAccountService;
 
     @BeforeEach public void setupMapperTest() {
         initUserEntity();
@@ -39,8 +41,6 @@ public class UserServiceTest extends SetupServiceTest {
     @Test public void shouldCreateNewUser_thenReturn_UserFullResponseDto() {
         when(userMapper.toUserEntityFromCreateDto(any(UserCreateDto.class), any()))
                 .thenReturn(userEntityFirstWithoutId);
-        when(bankAccountMapper.toEntityBankAccountFromCreateDto(any(BankAccountCreateDto.class), any(UserEntity.class)))
-                .thenReturn(bankAccountEntityFirstWithoutId);
         when(userRepository.existsByLogin(userCreateDtoFirst.getLogin()))
                 .thenReturn(false);
         when(userMapper.toUserFullDtoFromUserEntity(any(UserEntity.class), any(), any(), any()))
@@ -56,7 +56,6 @@ public class UserServiceTest extends SetupServiceTest {
 
         verify(userRepository, times(1)).existsByLogin(anyString());
         verify(userRepository, times(1)).saveAndFlush(any(UserEntity.class));
-        verify(bankAccountRepository, times(1)).saveAndFlush(any(BankAccountEntity.class));
     }
 
     @DisplayName("[createUser] Новый пользователь не должен создаться, [balance] не может быть отрицательным")

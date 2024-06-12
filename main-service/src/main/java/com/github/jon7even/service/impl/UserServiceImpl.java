@@ -3,10 +3,10 @@ package com.github.jon7even.service.impl;
 import com.github.jon7even.dto.user.UserCreateDto;
 import com.github.jon7even.dto.user.UserFullResponseDto;
 import com.github.jon7even.dto.user.UserShortResponseDto;
+import com.github.jon7even.dto.user.account.BankAccountShortResponseDto;
 import com.github.jon7even.dto.user.email.EmailShortResponseDto;
 import com.github.jon7even.dto.user.phone.PhoneShortResponseDto;
 import com.github.jon7even.dto.user.search.ParamsSearchUserRequestDto;
-import com.github.jon7even.entity.BankAccountEntity;
 import com.github.jon7even.entity.UserEntity;
 import com.github.jon7even.enums.user.UserSearchType;
 import com.github.jon7even.exception.IncorrectMadeRequestException;
@@ -15,8 +15,8 @@ import com.github.jon7even.mapper.BankAccountMapper;
 import com.github.jon7even.mapper.UserEmailMapper;
 import com.github.jon7even.mapper.UserMapper;
 import com.github.jon7even.mapper.UserPhoneMapper;
-import com.github.jon7even.repository.BankAccountRepository;
 import com.github.jon7even.repository.UserRepository;
+import com.github.jon7even.service.BankAccountService;
 import com.github.jon7even.service.UserEmailService;
 import com.github.jon7even.service.UserPhoneService;
 import com.github.jon7even.service.UserService;
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserEmailService userEmailService;
     private final UserPhoneService userPhoneService;
-    private final BankAccountRepository bankAccountRepository;
+    private final BankAccountService bankAccountService;
     private final UserMapper userMapper;
     private final BankAccountMapper bankAccountMapper;
     private final UserEmailMapper userEmailMapper;
@@ -70,12 +70,9 @@ public class UserServiceImpl implements UserService {
 
         UserEntity savedUserFromRepository = userRepository.saveAndFlush(userForSaveInRepository);
 
-        BankAccountEntity bankAccountEntityForSaveInRepository = bankAccountMapper.toEntityBankAccountFromCreateDto(
+        BankAccountShortResponseDto savedBankAccountInRepository = bankAccountService.createBankAccount(
                 userCreateDto.getBankAccount(), savedUserFromRepository
         );
-
-        BankAccountEntity savedBankAccountEntityInRepository =
-                bankAccountRepository.saveAndFlush(bankAccountEntityForSaveInRepository);
 
         List<EmailShortResponseDto> savedUserEmailsInRepository = userEmailService.createNewEmails(
                 userCreateDto.getEmails(), savedUserFromRepository
@@ -86,7 +83,7 @@ public class UserServiceImpl implements UserService {
         );
         log.trace("У нас успешно зарегистрирован новый пользователь [user={}]", savedUserFromRepository);
         return userMapper.toUserFullDtoFromUserEntity(savedUserFromRepository,
-                bankAccountMapper.toShortBalanceDtoFromBankAccountEntity(savedBankAccountEntityInRepository),
+                savedBankAccountInRepository,
                 savedUserEmailsInRepository,
                 savedUserPhonesInRepository
         );
@@ -94,13 +91,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserShortResponseDto> getListUsersByParam(ParamsSearchUserRequestDto paramsSearchUserRequestDto) {
-        log.debug("Начинаем получать список пользователей по запросу: {}", paramsSearchUserRequestDto);
+        log.trace("Начинаем получать список пользователей по запросу: {}", paramsSearchUserRequestDto);
         Pageable pageable = getPageableFromParamsSearchUserRequestDto(paramsSearchUserRequestDto);
         UserSearchType userSearchType = getUserSearchTypeByParamsSearchUserRequestDto(paramsSearchUserRequestDto);
 
         List<UserEntity> listOfUsersFromRepository = getListUserEntityFromRepository(
                 paramsSearchUserRequestDto, userSearchType, pageable);
-        log.debug("Получили список из [size={}] пользователей", listOfUsersFromRepository.size());
+        log.trace("Получили список из [size={}] пользователей", listOfUsersFromRepository.size());
 
         return listOfUsersFromRepository.stream()
                 .map((userEntity -> userMapper.toUserShortDtoFromUserEntity(userEntity,

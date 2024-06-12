@@ -55,28 +55,28 @@ public class UserPhoneServiceImpl implements UserPhoneService {
         List<UserPhoneEntity> savedPhones = userPhoneRepository.saveAllAndFlush(
                 sortListUserPhonesByLexicographic(userPhoneEntitiesForSaveInRepository)
         );
-        log.debug("Успешно сохранен новый список номеров телефона нового пользователя: [phones={}]", savedPhones);
+        log.trace("Успешно сохранен новый список номеров телефона нового пользователя: [phones={}]", savedPhones);
         return userPhoneMapper.toShortListPhoneDtoFromPhoneEntity(sortListUserPhonesId(savedPhones));
     }
 
     @Override
     @Transactional(isolation = REPEATABLE_READ)
     public PhoneShortResponseDto addNewPhone(PhoneCreateDto phoneCreateDto, Long userId) {
-        log.debug(SAVE_IN_REPOSITORY + "[phoneCreateDto={}] для [userId={}]", phoneCreateDto, userId);
+        log.trace(SAVE_IN_REPOSITORY + "[phoneCreateDto={}] для [userId={}]", phoneCreateDto, userId);
         checkPhoneInRepositoryByStringPhone(phoneCreateDto.getPhone());
 
         UserEntity ownerPhone = findUserEntityById(userId);
         UserPhoneEntity userPhoneEntityForSave = userPhoneMapper.toEntityPhoneFromCreateDto(phoneCreateDto, ownerPhone);
 
         UserPhoneEntity savedUserPhoneEntityInRepository = userPhoneRepository.saveAndFlush(userPhoneEntityForSave);
-
+        log.trace("В БД добавлен новый [{}]: [{}]", PARAMETER_PHONE, userPhoneEntityForSave);
         return userPhoneMapper.toShortPhoneDtoFromPhoneEntity(savedUserPhoneEntityInRepository);
     }
 
     @Override
     @Transactional(isolation = REPEATABLE_READ)
     public PhoneShortResponseDto updatePhoneById(PhoneUpdateDto phoneUpdateDto, Long userId) {
-        log.debug(UPDATE_IN_REPOSITORY + "[phoneUpdateDto={}] для [userId={}]", phoneUpdateDto, userId);
+        log.trace(UPDATE_IN_REPOSITORY + "[phoneUpdateDto={}] для [userId={}]", phoneUpdateDto, userId);
         checkPhoneInRepositoryByStringPhone(phoneUpdateDto.getPhone());
 
         UserPhoneEntity userPhoneEntityFromRepository = findUserPhoneEntityById(phoneUpdateDto.getId());
@@ -84,14 +84,14 @@ public class UserPhoneServiceImpl implements UserPhoneService {
         userPhoneEntityFromRepository.setPhone(phoneUpdateDto.getPhone());
 
         UserPhoneEntity updatedPhone = userPhoneRepository.saveAndFlush(userPhoneEntityFromRepository);
-        log.debug("В БД произошло обновление [{}]: [{}]", PARAMETER_PHONE, updatedPhone);
+        log.trace("В БД произошло обновление [{}]: [{}]", PARAMETER_PHONE, updatedPhone);
         return userPhoneMapper.toShortPhoneDtoFromPhoneEntity(updatedPhone);
     }
 
     @Override
     @Transactional(isolation = REPEATABLE_READ)
     public void deletePhoneById(Long userId, Long phoneId) {
-        log.debug(DELETE_IN_REPOSITORY + "[phoneId={}] для [userId={}]", phoneId, userId);
+        log.trace(DELETE_IN_REPOSITORY + "[phoneId={}] для [userId={}]", phoneId, userId);
         checkSizeListOfPhoneUserByUserId(userId);
         UserPhoneEntity userPhoneEntityFromRepository = findUserPhoneEntityById(phoneId);
         checkUserIsOwnerPhone(userPhoneEntityFromRepository, userId);
