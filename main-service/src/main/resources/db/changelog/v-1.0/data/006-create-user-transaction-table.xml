@@ -23,7 +23,7 @@
             <column name="bank_account_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="from" type="VARCHAR(255)">
+            <column name="from_whom" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="amount" type="DECIMAL" defaultValue="0">

@@ -15,11 +15,12 @@ public interface TransactionService {
      * Метод сохраняющий новую транзакцию
      *
      * @param transactionCreateDto заполненный объект DTO со всеми необходимыми полями
+     * @return Long ID транзакции для будущего изменения статуса
      */
-    void saveNewTransaction(TransactionCreateDto transactionCreateDto);
+    Long saveNewTransaction(TransactionCreateDto transactionCreateDto);
 
     /**
-     * Метод сохраняющий статус существующей транзакции
+     * Метод обновляющий статус транзакции
      *
      * @param transactionUpdateDto заполненный объект DTO с ID транзакции и новым статусом транзакции
      */

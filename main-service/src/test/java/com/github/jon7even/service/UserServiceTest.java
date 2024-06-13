@@ -2,10 +2,7 @@ package com.github.jon7even.service;
 
 import com.github.jon7even.dto.user.UserCreateDto;
 import com.github.jon7even.dto.user.UserFullResponseDto;
-import com.github.jon7even.dto.user.account.BankAccountCreateDto;
-import com.github.jon7even.entity.BankAccountEntity;
 import com.github.jon7even.entity.UserEntity;
-import com.github.jon7even.exception.IncorrectMadeRequestException;
 import com.github.jon7even.exception.IntegrityConstraintException;
 import com.github.jon7even.service.impl.BankAccountServiceImpl;
 import com.github.jon7even.service.impl.UserEmailServiceImpl;
@@ -18,8 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.math.BigDecimal;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,7 +26,7 @@ public class UserServiceTest extends SetupServiceTest {
     @Mock private UserPhoneServiceImpl userPhoneService;
     @Mock private BankAccountServiceImpl bankAccountService;
 
-    @BeforeEach public void setupMapperTest() {
+    @BeforeEach public void setupServiceTest() {
         initUserEntity();
         initUserCreateDto();
         initUserFullResponseDto();
@@ -47,6 +42,8 @@ public class UserServiceTest extends SetupServiceTest {
                 .thenReturn(userFullResponseDtoFirst);
         when(userRepository.saveAndFlush(any()))
                 .thenReturn(userEntityFirst);
+        when(bankAccountService.createBankAccount(any(), any()))
+                .thenReturn(bankAccountFullResponseDto);
 
         UserFullResponseDto actualResult = userService.createUser(userCreateDtoFirst);
 
@@ -56,18 +53,6 @@ public class UserServiceTest extends SetupServiceTest {
 
         verify(userRepository, times(1)).existsByLogin(anyString());
         verify(userRepository, times(1)).saveAndFlush(any(UserEntity.class));
-    }
-
-    @DisplayName("[createUser] Новый пользователь не должен создаться, [balance] не может быть отрицательным")
-    @Test public void shouldNotCreateNewUserWithBadBalance_thenReturn_ExceptionIncorrectMadeRequest() {
-        bankAccountCreateDtoFirst.setBalance(BigDecimal.valueOf(-1.01));
-        userCreateDtoFirst.setBankAccount(bankAccountCreateDtoFirst);
-
-        assertThrows(IncorrectMadeRequestException.class, () -> userService.createUser(userCreateDtoFirst));
-
-        verify(userRepository, never()).existsByLogin(anyString());
-        verify(userRepository, never()).saveAndFlush(any());
-        verify(bankAccountRepository, never()).saveAndFlush(any());
     }
 
     @DisplayName("[createUser] Новый пользователь не должен создаться потому что такой [login] уже есть в БД")

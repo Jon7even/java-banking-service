@@ -53,8 +53,8 @@ public class TransactionEntity {
     @JoinColumn(name = "bank_account_id", referencedColumnName = "id", nullable = false)
     private BankAccountEntity target;
 
-    @Column(name = "from", nullable = false)
-    private String from;
+    @Column(name = "from_whom", nullable = false)
+    private String fromWhom;
 
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;
@@ -83,7 +83,7 @@ public class TransactionEntity {
         }
         EqualsBuilder eb = new EqualsBuilder();
         eb.append(id, that.id);
-        eb.append(from, that.from);
+        eb.append(fromWhom, that.fromWhom);
         eb.append(amount, that.amount);
         eb.append(status, that.status);
         eb.append(type, that.type);
@@ -96,7 +96,7 @@ public class TransactionEntity {
     public int hashCode() {
         HashCodeBuilder hcb = new HashCodeBuilder();
         hcb.append(id);
-        hcb.append(from);
+        hcb.append(fromWhom);
         hcb.append(amount);
         hcb.append(status);
         hcb.append(type);

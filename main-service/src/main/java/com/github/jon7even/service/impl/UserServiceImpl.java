@@ -3,13 +3,12 @@ package com.github.jon7even.service.impl;
 import com.github.jon7even.dto.user.UserCreateDto;
 import com.github.jon7even.dto.user.UserFullResponseDto;
 import com.github.jon7even.dto.user.UserShortResponseDto;
-import com.github.jon7even.dto.user.account.BankAccountShortResponseDto;
+import com.github.jon7even.dto.user.account.BankAccountFullResponseDto;
 import com.github.jon7even.dto.user.email.EmailShortResponseDto;
 import com.github.jon7even.dto.user.phone.PhoneShortResponseDto;
 import com.github.jon7even.dto.user.search.ParamsSearchUserRequestDto;
 import com.github.jon7even.entity.UserEntity;
 import com.github.jon7even.enums.user.UserSearchType;
-import com.github.jon7even.exception.IncorrectMadeRequestException;
 import com.github.jon7even.exception.IntegrityConstraintException;
 import com.github.jon7even.mapper.BankAccountMapper;
 import com.github.jon7even.mapper.UserEmailMapper;
@@ -28,9 +27,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -61,7 +60,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    @Transactional(isolation = REPEATABLE_READ)
+    @Transactional(propagation = Propagation.REQUIRED, isolation = REPEATABLE_READ)
     public UserFullResponseDto createUser(UserCreateDto userCreateDto) {
         userCreateDto.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
         log.trace(SAVE_IN_REPOSITORY + "[userCreateDto={}]", userCreateDto);
@@ -70,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
         UserEntity savedUserFromRepository = userRepository.saveAndFlush(userForSaveInRepository);
 
-        BankAccountShortResponseDto savedBankAccountInRepository = bankAccountService.createBankAccount(
+        BankAccountFullResponseDto savedBankAccountInRepository = bankAccountService.createBankAccount(
                 userCreateDto.getBankAccount(), savedUserFromRepository
         );
 
@@ -81,9 +80,12 @@ public class UserServiceImpl implements UserService {
         List<PhoneShortResponseDto> savedUserPhonesInRepository = userPhoneService.createNewPhones(
                 userCreateDto.getPhones(), savedUserFromRepository
         );
+
         log.trace("У нас успешно зарегистрирован новый пользователь [user={}]", savedUserFromRepository);
+        bankAccountService.setTransactionIsSuccess(savedBankAccountInRepository.getTransactionId());
+
         return userMapper.toUserFullDtoFromUserEntity(savedUserFromRepository,
-                savedBankAccountInRepository,
+                bankAccountMapper.toShortBalanceDtoFromFullDto(savedBankAccountInRepository),
                 savedUserEmailsInRepository,
                 savedUserPhonesInRepository
         );
@@ -168,19 +170,13 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkUserCreateDto(UserCreateDto userCreateDto) {
-        log.debug("{} поля нового пользователя перед сохранением в БД", START_CHECKING);
-        var balance = userCreateDto.getBankAccount().getBalance();
-        if (balance.compareTo(BigDecimal.ZERO) < 0) {
-            log.error(PARAMETER_BAD_REQUEST + PARAMETER_BALANCE + WRONG_CAN_NOT + "отрицательным");
-            throw new IncorrectMadeRequestException(PARAMETER_BALANCE, WRONG_CAN_NOT + "отрицательным");
-        }
-
+        log.trace("{} поля нового пользователя перед сохранением в БД", START_CHECKING);
         var login = userCreateDto.getLogin();
         if (existsUserByLogin(login)) {
             log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[{}={}]", PARAMETER_LOGIN, login);
             throw new IntegrityConstraintException(PARAMETER_LOGIN, login + NOTE_ALREADY_EXIST);
         }
-        log.debug("Проверка успешно завершена, пользователя можно сохранять");
+        log.debug("{} [пользователя]", END_CHECKING);
     }
 
     private boolean existsUserByLogin(String login) {

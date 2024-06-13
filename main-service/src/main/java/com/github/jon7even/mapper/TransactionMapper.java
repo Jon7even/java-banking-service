@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public interface TransactionMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "bankAccountEntity", target = "target")
-    @Mapping(source = "transactionCreateDto.from", target = "from")
+    @Mapping(source = "transactionCreateDto.from", target = "fromWhom")
     @Mapping(source = "transactionCreateDto.amount", target = "amount")
     @Mapping(constant = "QUEUE", target = "status")
     @Mapping(source = "transactionCreateDto.type", target = "type")
@@ -32,7 +32,7 @@ public interface TransactionMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "target", ignore = true)
-    @Mapping(target = "from", ignore = true)
+    @Mapping(target = "fromWhom", ignore = true)
     @Mapping(target = "amount", ignore = true)
     @Mapping(source = "transactionUpdateDto.status", target = "status")
     @Mapping(target = "type", ignore = true)

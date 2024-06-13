@@ -3,12 +3,6 @@ package com.github.jon7even.service;
 import com.github.jon7even.dto.user.UserCreateDto;
 import com.github.jon7even.dto.user.UserFullResponseDto;
 import com.github.jon7even.dto.user.UserShortResponseDto;
-import com.github.jon7even.dto.user.email.EmailCreateDto;
-import com.github.jon7even.dto.user.email.EmailShortResponseDto;
-import com.github.jon7even.dto.user.email.EmailUpdateDto;
-import com.github.jon7even.dto.user.phone.PhoneCreateDto;
-import com.github.jon7even.dto.user.phone.PhoneShortResponseDto;
-import com.github.jon7even.dto.user.phone.PhoneUpdateDto;
 import com.github.jon7even.dto.user.search.ParamsSearchUserRequestDto;
 
 import java.util.List;

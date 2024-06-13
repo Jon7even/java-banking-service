@@ -43,7 +43,7 @@ public class UserPhoneServiceImpl implements UserPhoneService {
     private final UserRepository userRepository;
 
     @Override
-    @Transactional(propagation = Propagation.MANDATORY)
+    @Transactional(propagation = Propagation.MANDATORY, isolation = REPEATABLE_READ)
     public List<PhoneShortResponseDto> createNewPhones(Set<PhoneCreateDto> phonesCreateDto, UserEntity newUserEntity) {
         log.trace(SAVE_IN_REPOSITORY + "[phonesCreateDto={}]", phonesCreateDto);
         checkListPhonesCreateDto(phonesCreateDto);
@@ -99,6 +99,7 @@ public class UserPhoneServiceImpl implements UserPhoneService {
     }
 
     private void checkListPhonesCreateDto(Set<PhoneCreateDto> phones) {
+        log.trace("{} список объектов DTO с [phone] перед сохранением в БД", START_CHECKING);
         if (phones.size() == 1) {
             var phone = phones.stream().findFirst()
                     .orElseThrow(() -> new IncorrectMadeRequestException(PARAMETER_PHONE, phones + NOT_EXIST));
@@ -112,6 +113,7 @@ public class UserPhoneServiceImpl implements UserPhoneService {
             log.error(PARAMETER_BAD_REQUEST + "список [номеров] оказался пуст");
             throw new IncorrectMadeRequestException(PARAMETER_PHONE, "не может быть пустым");
         }
+        log.debug("{} список [номеров]", END_CHECKING);
     }
 
     private void checkUserIsOwnerPhone(UserPhoneEntity userPhone, Long userId) {
@@ -123,10 +125,12 @@ public class UserPhoneServiceImpl implements UserPhoneService {
     }
 
     private void checkPhoneInRepositoryByStringPhone(String phone) {
+        log.trace("{} объект DTO с [{}] перед сохранением в БД", START_CHECKING, PARAMETER_PHONE);
         if (existsPhoneByStringPhone(phone)) {
             log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[{}={}]", PARAMETER_PHONE, phone);
             throw new IntegrityConstraintException(PARAMETER_PHONE, phone + NOTE_ALREADY_EXIST);
         }
+        log.debug("{} [{}]", END_CHECKING, PARAMETER_PHONE);
     }
 
     private List<UserPhoneEntity> sortListUserPhonesByLexicographic(List<UserPhoneEntity> listNoSorted) {

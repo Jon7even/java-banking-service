@@ -36,8 +36,8 @@ public class TransactionServiceImpl implements TransactionService {
     private final BankAccountRepository bankAccountRepository;
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = REPEATABLE_READ)
-    public void saveNewTransaction(TransactionCreateDto transactionCreateDto) {
+    @Transactional(propagation = Propagation.MANDATORY, isolation = REPEATABLE_READ)
+    public Long saveNewTransaction(TransactionCreateDto transactionCreateDto) {
         log.trace(SAVE_IN_REPOSITORY + "[transactionCreateDto={}]", transactionCreateDto);
 
         var bankAccountId = transactionCreateDto.getAccountId();
@@ -49,11 +49,13 @@ public class TransactionServiceImpl implements TransactionService {
         );
 
         TransactionEntity savedTransaction = transactionRepository.saveAndFlush(transactionEntityForSaveInRepository);
-        log.trace("В репозитории успешно сохранена новая транзакция: [{}]", savedTransaction);
+        var transactionId = savedTransaction.getId();
+        log.trace("В БД успешно сохранена новая транзакция: [{}] c [ID={}]", savedTransaction, transactionId);
+        return transactionId;
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = REPEATABLE_READ)
+    @Transactional(propagation = Propagation.MANDATORY, isolation = REPEATABLE_READ)
     public void updateStatusTransaction(TransactionUpdateDto transactionUpdateDto) {
         log.debug(UPDATE_IN_REPOSITORY + "[transactionUpdateDto={}]", transactionUpdateDto);
 
@@ -66,6 +68,6 @@ public class TransactionServiceImpl implements TransactionService {
         );
 
         TransactionEntity updatedTransaction = transactionRepository.saveAndFlush(transactionEntityForUpdate);
-        log.trace("В репозитории обновлен статус транзакции: [{}]", updatedTransaction);
+        log.trace("В БД обновлен статус транзакции: [{}]", updatedTransaction);
     }
 }

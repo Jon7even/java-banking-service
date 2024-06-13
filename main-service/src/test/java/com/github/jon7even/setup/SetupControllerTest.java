@@ -2,10 +2,7 @@ package com.github.jon7even.setup;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.jon7even.BankingServiceApp;
-import com.github.jon7even.repository.BankAccountRepository;
-import com.github.jon7even.repository.UserEmailRepository;
-import com.github.jon7even.repository.UserPhoneRepository;
-import com.github.jon7even.repository.UserRepository;
+import com.github.jon7even.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +26,7 @@ public class SetupControllerTest extends SetupContainerTest {
     @Autowired protected UserEmailRepository userEmailRepository;
     @Autowired protected UserPhoneRepository userPhoneRepository;
     @Autowired protected BankAccountRepository bankAccountRepository;
+    @Autowired protected TransactionRepository transactionRepository;
     @Autowired protected JdbcTemplate jdbcTemplate;
 
     @AfterEach
@@ -37,6 +35,8 @@ public class SetupControllerTest extends SetupContainerTest {
         userRepository.deleteAll();
         log.debug("Удаляем банковские аккаунты");
         bankAccountRepository.deleteAll();
+        log.debug("Удаляем транзакции");
+        transactionRepository.deleteAll();
         log.debug("Делаем сброс ID пользователей");
         jdbcTemplate.execute("ALTER SEQUENCE application.user_seq RESTART WITH 1");
         log.debug("Делаем сброс ID банковских аккаунтов");
@@ -45,5 +45,7 @@ public class SetupControllerTest extends SetupContainerTest {
         jdbcTemplate.execute("ALTER SEQUENCE application.email_seq RESTART WITH 1");
         log.debug("Делаем сброс ID номеров телефонов");
         jdbcTemplate.execute("ALTER SEQUENCE application.phone_seq RESTART WITH 1");
+        log.debug("Делаем сброс ID транзакций");
+        jdbcTemplate.execute("ALTER SEQUENCE application.transaction_seq RESTART WITH 1");
     }
 }

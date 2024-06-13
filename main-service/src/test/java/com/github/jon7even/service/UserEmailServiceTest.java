@@ -15,7 +15,7 @@ import static org.mockito.Mockito.*;
 public class UserEmailServiceTest extends SetupServiceTest {
     @InjectMocks private UserEmailServiceImpl userEmailService;
 
-    @BeforeEach public void setupMapperTest() {
+    @BeforeEach public void setupServiceTest() {
         initUserEntity();
         initUserCreateDto();
     }

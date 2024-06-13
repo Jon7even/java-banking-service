@@ -4,6 +4,7 @@ import com.github.jon7even.dto.user.UserCreateDto;
 import com.github.jon7even.dto.user.UserFullResponseDto;
 import com.github.jon7even.dto.user.UserShortResponseDto;
 import com.github.jon7even.dto.user.account.BankAccountCreateDto;
+import com.github.jon7even.dto.user.account.BankAccountFullResponseDto;
 import com.github.jon7even.dto.user.account.BankAccountShortResponseDto;
 import com.github.jon7even.dto.user.email.EmailCreateDto;
 import com.github.jon7even.dto.user.email.EmailShortResponseDto;
@@ -77,6 +78,7 @@ public class PreparationObjectsForTests {
     protected List<EmailShortResponseDto> emailShortResponseDtoFirst;
     protected List<PhoneShortResponseDto> phoneShortResponseDtoFirst;
     protected BankAccountShortResponseDto bankAccountShortResponseDto;
+    protected BankAccountFullResponseDto bankAccountFullResponseDto;
 
     protected UserFullResponseDto userFullResponseDtoSecond;
     protected List<EmailShortResponseDto> emailShortResponseDtoSecond;
@@ -424,6 +426,10 @@ public class PreparationObjectsForTests {
         userFullResponseDtoFirst.setEmails(emailShortResponseDtoFirst);
         userFullResponseDtoFirst.setPhones(phoneShortResponseDtoFirst);
 
+        bankAccountFullResponseDto = BankAccountFullResponseDto.builder()
+                .transactionId(firstId)
+                .balance(balanceFirst)
+                .build();
 
         userFullResponseDtoSecond = UserFullResponseDto.builder()
                 .id(secondId)

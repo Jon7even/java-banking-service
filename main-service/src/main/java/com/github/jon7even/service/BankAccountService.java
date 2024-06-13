@@ -1,7 +1,7 @@
 package com.github.jon7even.service;
 
 import com.github.jon7even.dto.user.account.BankAccountCreateDto;
-import com.github.jon7even.dto.user.account.BankAccountShortResponseDto;
+import com.github.jon7even.dto.user.account.BankAccountFullResponseDto;
 import com.github.jon7even.entity.UserEntity;
 
 /**
@@ -16,7 +16,21 @@ public interface BankAccountService {
      *
      * @param bankAccountCreateDto объект DTO с изначальной суммой
      * @param newUserEntity        пользователь, который будет являться владельцем счета
-     * @return BankAccountShortResponseDto объект DTO
+     * @return BankAccountFullResponseDto объект DTO c суммой, с которой открылся счет и ID транзакции
      */
-    BankAccountShortResponseDto createBankAccount(BankAccountCreateDto bankAccountCreateDto, UserEntity newUserEntity);
+    BankAccountFullResponseDto createBankAccount(BankAccountCreateDto bankAccountCreateDto, UserEntity newUserEntity);
+
+    /**
+     * Метод обновляющий статус транзакции (списание/пополнение денег по счету пользователя), если операция успешна
+     *
+     * @param transactionId ID транзакции
+     */
+    void setTransactionIsSuccess(Long transactionId);
+
+    /**
+     * Метод обновляющий статус транзакции (списание/пополнение денег по счету пользователя), если операция не прошла
+     *
+     * @param transactionId ID транзакции
+     */
+    void setTransactionIsFailure(Long transactionId);
 }

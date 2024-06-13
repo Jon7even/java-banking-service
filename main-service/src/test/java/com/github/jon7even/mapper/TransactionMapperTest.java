@@ -37,7 +37,7 @@ public class TransactionMapperTest extends PreparationObjectsForTests {
 
         transactionEntity = TransactionEntity.builder()
                 .target(bankAccountEntityFirst)
-                .from("TERMINAL_TEST")
+                .fromWhom("TERMINAL_TEST")
                 .amount(balanceFirst)
                 .status(TransactionStatus.QUEUE)
                 .type(TransactionType.TOPUP)
@@ -67,7 +67,7 @@ public class TransactionMapperTest extends PreparationObjectsForTests {
 
         TransactionEntity expected = TransactionEntity.builder()
                 .target(bankAccountEntityFirst)
-                .from("TERMINAL_TEST")
+                .fromWhom("TERMINAL_TEST")
                 .amount(balanceFirst)
                 .status(TransactionStatus.SUCCESS)
                 .type(TransactionType.TOPUP)

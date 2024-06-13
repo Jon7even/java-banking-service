@@ -42,7 +42,7 @@ public class UserEmailServiceImpl implements UserEmailService {
     private final UserRepository userRepository;
 
     @Override
-    @Transactional(propagation = Propagation.MANDATORY)
+    @Transactional(propagation = Propagation.MANDATORY, isolation = REPEATABLE_READ)
     public List<EmailShortResponseDto> createNewEmails(Set<EmailCreateDto> emailsCreateDto, UserEntity newUserEntity) {
         log.trace(SAVE_IN_REPOSITORY + "[emailsCreateDto={}]", emailsCreateDto);
         checkListEmailsCreateDto(emailsCreateDto);
@@ -98,6 +98,7 @@ public class UserEmailServiceImpl implements UserEmailService {
     }
 
     private void checkListEmailsCreateDto(Set<EmailCreateDto> emails) {
+        log.trace("{} список объектов DTO с [email] перед сохранением в БД", START_CHECKING);
         if (emails.size() == 1) {
             var email = emails.stream().findFirst()
                     .orElseThrow(() -> new IncorrectMadeRequestException(PARAMETER_EMAIL, emails + NOT_EXIST));
@@ -111,6 +112,7 @@ public class UserEmailServiceImpl implements UserEmailService {
             log.error(PARAMETER_BAD_REQUEST + "список [email адресов] оказался пуст");
             throw new IncorrectMadeRequestException(PARAMETER_EMAIL, "не может быть пустым");
         }
+        log.debug("{} список [email адресов]", END_CHECKING);
     }
 
     private List<UserEmailEntity> sortListUserEmailsByLexicographic(List<UserEmailEntity> listNoSorted) {
@@ -124,10 +126,12 @@ public class UserEmailServiceImpl implements UserEmailService {
     }
 
     private void checkEmailInRepositoryByStringEmail(String email) {
+        log.trace("{} объект DTO с [{}] перед сохранением в БД", START_CHECKING, PARAMETER_EMAIL);
         if (existsEmailByStringEmail(email)) {
             log.warn(PARAMETER_ALREADY_EXIST_IN_REPOSITORY + "[{}={}]", PARAMETER_EMAIL, email);
             throw new IntegrityConstraintException(PARAMETER_EMAIL, email + NOTE_ALREADY_EXIST);
         }
+        log.debug("{} [{}]", END_CHECKING, PARAMETER_EMAIL);
     }
 
     private void checkUserIsOwnerEmail(UserEmailEntity userEmail, Long userId) {
