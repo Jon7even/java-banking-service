@@ -7,6 +7,8 @@ import com.github.jon7even.dto.user.account.BankAccountFullResponseDto;
 import com.github.jon7even.dto.user.email.EmailShortResponseDto;
 import com.github.jon7even.dto.user.phone.PhoneShortResponseDto;
 import com.github.jon7even.dto.user.search.ParamsSearchUserRequestDto;
+import com.github.jon7even.dto.user.transfer.TransferCreateDto;
+import com.github.jon7even.dto.user.transfer.TransferResponseDto;
 import com.github.jon7even.entity.UserEntity;
 import com.github.jon7even.enums.user.UserSearchType;
 import com.github.jon7even.exception.IntegrityConstraintException;
@@ -108,6 +110,11 @@ public class UserServiceImpl implements UserService {
                         userPhoneMapper.toShortListPhoneDtoFromPhoneEntity(userEntity.getPhones()))
                 ))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public TransferResponseDto transferByOwner(TransferCreateDto transferCreateDto, Long ownerBankAccountId) {
+        return null;
     }
 
     private List<UserEntity> getListUserEntityFromRepository(ParamsSearchUserRequestDto paramsSearchUserRequestDto,

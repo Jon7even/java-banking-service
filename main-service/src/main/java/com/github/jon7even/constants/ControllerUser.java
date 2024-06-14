@@ -18,4 +18,5 @@ public final class ControllerUser {
     public static final String PATH_EMAIL_ID = "/{emailId}";
     public static final String PATH_PHONE = "/phone";
     public static final String PATH_PHONE_ID = "/{phoneId}";
+    public static final String PATH_TRANSFER = "/transfer";
 }
