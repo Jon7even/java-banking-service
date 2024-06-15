@@ -2,6 +2,8 @@ package com.github.jon7even.service;
 
 import com.github.jon7even.dto.user.account.BankAccountCreateDto;
 import com.github.jon7even.dto.user.account.BankAccountFullResponseDto;
+import com.github.jon7even.dto.user.transfer.TransferCreateDto;
+import com.github.jon7even.dto.user.transfer.TransferResponseDto;
 import com.github.jon7even.entity.UserEntity;
 
 /**
@@ -33,4 +35,13 @@ public interface BankAccountService {
      * @param transactionId ID транзакции
      */
     void setTransactionIsFailure(Long transactionId);
+
+    /**
+     * Метод для совершения трансфера денег с одного банковского счета на другой
+     *
+     * @param transferCreateDto  заполненный объект DTO с ID счета получателя и суммой
+     * @param ownerBankAccountId ID владельца счета совершающий перевод
+     * @return TransferResponseDto объект DTO с данными о совершении перевода
+     */
+    TransferResponseDto transferByOwner(TransferCreateDto transferCreateDto, Long ownerBankAccountId);
 }

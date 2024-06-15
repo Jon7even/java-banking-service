@@ -31,13 +31,4 @@ public interface UserService {
      * @return UserShortResponseDto список объектов DTO с краткими данными о пользователе
      */
     List<UserShortResponseDto> getListUsersByParam(ParamsSearchUserRequestDto paramsSearchUserRequestDto);
-
-    /**
-     * Метод для совершения трансфера денег с одного банковского счета на другой
-     *
-     * @param transferCreateDto  заполненный объект DTO с ID счета получателя и суммой
-     * @param ownerBankAccountId ID владельца счета совершающий перевод
-     * @return TransferResponseDto объект DTO с данными о совершении перевода
-     */
-    TransferResponseDto transferByOwner(TransferCreateDto transferCreateDto, Long ownerBankAccountId);
 }

@@ -4,10 +4,13 @@ import com.github.jon7even.dto.transaction.TransactionCreateDto;
 import com.github.jon7even.dto.transaction.TransactionUpdateDto;
 import com.github.jon7even.dto.user.account.BankAccountCreateDto;
 import com.github.jon7even.dto.user.account.BankAccountFullResponseDto;
+import com.github.jon7even.dto.user.transfer.TransferCreateDto;
+import com.github.jon7even.dto.user.transfer.TransferResponseDto;
 import com.github.jon7even.entity.BankAccountEntity;
 import com.github.jon7even.entity.UserEntity;
 import com.github.jon7even.enums.transaction.TransactionStatus;
 import com.github.jon7even.enums.transaction.TransactionType;
+import com.github.jon7even.exception.EntityNotFoundException;
 import com.github.jon7even.exception.IncorrectMadeRequestException;
 import com.github.jon7even.mapper.BankAccountMapper;
 import com.github.jon7even.repository.BankAccountRepository;
@@ -44,7 +47,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     public BankAccountFullResponseDto createBankAccount(BankAccountCreateDto bankAccountCreateDto,
                                                         UserEntity newUserEntity) {
         log.trace(SAVE_IN_REPOSITORY + "[bankAccountCreateDto={}]", bankAccountCreateDto);
-        checkBankAccount(bankAccountCreateDto);
+        checkBankAccountForCreate(bankAccountCreateDto);
 
         BankAccountEntity bankAccountForSaveInRepository = bankAccountMapper.toEntityBankAccountFromCreateDto(
                 bankAccountCreateDto, newUserEntity
@@ -73,6 +76,37 @@ public class BankAccountServiceImpl implements BankAccountService {
         updateTransaction(transactionId, TransactionStatus.FAILURE);
     }
 
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = SERIALIZABLE)
+    public synchronized TransferResponseDto transferByOwner(TransferCreateDto transferCreateDto,
+                                                            Long ownerBankAccountId) {
+        var amount = transferCreateDto.getAmount();
+        var toAccountId = transferCreateDto.getToBankAccountId();
+        log.trace("Начинаем трансфер со счета [{}] на счет [{}] сумма [{}]", ownerBankAccountId, toAccountId, amount);
+
+        synchronized (this) {
+            BankAccountEntity accountFrom = findBankAccountById(ownerBankAccountId);
+            Long transactionIdFrom = createTransactionWithdraw(ownerBankAccountId, amount, toAccountId.toString());
+
+            BankAccountEntity accountTo = findBankAccountById(toAccountId);
+            Long transactionIdTo = createTransactionTopup(toAccountId, amount, ownerBankAccountId.toString());
+
+            if (accountFrom.getBalance().compareTo(amount) < 0) {
+                log.warn("У пользователя с аккаунтом [{}] на счете недостаточно средств для перевода", accountFrom);
+                setTransactionIsFailure(transactionIdFrom);
+                setTransactionIsFailure(transactionIdTo);
+                // TODO
+            }
+            return null; // TODO
+        }
+    }
+
+    private BankAccountEntity findBankAccountById(Long accountId) {
+        log.debug("{}[bankAccountId={}]", SEARCH_IN_REPOSITORY, accountId);
+        return bankAccountRepository.findById(accountId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Счет с номером [%d]", accountId)));
+    }
+
     private void updateTransaction(Long transactionId, TransactionStatus status) {
         TransactionUpdateDto transactionForUpdate = TransactionUpdateDto.builder()
                 .transactionId(transactionId)
@@ -91,7 +125,17 @@ public class BankAccountServiceImpl implements BankAccountService {
         return transactionService.saveNewTransaction(transactionForSave);
     }
 
-    private void checkBankAccount(BankAccountCreateDto bankAccountCreateDto) {
+    private Long createTransactionWithdraw(Long accountId, BigDecimal amount, String toWhom) {
+        TransactionCreateDto transactionForSave = TransactionCreateDto.builder()
+                .accountId(accountId)
+                .from(toWhom)
+                .amount(amount)
+                .type(TransactionType.WITHDRAW)
+                .build();
+        return transactionService.saveNewTransaction(transactionForSave);
+    }
+
+    private void checkBankAccountForCreate(BankAccountCreateDto bankAccountCreateDto) {
         log.trace("{} объект DTO для открытия счета перед сохранением в БД", START_CHECKING);
         var balance = bankAccountCreateDto.getBalance();
         if (balance.compareTo(BigDecimal.ZERO) < 0) {

@@ -4,6 +4,7 @@ import com.github.jon7even.constants.ControllerApi;
 import com.github.jon7even.constants.ControllerUser;
 import com.github.jon7even.dto.user.transfer.TransferCreateDto;
 import com.github.jon7even.dto.user.transfer.TransferResponseDto;
+import com.github.jon7even.service.BankAccountService;
 import com.github.jon7even.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,8 +33,7 @@ import static com.github.jon7even.constants.LogsMessage.IN_CONTROLLER_METHOD;
 @RequiredArgsConstructor
 @RequestMapping(path = ControllerApi.PATH_API + ControllerUser.PATH_USERS)
 public class ApiUserTransferController {
-    private final UserService userService;
-
+    private final BankAccountService bankService;
 
     @Operation(
             summary = "Совершить денежный перевод",
@@ -50,6 +50,6 @@ public class ApiUserTransferController {
                                                         HttpServletRequest request) {
         log.debug("На {} {} {}", request.getRequestURL(), IN_CONTROLLER_METHOD, request.getMethod());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.transferByOwner(transferCreateDto, userId));
+        return ResponseEntity.status(HttpStatus.CREATED).body(bankService.transferByOwner(transferCreateDto, userId));
     }
 }
