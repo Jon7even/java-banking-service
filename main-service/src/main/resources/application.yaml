@@ -1,0 +1,88 @@
+# Configuration for the 'dev' profile
+server.port: ${SERVER_EXTERNAL_PORT_APPLICATION}
+
+logging:
+  level:
+    com.github.jon7even: DEBUG
+    org:
+      springframework:
+        orm:
+          jpa: INFO
+          JpaTransactionManager: INFO
+        transaction: INFO
+      hibernate:
+        SQL: INFO
+        type.descriptor.sql.BasicBinder: TRACE
+
+spring:
+  config.activate.on-profile: dev
+  application.name: Banking service
+  main.banner-mode: off
+  output.ansi.enabled: ALWAYS
+  token:
+    key: ${SECURITY_TOKEN_KEY_DEV}
+    lifetime: ${SECURITY_TOKEN_LIFETIME_DEV}
+
+  liquibase:
+    enabled: true
+    default-schema: ${SCHEMA_APP}
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
+  jpa:
+    hibernate.ddl-auto: validate
+    properties.hibernate:
+      format_sql: true
+      default-schema: ${SCHEMA_APP}
+    open-in-view: false
+
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT_LOCAL}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASS}
+    hikari:
+      connection-timeout: 270
+---
+# Configuration for the 'test' profile
+server.port: ${SERVER_EXTERNAL_PORT_APPLICATION_TEST}
+
+logging:
+  level:
+    com.github.jon7even: DEBUG
+    org:
+      springframework:
+        orm:
+          jpa: DEBUG
+          JpaTransactionManager: DEBUG
+        transaction: DEBUG
+      hibernate:
+        SQL: DEBUG
+        type.descriptor.sql.BasicBinder: DEBUG
+
+spring:
+  config.activate.on-profile: test
+  application.name: Banking service Test
+  output.ansi.enabled: ALWAYS
+  token:
+    key: ${SECURITY_TOKEN_KEY_TEST}
+    lifetime: ${SECURITY_TOKEN_LIFETIME_TEST}
+
+  liquibase:
+    enabled: true
+    default-schema: ${SCHEMA_APP}
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
+  jpa:
+    hibernate.ddl-auto: validate
+    properties.hibernate:
+      format_sql: true
+      default-schema: ${SCHEMA_APP}
+    open-in-view: false
+
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://${DB_HOST_TEST}:${DB_PORT_TEST}/${DB_NAME_TEST}
+    username: ${DB_USER_TEST}
+    password: ${DB_PASS_TEST}
+    hikari:
+      connection-timeout: 270

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="006-create-user-transaction-table" author="Jon7even" context="dev" dbms="postgresql">
+
+        <createSequence
+                schemaName="application"
+                sequenceName="transaction_seq"
+                dataType="BIGINT"
+                startValue="1"
+                incrementBy="1"
+                maxValue="10000000000"
+                cycle="false"/>
+
+        <createTable tableName="transaction" schemaName="application">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="transaction_seq">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_transaction"/>
+            </column>
+            <column name="bank_account_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="from_whom" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="DECIMAL" defaultValue="0">
+                <constraints nullable="false" checkConstraint="CHECK (amount >= 0)"/>
+            </column>
+            <column name="status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_on" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_on" type="TIMESTAMP">
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableSchemaName="application"
+                                 baseTableName="transaction"
+                                 baseColumnNames="bank_account_id"
+                                 constraintName="fk_transaction_to_bank_account"
+                                 referencedTableSchemaName="application"
+                                 referencedTableName="bank_account"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 onUpdate="CASCADE"/>
+
+        <rollback>
+            <delete tableName="transaction" schemaName="application"/>
+            <dropAllForeignKeyConstraints baseTableName="transaction" baseTableSchemaName="application"/>
+            <dropSequence sequenceName="transaction_seq" schemaName="application"/>
+            <dropTable tableName="transaction" schemaName="application"/>
+        </rollback>
+
+    </changeSet>
+
+</databaseChangeLog>

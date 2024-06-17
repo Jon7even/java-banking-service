@@ -1,0 +1,38 @@
+services:
+  bs-main-db:
+    container_name: bs-main-db
+    env_file:
+      - .env
+    image: "postgres:${POSTGRES_VERSION}"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT_EXTERNAL}:${DB_PORT_LOCAL}"
+    restart: on-failure
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+    networks:
+      - local
+
+  bs-main-service:
+    container_name: bs-main-service
+    env_file:
+      - .env
+    build: main-service/
+    depends_on:
+      - bs-main-db
+    links:
+      - bs-main-db
+    restart: on-failure
+    ports:
+      - "${SERVER_EXTERNAL_PORT_APPLICATION}:8080"
+    networks:
+      - local
+
+volumes:
+  pg-data: { }
+
+networks:
+  local:

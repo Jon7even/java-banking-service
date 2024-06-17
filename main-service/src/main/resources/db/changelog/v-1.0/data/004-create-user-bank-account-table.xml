@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="004-create-user-bank-account-table" author="Jon7even" context="dev" dbms="postgresql">
+
+        <createSequence
+                schemaName="application"
+                sequenceName="bank_account_seq"
+                dataType="BIGINT"
+                startValue="1"
+                incrementBy="1"
+                maxValue="100000000"
+                cycle="false"/>
+
+        <createTable tableName="bank_account" schemaName="application">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="bank_account_seq">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_bank_account"/>
+            </column>
+            <column name="balance" type="DECIMAL" defaultValue="0">
+                <constraints nullable="false" checkConstraint="CHECK (balance >= 0)"/>
+            </column>
+            <column name="owner_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableSchemaName="application"
+                                 baseTableName="bank_account"
+                                 baseColumnNames="owner_id"
+                                 constraintName="fk_bank_account_to_user"
+                                 referencedTableSchemaName="application"
+                                 referencedTableName="user"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 onUpdate="CASCADE"/>
+
+        <rollback>
+            <delete tableName="bank_account" schemaName="application"/>
+            <dropAllForeignKeyConstraints baseTableName="bank_account" baseTableSchemaName="application"/>
+            <dropSequence sequenceName="bank_account_seq" schemaName="application"/>
+            <dropTable tableName="bank_account" schemaName="application"/>
+        </rollback>
+
+    </changeSet>
+
+</databaseChangeLog>
